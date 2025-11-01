@@ -32,7 +32,7 @@ For example, you can request a list of all public holidays for a given year. An 
 *A final class (dprWorkingWeekDays), which is only there to be a property of the DaysProcessingRegion class, is also provided, but is not designed to be used on its own.*
 
 # The 4 classes that implement the AnnualEvent interface
- These classes are used to manipulate "annual events", such as holidays, celebrations, or events where calculating the date is a bit complicated (like "The Tuesday after the first Monday of November, for the U.S. Election Day").
+ These classes are used to manipulate "annual events", such as holidays, celebrations, or events where calculating the date is a bit complicated (like "The Tuesday after the first Monday of November", for the U.S. Election Day).
 
 | Class|For                       
 |----------------|------------------------------- |
@@ -42,6 +42,7 @@ For example, you can request a list of all public holidays for a given year. An 
 |AnnualEventWeekDay|for events whose date is calculated based on a fixed month and the week number of a weekday (Labor Day, Thanksgiving, etc.) 
 
 
+
  ## Common methods and properties (implemented by the interface)
 Note: An interface defines only methods and not properties. "Properties" are a pair of overloaded methods that simulate real properties.
 
@@ -49,18 +50,18 @@ Note: An interface defines only methods and not properties. "Properties" are a p
     Public Function Caption() As string
 
 ### Common properties
-#### Caption 
+##### Caption 
 Type : String
 Defines the caption of the event, for example Christmas, Easter, presidential election, etc.
-#### DayOff 
+##### DayOff 
 Type : Boolean
 Defines if it is a non-working day or not (for non-working day the value is true)
-#### StartOfValidity, EndOfValidity
+##### StartOfValidity, EndOfValidity
 Type : DateTime
 Defines the dates on which the event occurs. For example, we can imagine a new public holiday being created starting next year (or an existing public holiday being discontinued).
 
 The default dates are from January 1st of year 1 to December 31st of year 3999.
-#### CycleFirstYear, CycleYearDuration
+##### CycleFirstYear, CycleYearDuration
 Type : Integer
 An event may not occur every year. For example, an election.
 
@@ -79,7 +80,7 @@ For example, the cycle for the US presidential election can be defined as follow
 
 ### Common methods
 
-#### DateValue(Year as integer) as DateTime
+##### DateValue(Year as integer) as DateTime
 Returns the date of the event for the specified year.
 
 If the event did not occur that year, Nil is returned.
@@ -89,9 +90,7 @@ Hours, minutes, and seconds are all set to 0.
     Var GoodFriday As New AnnualEventEaster("Good Friday",-2)
      // Determine the date for the year 2025
     Var Value2025 as Datetime = GoodFriday.DateValue(2025)
-
-
-#### Calculate(Year as integer) as DateAndCaption
+##### Calculate(Year as integer) as DateAndCaption
 Returns a DateAndCaption object for the event for the specified year.
 The object's date property contains the event date, and the Caption property replicates the event's Caption property.
 
@@ -99,7 +98,7 @@ If the event did not occur that year, Nil is returned.
 The reasons for a Nil value could be that the year falls outside the event's validity period or that the year does not correspond to the cycle.
 Hours, minutes, and seconds of the Date propertie of the object are all set to 0.
 
-#### TestDate(d as DateTime) as Boolean
+##### TestDate(d as DateTime) as Boolean
 Determines if the event occurs on the tested date.
 Hours, minutes, and seconds are ignored.
 
@@ -110,7 +109,7 @@ Hours, minutes, and seconds are ignored.
      else
        MessageBox "It's NOT the date of the Good Friday !"
      end
-#### DbRow(RegionIdentifier as Variant = Nil, encoding as TextEncoding = nil) as DatabaseRow
+##### DbRow(RegionIdentifier as Variant = Nil, encoding as TextEncoding = nil) as DatabaseRow
 Returns a DatabaseRow object.
 This allows you to quickly save an event definition to a database.
 Example :
@@ -149,7 +148,7 @@ The DaysProcessingRegion class provides a method to load events from a RowSet.
 	"alwaysdayshift"	BOOLEAN NOT NULL DEFAULT 0,
 	PRIMARY KEY("id_date" AUTOINCREMENT)
 	);
-### FingerPrint() as string
+#### FingerPrint() as string
 Returns a value calculated based on the nature of the event, its parameters, and its validity dates. 
 The caption and the shift parameters properties is not part of the fingerprint.
 
@@ -158,60 +157,59 @@ The caption and the shift parameters properties is not part of the fingerprint.
     MessageBox dFixedDay.FingerPrint
 
 This code return "F05;25;0|0001-01-01|3999-12-31"
-### DefinitionObject() as variant
+#### DefinitionObject() as variant
 Returns the object as a variant
 
 Example :
-AnnualEvents() is a array of AnnualEvent
+Events() is a array of AnnualEvent
 
 		Var dFix as AnnualEventFix 
 		Var dEaster as AnnualEventEaster
 		Var dEasterOrthodox as AnnualEventOrthodoxEaster
 		Var dWeekDay as AnnualEventWeekDay
-    For i as integer = 0 to AnnualEvents.LastIndex
+    For i as integer = 0 to Events.LastIndex
     
-    	Select Case AnnualEvents(i)
+    	Select Case Events(i)
     	
     	Case IsA AnnualEventFix 
       
-    			dFix = AnnualEvents(i).DefinitionObject
-                // Change something in dFix 
+    			dFix = Events(i).DefinitionObject
+      
     	Case IsA AnnualEventEaster
     	  
-    	   dEaster = AnnualEvents(i).DefinitionObject
-           // Change something in dEaster
+    	   dEaster = Events(i).DefinitionObject
+      
     	Case IsA AnnualEventOrthodoxEaster
           
-		   dEasterOrthodox = AnnualEvents(i).DefinitionObject
-           // Change something in dEasterOrthodox
+		   dEasterOrthodox = Events(i).DefinitionObject
+     
        Case IsA AnnualEventWeekDay
      
-	      dWeekDay =  AnnualEvents(i).DefinitionObject
-          // Change something in dWeekDay
-    
-	End  Select
+	      dWeekDay =  Events(i).DefinitionObject
+      
+    End  Select
     
     Next i
 ### AnnualEventFix Class
 In addition to the methods and properties common to the interface, here are the properties specific to this class.
 #### Methods
-#### Constructor(lCaption as string = "", lMonth as Integer = 1, lDay as Integer = 1, lFridayIfSaturday as Boolean = False, lMondayIfSunday as Boolean = False)
+##### Constructor(lCaption as string = "", lMonth as Integer = 1, lDay as Integer = 1, lFridayIfSaturday as Boolean = False, lMondayIfSunday as Boolean = False)
 Creates a new object AnnualEventFix  whose properties are defined in the method arguments.
 
     Var dFixedDay As New AnnualEventFix("Día de la Independencia",9,16) // Mexico
 
-#### Constructor(copy as AnnualEventFix)
+##### Constructor(copy as AnnualEventFix)
 Creates a new object AnnualEventFix whose properties are the same as the **copy** object passed (duplication).
 
     Var dFixedDay As New AnnualEventFix("Día de la Independencia",9,16) // Mexico
     Var dDupli as New AnnualEventFix(dFixedDay)
 
-#### Constructor(a as AnnualEvent)
+##### Constructor(a as AnnualEvent)
 Creates a new object AnnualEventFix whose properties are the same as the **copy** object passed (duplication).
 If the AnnualEvent is not a AnnualEventFix then a InvalidArgumentException is raised.
 
 #### Properties 
-#### Month, Day
+##### Month, Day
 Type : Integer
 
 These two values ​​define the month and day of the event each year.
@@ -221,7 +219,7 @@ These two values ​​define the month and day of the event each year.
     dFix.month = 7
     dFix.day = 14
 
-#### MondayIfSunday
+##### MondayIfSunday
 Type : Boolean
 
 Determines whether the event should be postponed to Monday if it takes place on a Sunday.
@@ -235,7 +233,7 @@ Determines whether the event should be postponed to Monday if it takes place on 
 ***Note :*** The property can be associated with FridayIfSaturday
 
 
-#### FridayIfSaturday
+##### FridayIfSaturday
 Type : Boolean
 
 Determines whether the event should be moved to the previous Friday if it takes place on a Saturday.
@@ -255,7 +253,7 @@ Determines whether the event should be moved to the previous Friday if it takes 
     // Never a weekend :-)
     dFix.FridayIfSaturday = True
     dFix.MondayIfSunday = True
-#### NextWeekDay, PreviousWeekDay, AlwaysNextWeekDay, AlwaysPreviousWeekDay
+##### NextWeekDay, PreviousWeekDay, AlwaysNextWeekDay, AlwaysPreviousWeekDay
 Type : Integer
 
 Determines whether the day will be shifted to the corresponding day of the following week (or the previous one)
@@ -273,7 +271,7 @@ The value less that 1 indicates that there will be no offset
     dFixedDay.Month = 5
     dFixedDay.Day = 25
     dFixedDay.AlwaysPreviousWeekDay = 2
-#### AddDays
+##### AddDays
 Type : Integer
 
 Shifts the event by the specified number of days. Accepts negative values.
@@ -287,12 +285,125 @@ For example, imagine a holiday that falls on the day after February 28th.
     dFixedDay.Day = 28
     dFixedDay.AddDays = 1
 The calculation will give March 1st except for leap years where it will give February 29th.
-### :warning: Important note on the combination and order of the shifts
+
+#### :warning: Important note on the combination and order of the shifts
 The calculation function will first consider the MondayIfSunday and FridayIfSaturday properties, which are cumulative. If these properties are used, it will stop there and ignore any other offsets.
 Otherwise, it will apply only ONE of the following conditions in the order below:
 
  1. AlwaysPreviousWeekDay 
  2. AlwaysNextWeekDay 
  3. PreviousWeekDay
- 4.  NextWeekDay
+ 4. NextWeekDay
  5. AddDays
+
+### AnnualEventEaster and AnnualEventOrthodoxEaster Classes
+In addition to the methods and properties common to the interface, here is one property specific to this class.
+The only difference between the AnnualEventOrthodoxEaster class and the AnnualEventEaster class is the algorithm.
+
+Note that the date calculated by AnnualEventOrthodoxEaster is the date of the event in the Gregorian calendar.
+
+#### Methods
+##### Constructor(lCaption as string = "", lDeltaEaster as Integer = 0)
+  Creates a new object AnnualEventEaster (or AnnualEventOrthodoxEaster) whose properties are defined in the method arguments.
+
+```
+Var dEasterDay As New AnnualEventEaster("Palm Sunday",-7)
+```
+
+##### Constructor(copy as AnnualEventEaster )
+
+Creates a new object AnnualEventEaster whose properties are the same as the **copy** object passed (duplication).
+
+```
+Var dEasterDay As New AnnualEventEaster("Palm Sunday",-7)
+Var dDupli as New AnnualEventEaster(dEasterDay )
+```
+##### Constructor(a as AnnualEvent)
+
+Creates a new object AnnualEventEaster whose properties are the same as the "a" object passed (duplication).  
+If the AnnualEvent is not a AnnualEventEaster then a InvalidArgumentException is raised.
+
+#### Properties 
+##### DeltaEster
+Type : Integer
+
+The number of days to add or subtract from the date of Easter to calculate the date. If 0, it is Easter Sunday.
+
+#### Constants
+A number of constants are included with this class.
+
+For example, AnnualEventEaster.AshWednesday equals -46.
+Since some holidays have multiple names, you may have several constants with the same value.
+
+**Note :** Despite multiple checks, errors may still exist in the values ​​or names.
+### AnnualEventWeekDay Class
+In addition to the methods and properties common to the interface, here are properties specific to this class.
+#### Methods
+##### Constructor(lCaption as string = "", lMonth as Integer = 1, lWeekDay as Integer = 1, lRank as Integer = 1)
+ Creates a new object AnnualEventWeekDay whose properties are defined in the method arguments.
+
+```
+Var dWeekDay As New AnnualEventWeekDay("Thanksgiving Day ",11,5,4)
+// November (11)
+// Thursday (5)
+// The 4th (4)
+```
+##### Constructor(copy as AnnualEventWeekDay )
+
+Creates a new object AnnualEventWeekDay whose properties are the same as the **copy** object passed (duplication).
+
+```
+Var dWeekDay As New AnnualEventWeekDay("Thanksgiving Day ",11,5,4)
+Var dDupli as New AnnualEventWeekDay(dWeekDay )
+```
+##### Constructor(a as AnnualEvent)
+
+Creates a new object AnnualEventWeekDay whose properties are the same as the "a" object passed (duplication).  
+If the AnnualEvent is not a AnnualEventEaster then a InvalidArgumentException is raised.
+#### Properties 
+##### Month, WeekDay, Rank
+Type : Integer
+
+Use these three properties to define the event date.
+
+For the third Thursday of February, for example, the values ​​are:
+
+    dWeekDay.Month = 2 // February
+    dWeekDay.WeekDay = 5 // Thursday
+    dWeekDay.Rank = 3 // 3rd week
+
+To indicate the last week (without knowing if it will be the 4th or 5th), use Rank = 6
+##### NextWeekDay, PreviousWeekDay
+Type : Integer
+
+Determines whether the day will be shifted to the corresponding day of the following week (or the previous one)
+
+Use NextWeekDay/PreviousWeekDay if shifting is only necessary if the calculation does not fall on the requested day of the week.
+The value is the same as the DayOfWeek property of the DateTime class. 
+The value less that 1 indicates that there will be no offset
+
+    // U.S. Presidential Election
+    Var dWeekDay As New AnnualEventWeekDay("Presidential Election",11,2,1) // First Monday of November
+    dWeekDay.NextWeekDay = 3 // The Tuesday following the first Monday in November 
+    dWeekDay.CycleFirstYear = 1848  // The event is not every year
+    dWeekDay.CycleYearDuration = 4
+
+##### AddDays
+Type : Integer
+
+Shifts the event by the specified number of days. Accepts negative values.
+The value less that 0 indicates that there will be no offset
+
+
+    // U.S. Presidential Election
+    Var dWeekDay As New AnnualEventWeekDay("Presidential Election",11,2,1) // First Monday of November
+    dWeekDay.AddDays = 1 // The day following the first Monday in November (so a Tuesday)
+    dWeekDay.CycleFirstYear = 1848  // The event is not every year
+    dWeekDay.CycleYearDuration = 4
+
+
+#### :warning: Important note on the combination and order of the shifts
+The algorithm will apply only ONE of the following conditions in the order below:
+ 1. PreviousWeekDay  
+ 2. NextWeekDay
+ 3.  AddDays
