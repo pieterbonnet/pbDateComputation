@@ -52,7 +52,7 @@ Begin DesktopWindow wDemo
       Top             =   10
       Transparent     =   False
       Underline       =   False
-      Value           =   0
+      Value           =   1
       Visible         =   True
       Width           =   863
       BeginDesktopSegmentedButton DesktopSegmentedButton SegmentedButton1
@@ -157,7 +157,7 @@ Begin DesktopWindow wDemo
       Begin DesktopTextArea txtCode
          AllowAutoDeactivate=   True
          AllowFocusRing  =   True
-         AllowSpellChecking=   True
+         AllowSpellChecking=   False
          AllowStyledText =   False
          AllowTabs       =   False
          BackgroundColor =   &cFFFFFF
@@ -3038,6 +3038,7 @@ Begin DesktopWindow wDemo
             Top             =   264
             Transparent     =   False
             Underline       =   False
+            Value           =   False
             Visible         =   True
             VisualState     =   0
             Width           =   100
@@ -3710,7 +3711,7 @@ Begin DesktopWindow wDemo
          Horizontal      =   True
          Index           =   -2147483648
          InitialParent   =   "TabPanel1"
-         InitialValue    =   "Working week day\r\nClosing periods\r\nAnnual events"
+         InitialValue    =   "Working week day\r\nClosure periods\r\nAnnual events"
          Italic          =   False
          Left            =   443
          LockBottom      =   False
@@ -3780,7 +3781,7 @@ End
 		    chkWorkingDay.Value = Self.Regions(lstRegions.SelectedRowIndex).IsWorkingDay(dtThisDate.SelectedDate)
 		    chkIsDayOff.value = Not chkWorkingDay.Value
 		    
-		    Var dc As DateAndCaption = Self.Regions(lstRegions.SelectedRowIndex).DateEventMatchDateAndCaption(dtThisDate.SelectedDate)
+		    Var dc As DateAndCaption = Self.Regions(lstRegions.SelectedRowIndex).AnnualEventMatchDateAndCaption(dtThisDate.SelectedDate)
 		    If dc <> Nil Then 
 		      chkIsEvent.Value = True
 		      lblEvent.Text = dc.Caption
@@ -3844,10 +3845,18 @@ End
 		  if popFDWeekDay.SelectedRowIndex > 0 then
 		    if popFDShiftMode.SelectedRowIndex = 0 then
 		      s = s + EndOfLine
-		      s = s + "dFixedDay.PreviousWeekDay = " + popFDWeekDay.SelectedRowIndex.ToString
+		      If chkDFAlways.value Then 
+		        s = s + "dFixedDay.AlwaysPreviousWeekDay = " + popFDWeekDay.SelectedRowIndex.ToString
+		      else
+		        s = s + "dFixedDay.PreviousWeekDay = " + popFDWeekDay.SelectedRowIndex.ToString
+		      end
 		    else
 		      s = s + EndOfLine
-		      s = s + "dFixedDay.NextWeekDay = " + popFDWeekDay.SelectedRowIndex.ToString
+		      If chkDFAlways.value Then 
+		        s = s + "dFixedDay.AlwaysNextWeekDay = " + popFDWeekDay.SelectedRowIndex.ToString
+		      else
+		        s = s + "dFixedDay.NextWeekDay = " + popFDWeekDay.SelectedRowIndex.ToString
+		      end
 		    end
 		    
 		  elseif txtFDAdding.Text.ToInteger <> 0 then
@@ -3880,7 +3889,7 @@ End
 		  
 		  s = s + EndOfLine
 		  s = s + EndOfLine + "Var DatesEngine as new DaysProcessingRegion"
-		  s = s + EndOfLine + "DatesEngine.EventDefinitions.add dFixedDay"
+		  s = s + EndOfLine + "DatesEngine.AnnualEvents.add dFixedDay"
 		  
 		  
 		  txtCode.Text = s  
@@ -3986,7 +3995,7 @@ End
 		  s = s + EndOfLine + "// If the event is not a holiday, set the DayOff property to False"
 		  s = s + EndOfLine
 		  s = s + EndOfLine + "Var DatesEngine as new DaysProcessingRegion"
-		  s = s + EndOfLine + "DatesEngine.EventDefinitions.add dEasterDay"
+		  s = s + EndOfLine + "DatesEngine.AnnualEvents.add dEasterDay"
 		  
 		  
 		  txtCode.Text = s  
@@ -4086,17 +4095,17 @@ End
 		  
 		  DaysProcessingMultiRegion.LoadWeekDaysFromRowSet(me.Regions, rs)
 		  
-		  // Loading closing periofs for all regions
+		  // Loading Closure periofs for all regions
 		  
 		  Try
-		    rs = app.db.SelectSQL("Select * FROM tclosingperiods ORDER BY region")
+		    rs = app.db.SelectSQL("Select * FROM tClosurePeriods ORDER BY region")
 		  Catch err As DataBaseException
 		    MessageBox "(" + Err.ErrorNumber.ToString + ") " + err.Message
 		    Break
 		    Exit Sub
 		  End Try
 		  
-		  DaysProcessingMultiRegion.LoadClosingPeriods(me.Regions, rs)
+		  DaysProcessingMultiRegion.LoadClosurePeriods(me.Regions, rs)
 		  
 		  PopulateLstRegions
 		  
@@ -4129,14 +4138,14 @@ End
 		    
 		    Var r As DaysProcessingRegion = Me.Regions(lstRegions.SelectedRowIndex)
 		    
-		    For p As Integer = 0 To r.ClosingPeriods.LastIndex
+		    For p As Integer = 0 To r.ClosurePeriods.LastIndex
 		      
-		      lstRegionItems.AddRow r.ClosingPeriods(p).Caption, _
-		      r.ClosingPeriods(p).FirstDay.ToString(DateTime.FormatStyles.Short, DateTime.FormatStyles.None), _
-		      r.ClosingPeriods(p).LastDay.ToString(DateTime.FormatStyles.Short, DateTime.FormatStyles.None)
+		      lstRegionItems.AddRow r.ClosurePeriods(p).Caption, _
+		      r.ClosurePeriods(p).FirstDay.ToString(DateTime.FormatStyles.Short, DateTime.FormatStyles.None), _
+		      r.ClosurePeriods(p).LastDay.ToString(DateTime.FormatStyles.Short, DateTime.FormatStyles.None)
 		      
-		      lstRegionItems.CellTagAt(lstRegionItems.LastAddedRowIndex, 1) = r.ClosingPeriods(p).FirstDay
-		      lstRegionItems.CellTagAt(lstRegionItems.LastAddedRowIndex, 2) = r.ClosingPeriods(p).LastDay
+		      lstRegionItems.CellTagAt(lstRegionItems.LastAddedRowIndex, 1) = r.ClosurePeriods(p).FirstDay
+		      lstRegionItems.CellTagAt(lstRegionItems.LastAddedRowIndex, 2) = r.ClosurePeriods(p).LastDay
 		      
 		    next p
 		    
@@ -4149,15 +4158,15 @@ End
 		    
 		    Var r As DaysProcessingRegion = Me.Regions(lstRegions.SelectedRowIndex)
 		    
-		    If r.EventDefinitions.Count = 0 Then 
+		    If r.AnnualEvents.Count = 0 Then 
 		      Break
 		      Exit Sub
 		    End
 		    
-		    For e As Integer = 0 To r.EventDefinitions.LastIndex
+		    For e As Integer = 0 To r.AnnualEvents.LastIndex
 		      
-		      lstRegionItems.AddRow r.EventDefinitions(e).Caption
-		      Select Case r.EventDefinitions(e) 
+		      lstRegionItems.AddRow r.AnnualEvents(e).Caption
+		      Select Case r.AnnualEvents(e) 
 		        
 		      Case IsA AnnualEventFix 
 		        lstRegionItems.CellTextAt(lstRegionItems.LastAddedRowIndex, 1) = "Fix"
@@ -4246,7 +4255,7 @@ End
 		  s = s + EndOfLine + "// If the event is not a holiday, set the DayOff property to False"
 		  s = s + EndOfLine
 		  s = s + EndOfLine + "Var DatesEngine as new DaysProcessingRegion"
-		  s = s + EndOfLine + "DatesEngine.EventDefinitions.add dWeekDay"
+		  s = s + EndOfLine + "DatesEngine.AnnualEvents.add dWeekDay"
 		  
 		  
 		  txtCode.Text = s  
@@ -4639,11 +4648,11 @@ End
 		  case 1
 		    
 		    var w as wNewOrEditPeriod
-		    Var p As ClosingPeriod = w.Charge
+		    Var p As ClosurePeriod = w.Charge
 		    
 		    if p = nil then exit sub
 		    
-		    Self.Regions(lstRegions.SelectedRowIndex).ClosingPeriods.Add p
+		    Self.Regions(lstRegions.SelectedRowIndex).ClosurePeriods.Add p
 		    
 		    PopulateLstRegionItems
 		    
@@ -4654,7 +4663,7 @@ End
 		    
 		    If d = Nil Then Exit Sub
 		    
-		    Self.Regions(lstRegions.SelectedRowIndex).AddDefinitions(d, True) // Add without duplicate (caption or parameters)
+		    Self.Regions(lstRegions.SelectedRowIndex).AddAnnualEvents(d, True) // Add without duplicate (caption or parameters)
 		    
 		    PopulateLstRegionItems
 		    
@@ -4772,14 +4781,14 @@ End
 		  Case 1
 		    
 		    Var w As New wNewOrEditPeriod
-		    Var p As ClosingPeriod = w.Charge
+		    Var p As ClosurePeriod = w.Charge
 		    
 		    If p = Nil Then Exit Sub
 		    
 		    Var row As Integer = lstRegionItems.SelectedRowIndex
 		    
-		    Self.Regions(lstRegions.SelectedRowIndex).ClosingPeriods(row) = Nil // Clean the old object
-		    Self.Regions(lstRegions.SelectedRowIndex).ClosingPeriods(row)  = p // Affects the new object
+		    Self.Regions(lstRegions.SelectedRowIndex).ClosurePeriods(row) = Nil // Clean the old object
+		    Self.Regions(lstRegions.SelectedRowIndex).ClosurePeriods(row)  = p // Affects the new object
 		    
 		    lstRegionItems.CellTextAt(row, 0)=  p.Caption
 		    
@@ -4792,11 +4801,11 @@ End
 		  case 2
 		    
 		    Var w As New wNewOrEditDefinition
-		    Var d As AnnualEvent = w.Charge(Self.Regions(lstRegions.SelectedRowIndex).EventDefinitions(lstRegionItems.SelectedRowIndex))
+		    Var d As AnnualEvent = w.Charge(Self.Regions(lstRegions.SelectedRowIndex).AnnualEvents(lstRegionItems.SelectedRowIndex))
 		    If d = Nil Then Exit Sub
 		    
-		    Self.Regions(lstRegions.SelectedRowIndex).EventDefinitions(lstRegionItems.SelectedRowIndex) = Nil // Clean the old object
-		    Self.Regions(lstRegions.SelectedRowIndex).EventDefinitions(lstRegionItems.SelectedRowIndex) = d // Affects the new object
+		    Self.Regions(lstRegions.SelectedRowIndex).AnnualEvents(lstRegionItems.SelectedRowIndex) = Nil // Clean the old object
+		    Self.Regions(lstRegions.SelectedRowIndex).AnnualEvents(lstRegionItems.SelectedRowIndex) = d // Affects the new object
 		    
 		    lstRegionItems.CellTextAt(lstRegionItems.SelectedRowIndex, 0) = d.Caption
 		    
@@ -4830,35 +4839,35 @@ End
 		  Self.Regions.RemoveAll
 		  
 		  Self.Regions.Add New DaysProcessingRegion("usa-federal")
-		  Self.Regions(Regions.LastIndex).AddDefinitions DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Federal)
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Federal)
 		  
 		  Self.Regions.Add New DaysProcessingRegion("usa-alabama")
-		  Self.Regions(Regions.LastIndex).AddDefinitions DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Alabama)
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Alabama)
 		  
 		  Self.Regions.Add New DaysProcessingRegion("usa-alaska")
-		  Self.Regions(Regions.LastIndex).AddDefinitions DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Alaska)
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Alaska)
 		  
 		  Self.Regions.Add New DaysProcessingRegion("usa-arkansas")
-		  Self.Regions(Regions.LastIndex).AddDefinitions DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Arkansas)
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Arkansas)
 		  
 		  Self.Regions.Add New DaysProcessingRegion("usa-arizona")
-		  Self.Regions(Regions.LastIndex).AddDefinitions DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Arizona)
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Arizona)
 		  
 		  Self.Regions.Add New DaysProcessingRegion("usa-california")
-		  Self.Regions(Regions.LastIndex).AddDefinitions DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.California)
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.California)
 		  
 		  Self.Regions.Add New DaysProcessingRegion("usa-colorado")
-		  Self.Regions(Regions.LastIndex).AddDefinitions DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Colorado)
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Colorado)
 		  
 		  Self.Regions.Add New DaysProcessingRegion("usa-connecticut")
-		  Self.Regions(Regions.LastIndex).AddDefinitions DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Connecticut)
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Connecticut)
 		  
 		  Self.Regions.Add New DaysProcessingRegion("usa-delaware")
-		  Self.Regions(Regions.LastIndex).AddDefinitions DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Delaware)
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Delaware)
 		  
 		  
 		  Self.Regions.Add New DaysProcessingRegion("usa-dc")
-		  Self.Regions(Regions.LastIndex).AddDefinitions DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.DistrictOfColumbia)
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.DistrictOfColumbia)
 		  
 		  
 		  // No more states implanted, because it's a bit time-consuming to find the official texts for each state. Not to mention the counties...
@@ -5900,24 +5909,24 @@ End
 		  
 		  select case rgItem.SelectedIndex
 		    
-		  case 1 // Closing Periods
+		  case 1 // Closure Periods
 		    
 		    Var w As New wNewOrEditPeriod
-		    Var p As ClosingPeriod = w.Charge
+		    Var p As ClosurePeriod = w.Charge
 		    
 		    If p = Nil Then Exit Sub
 		    
-		    Self.Regions(lstRegions.SelectedRowIndex).ClosingPeriods(Me.SelectedRowIndex) = Nil // Clean the old object
-		    Self.Regions(lstRegions.SelectedRowIndex).ClosingPeriods(Me.SelectedRowIndex)  = p // Affects the new object
+		    Self.Regions(lstRegions.SelectedRowIndex).ClosurePeriods(Me.SelectedRowIndex) = Nil // Clean the old object
+		    Self.Regions(lstRegions.SelectedRowIndex).ClosurePeriods(Me.SelectedRowIndex)  = p // Affects the new object
 		    
 		  case 2 // Annual events
 		    
 		    Var w As New wNewOrEditDefinition
-		    Var d As AnnualEvent = w.Charge(Self.Regions(lstRegions.SelectedRowIndex).EventDefinitions(Me.SelectedRowIndex))
+		    Var d As AnnualEvent = w.Charge(Self.Regions(lstRegions.SelectedRowIndex).AnnualEvents(Me.SelectedRowIndex))
 		    If d = Nil Then Exit Sub
 		    
-		    Self.Regions(lstRegions.SelectedRowIndex).EventDefinitions(Me.SelectedRowIndex) = Nil // Clean the old object
-		    Self.Regions(lstRegions.SelectedRowIndex).EventDefinitions(Me.SelectedRowIndex) = d // Affects the new object
+		    Self.Regions(lstRegions.SelectedRowIndex).AnnualEvents(Me.SelectedRowIndex) = Nil // Clean the old object
+		    Self.Regions(lstRegions.SelectedRowIndex).AnnualEvents(Me.SelectedRowIndex) = d // Affects the new object
 		    
 		    Me.CellTextAt(Me.SelectedRowIndex, 0) = d.Caption
 		    
@@ -5955,9 +5964,9 @@ End
 		      
 		      
 		    case 1
-		      self.Regions(lstRegions.SelectedRowIndex).ClosingPeriods.RemoveAt index
+		      self.Regions(lstRegions.SelectedRowIndex).ClosurePeriods.RemoveAt index
 		    case 2
-		      Self.Regions(lstRegions.SelectedRowIndex).EventDefinitions.RemoveAt index
+		      Self.Regions(lstRegions.SelectedRowIndex).AnnualEvents.RemoveAt index
 		    end
 		    
 		    Me.RemoveRowAt(index)
@@ -6279,8 +6288,8 @@ End
 		  Case 1
 		    btnAddItem.Visible = True
 		    btnEditItem.Visible = True
-		    btnAddItem.Caption = "Adding a closing period"
-		    btnEditItem.Caption = "Edit a closing period"
+		    btnAddItem.Caption = "Adding a Closure period"
+		    btnEditItem.Caption = "Edit a Closure period"
 		    lstRegionItems.ColumnWidths = ",25%,25%"
 		    lstRegionItems.HeaderAt(0) = "Period caption"
 		    lstRegionItems.HeaderAt(1) = "First day"

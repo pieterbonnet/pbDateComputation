@@ -1,9 +1,9 @@
 #tag Class
 Protected Class DaysProcessingMultiRegion
 	#tag Method, Flags = &h21
-		Private Sub AddClosingPeriods(FirstDay as DateTime, LastDay as DateTime, cp() as ClosingPeriod, R as DaysProcessingRegion)
-		  For c As Integer = 0 To R.ClosingPeriods.LastIndex
-		    If FirstDay <= R.ClosingPeriods(c).LastDay And LastDay >= R.ClosingPeriods(c).FirstDay Then cp.Add R.ClosingPeriods(c)
+		Private Sub AddClosurePeriods(FirstDay as DateTime, LastDay as DateTime, cp() as ClosurePeriod, R as DaysProcessingRegion)
+		  For c As Integer = 0 To R.ClosurePeriods.LastIndex
+		    If FirstDay <= R.ClosurePeriods(c).LastDay And LastDay >= R.ClosurePeriods(c).FirstDay Then cp.Add R.ClosurePeriods(c)
 		  Next
 		End Sub
 	#tag EndMethod
@@ -32,6 +32,30 @@ Protected Class DaysProcessingMultiRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function AnnualEventMatch(d as DateTime, OnlyIfDayOff as Boolean = False) As Boolean
+		  If d = Nil Then 
+		    Raise New NilObjectException
+		    Return False
+		  end
+		  
+		  if not OnRegionEnabled then Return False
+		  
+		  // The date must be a public holiday for ALL regions.
+		  
+		  For i As Integer = 0 To Me.Regions.LastIndex
+		    
+		    if not me.Regions(i).Enabled then Continue
+		    
+		    // Therefore, it is enough for just one of them to not match.
+		    if not me.Regions(i).AnnualEventMatch(d, OnlyIfDayOff) then Return false
+		    
+		  Next
+		  
+		  Return True
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function BusinessDays(starting as DateTime, ending as DateTime) As DateTime()
 		  If starting = Nil Then 
 		    Raise New NilObjectException
@@ -51,11 +75,11 @@ Protected Class DaysProcessingMultiRegion
 		  
 		  If nStart > nEnd Then Return list
 		  
-		  // Copy the relevant items ClosingPeriod
-		  Var cp() As ClosingPeriod 
+		  // Copy the relevant items ClosurePeriod
+		  Var cp() As ClosurePeriod 
 		  For r As Integer = 0 To Me.Regions.LastIndex
 		    If Me.Regions(r).Enabled Then
-		      AddClosingPeriods(starting, ending, cp, me.Regions(r))
+		      AddClosurePeriods(starting, ending, cp, me.Regions(r))
 		    End If
 		  next
 		  
@@ -87,7 +111,7 @@ Protected Class DaysProcessingMultiRegion
 		      
 		      if not me.Regions(i).Enabled then Continue // ignore
 		      
-		      If Me.Regions(i).DateEventMatch(d, True) Then  // if is a holiday
+		      If Me.Regions(i).AnnualEventMatch(d, True) Then  // if is a holiday
 		        Continue Do // It is enough that in just one region that day is not a working day...
 		      end
 		      
@@ -142,31 +166,31 @@ Protected Class DaysProcessingMultiRegion
 		  'Var doe As AnnualEventOrthodoxEaster
 		  'var dwd as AnnualEventWeekDay
 		  '
-		  'If copy.EventDefinitions.Count > 0 Then
+		  'If copy.AnnualEvents.Count > 0 Then
 		  '
-		  'For i As Integer = 0 To copy.EventDefinitions.LastIndex
+		  'For i As Integer = 0 To copy.AnnualEvents.LastIndex
 		  '
-		  'select case copy.EventDefinitions(i) 
+		  'select case copy.AnnualEvents(i) 
 		  '
 		  'Case IsA AnnualEventFix
 		  '
-		  'df = copy.EventDefinitions(i).DefinitionObject
-		  'me.EventDefinitions.Add new AnnualEventFix(df)
+		  'df = copy.AnnualEvents(i).DefinitionObject
+		  'me.AnnualEvents.Add new AnnualEventFix(df)
 		  '
 		  'Case IsA AnnualEventEaster
 		  '
-		  'de =  copy.EventDefinitions(i).DefinitionObject
-		  'me.EventDefinitions.Add new AnnualEventEaster(de)
+		  'de =  copy.AnnualEvents(i).DefinitionObject
+		  'me.AnnualEvents.Add new AnnualEventEaster(de)
 		  '
 		  'Case IsA AnnualEventOrthodoxEaster
 		  '
-		  'doe =  copy.EventDefinitions(i).DefinitionObject
-		  'Me.EventDefinitions.Add New AnnualEventOrthodoxEaster(doe)
+		  'doe =  copy.AnnualEvents(i).DefinitionObject
+		  'Me.AnnualEvents.Add New AnnualEventOrthodoxEaster(doe)
 		  '
 		  'Case IsA AnnualEventWeekDay
 		  '
-		  'dwd =  copy.EventDefinitions(i).DefinitionObject
-		  'Me.EventDefinitions.Add New AnnualEventWeekDay(dwd)
+		  'dwd =  copy.AnnualEvents(i).DefinitionObject
+		  'Me.AnnualEvents.Add New AnnualEventWeekDay(dwd)
 		  '
 		  'end
 		  '
@@ -207,11 +231,11 @@ Protected Class DaysProcessingMultiRegion
 		  End
 		  
 		  
-		  // Copy the relevant items ClosingPeriod
-		  Var cp() As ClosingPeriod 
+		  // Copy the relevant items ClosurePeriod
+		  Var cp() As ClosurePeriod 
 		  For r As Integer = 0 To Me.Regions.LastIndex
 		    If Me.Regions(r).Enabled Then
-		      AddClosingPeriods(date1, date2, cp, Me.Regions(r))
+		      AddClosurePeriods(date1, date2, cp, Me.Regions(r))
 		    End If
 		  next
 		  
@@ -245,7 +269,7 @@ Protected Class DaysProcessingMultiRegion
 		      if me.Regions(i).Enabled then continue for
 		      
 		      // it's a working (week)day but is this a public holiday - day off ?
-		      If Me.Regions(i).DateEventMatch(dtCurrent, True) Then Continue Do // It is enough that in just one region that day is not a working day...
+		      If Me.Regions(i).AnnualEventMatch(dtCurrent, True) Then Continue Do // It is enough that in just one region that day is not a working day...
 		      
 		      
 		    next i
@@ -301,11 +325,11 @@ Protected Class DaysProcessingMultiRegion
 		  End
 		  
 		  
-		  // Copy the relevant items ClosingPeriod
-		  Var cp() As ClosingPeriod 
+		  // Copy the relevant items ClosurePeriod
+		  Var cp() As ClosurePeriod 
 		  For r As Integer = 0 To Me.Regions.LastIndex
 		    If Me.Regions(r).Enabled Then
-		      AddClosingPeriods(date1, date2, cp, Me.Regions(r))
+		      AddClosurePeriods(date1, date2, cp, Me.Regions(r))
 		    End If
 		  next
 		  
@@ -347,7 +371,7 @@ Protected Class DaysProcessingMultiRegion
 		      
 		      If Me.Regions(i).Enabled Then Continue
 		      
-		      If not Me.Regions(i).DateEventMatch(dtCurrent, True) Then 
+		      If not Me.Regions(i).AnnualEventMatch(dtCurrent, True) Then 
 		        counter = counter + 1
 		        Continue Do // It's a closed period....
 		      end
@@ -368,37 +392,13 @@ Protected Class DaysProcessingMultiRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function DateEventMatch(d as DateTime, OnlyIfDayOff as Boolean = False) As Boolean
-		  If d = Nil Then 
-		    Raise New NilObjectException
-		    Return False
-		  end
-		  
-		  if not OnRegionEnabled then Return False
-		  
-		  // The date must be a public holiday for ALL regions.
-		  
-		  For i As Integer = 0 To Me.Regions.LastIndex
-		    
-		    if not me.Regions(i).Enabled then Continue
-		    
-		    // Therefore, it is enough for just one of them to not match.
-		    if not me.Regions(i).DateEventMatch(d, OnlyIfDayOff) then Return false
-		    
-		  Next
-		  
-		  Return True
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function IsEvent(d as DateTime, OnlyDayOff as Boolean = False) As Boolean
 		  for r as Integer = 0 to me.Regions.LastIndex
 		    
-		    For i As Integer = 0 To me.Regions(r).EventDefinitions.LastIndex
+		    For i As Integer = 0 To me.Regions(r).AnnualEvents.LastIndex
 		      
-		      if not me.Regions(r).EventDefinitions(i).DayOff and OnlyDayOff then Continue
-		      if me.Regions(r).EventDefinitions(i).TestDate(d) then Return True
+		      if not me.Regions(r).AnnualEvents(i).DayOff and OnlyDayOff then Continue
+		      if me.Regions(r).AnnualEvents(i).TestDate(d) then Return True
 		      
 		    Next
 		    
@@ -414,14 +414,14 @@ Protected Class DaysProcessingMultiRegion
 		    
 		    If Not me.Regions(r).WorkingWeekDays.WorkingDay(d.DayOfWeek) Then Return False // It's never a working day
 		    
-		    For p As Integer = 0 To Me.Regions(r).ClosingPeriods.LastIndex
-		      If d >=  Me.Regions(r).ClosingPeriods(p).FirstDay And d <=  Me.Regions(r).ClosingPeriods(p).LastDay Then Return False // It's as closed period
+		    For p As Integer = 0 To Me.Regions(r).ClosurePeriods.LastIndex
+		      If d >=  Me.Regions(r).ClosurePeriods(p).FirstDay And d <=  Me.Regions(r).ClosurePeriods(p).LastDay Then Return False // It's as closed period
 		    Next p
 		    
-		    For i As Integer = 0 To me.Regions(r).EventDefinitions.LastIndex
+		    For i As Integer = 0 To me.Regions(r).AnnualEvents.LastIndex
 		      
-		      if not me.Regions(r).EventDefinitions(i).DayOff then Continue // No need to calculate the date, it's not a holiday
-		      if me.Regions(r).EventDefinitions(i).TestDate(d) then Return False
+		      if not me.Regions(r).AnnualEvents(i).DayOff then Continue // No need to calculate the date, it's not a holiday
+		      if me.Regions(r).AnnualEvents(i).TestDate(d) then Return False
 		      
 		    Next i
 		    
@@ -480,11 +480,11 @@ Protected Class DaysProcessingMultiRegion
 		    
 		    for r as integer = 0 to me.Regions.LastIndex
 		      
-		      if me.Regions(r).EventDefinitions.Count = 0 then Continue 
+		      if me.Regions(r).AnnualEvents.Count = 0 then Continue 
 		      
-		      For i As Integer = 0 To me.Regions(r).EventDefinitions.LastIndex
+		      For i As Integer = 0 To me.Regions(r).AnnualEvents.LastIndex
 		        
-		        Valeur =  me.Regions(r).EventDefinitions(i).Calculate(year)
+		        Valeur =  me.Regions(r).AnnualEvents(i).Calculate(year)
 		        
 		        If valeur = Nil Then Continue
 		        If valeur.DateValue < nStart Or valeur.DateValue > nEnd Then Continue
@@ -519,11 +519,11 @@ Protected Class DaysProcessingMultiRegion
 		  
 		  for r as Integer = 0 to me.Regions.LastIndex
 		    
-		    if me.Regions(r).EventDefinitions.Count = 0 then  continue
+		    if me.Regions(r).AnnualEvents.Count = 0 then  continue
 		    
-		    For i As Integer = 0 To me.Regions(r).EventDefinitions.LastIndex
+		    For i As Integer = 0 To me.Regions(r).AnnualEvents.LastIndex
 		      
-		      Valeur = me.Regions(r).EventDefinitions(i).Calculate(year)
+		      Valeur = me.Regions(r).AnnualEvents(i).Calculate(year)
 		      
 		      If valeur = Nil Then Continue
 		      
@@ -561,7 +561,7 @@ Protected Class DaysProcessingMultiRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub LoadClosingPeriods(regions() as DaysProcessingRegion, rs as RowSet, Encoding as TextEncoding = Nil)
+		Shared Sub LoadClosurePeriods(regions() as DaysProcessingRegion, rs as RowSet, Encoding as TextEncoding = Nil)
 		  If rs = Nil Then Exit Sub
 		  If Regions.Count = 0 Then Exit Sub
 		  
@@ -580,7 +580,7 @@ Protected Class DaysProcessingMultiRegion
 		    for r as Integer = 0 to Regions.LastIndex
 		      
 		      If r1 <> Regions(r).Identifier.StringValue.Lowercase.Trim Then continue
-		      Regions(r).ClosingPeriods.Add new ClosingPeriod(rs.Column("firstday").DateTimeValue, rs.Column("lastday").DateTimeValue, caption)
+		      Regions(r).ClosurePeriods.Add new ClosurePeriod(rs.Column("firstday").DateTimeValue, rs.Column("lastday").DateTimeValue, caption)
 		      
 		    Next r
 		    
@@ -638,7 +638,7 @@ Protected Class DaysProcessingMultiRegion
 		      df.NextWeekDay = rs.Column("nextweekday").IntegerValue
 		      df.PreviousWeekDay = rs.Column("previousweekday").IntegerValue
 		      
-		      CurrentRegion.EventDefinitions.Add df
+		      CurrentRegion.AnnualEvents.Add df
 		      
 		    Case "WD" // Weekday
 		      
@@ -648,29 +648,29 @@ Protected Class DaysProcessingMultiRegion
 		      dw.NextWeekDay = rs.Column("nextweekday").IntegerValue
 		      dw.PreviousWeekDay = rs.Column("previousweekday").IntegerValue
 		      
-		      CurrentRegion.EventDefinitions.Add dw  
+		      CurrentRegion.AnnualEvents.Add dw  
 		      
 		    Case  "E" // Easter
 		      
 		      de = New AnnualEventEaster(label, rs.Column("day").IntegerValue)
 		      
-		      CurrentRegion.EventDefinitions.Add de
+		      CurrentRegion.AnnualEvents.Add de
 		      
 		      
 		    case "EO" // Orthodox Easter 
 		      
 		      deo = New AnnualEventOrthodoxEaster(label, rs.Column("day").IntegerValue)
 		      
-		      CurrentRegion.EventDefinitions.Add deo
+		      CurrentRegion.AnnualEvents.Add deo
 		      
 		      
 		    end
 		    
-		    CurrentRegion.EventDefinitions(CurrentRegion.EventDefinitions.LastIndex).CycleFirstYear = rs.Column("cyclefirstyear").IntegerValue
-		    CurrentRegion.EventDefinitions(CurrentRegion.EventDefinitions.LastIndex).CycleYearDuration = rs.Column("cycleyearduration").IntegerValue
-		    CurrentRegion.EventDefinitions(CurrentRegion.EventDefinitions.LastIndex).StartOfValidity = rs.Column("start").DateTimeValue
-		    CurrentRegion.EventDefinitions(CurrentRegion.EventDefinitions.LastIndex).EndOfValidity = rs.Column("end").DateTimeValue
-		    CurrentRegion.EventDefinitions(CurrentRegion.EventDefinitions.LastIndex).DayOff = rs.Column("dayoff").BooleanValue
+		    CurrentRegion.AnnualEvents(CurrentRegion.AnnualEvents.LastIndex).CycleFirstYear = rs.Column("cyclefirstyear").IntegerValue
+		    CurrentRegion.AnnualEvents(CurrentRegion.AnnualEvents.LastIndex).CycleYearDuration = rs.Column("cycleyearduration").IntegerValue
+		    CurrentRegion.AnnualEvents(CurrentRegion.AnnualEvents.LastIndex).StartOfValidity = rs.Column("start").DateTimeValue
+		    CurrentRegion.AnnualEvents(CurrentRegion.AnnualEvents.LastIndex).EndOfValidity = rs.Column("end").DateTimeValue
+		    CurrentRegion.AnnualEvents(CurrentRegion.AnnualEvents.LastIndex).DayOff = rs.Column("dayoff").BooleanValue
 		    
 		    rs.MoveToNextRow
 		  Loop
@@ -752,17 +752,17 @@ Protected Class DaysProcessingMultiRegion
 		  Var dt As New DateTime(d), counter As Integer
 		  Var blOK as Boolean
 		  
-		  Var cp() As ClosingPeriod 
+		  Var cp() As ClosurePeriod 
 		  
 		  If number > 0 Then
 		    
 		    Var d2 as new DateTime(3999, 12, 31)
 		    
-		    // Copy the relevant items ClosingPeriod
+		    // Copy the relevant items ClosurePeriod
 		    
 		    For r As Integer = 0 To Me.Regions.LastIndex
 		      If Me.Regions(r).Enabled Then
-		        AddClosingPeriods(d, d2 , cp, Me.Regions(r))
+		        AddClosurePeriods(d, d2 , cp, Me.Regions(r))
 		      End If
 		    next
 		    
@@ -772,7 +772,7 @@ Protected Class DaysProcessingMultiRegion
 		    
 		    For r As Integer = 0 To Me.Regions.LastIndex
 		      If Me.Regions(r).Enabled Then
-		        AddClosingPeriods(d2, d, cp, Me.Regions(r))
+		        AddClosurePeriods(d2, d, cp, Me.Regions(r))
 		      End If
 		    next
 		    
@@ -810,7 +810,7 @@ Protected Class DaysProcessingMultiRegion
 		      
 		      if not me.Regions(r).Enabled then Continue for
 		      
-		      If Me.Regions(r).DateEventMatch(dt, True) Then continue do
+		      If Me.Regions(r).AnnualEventMatch(dt, True) Then continue do
 		      
 		    Next r
 		    
@@ -850,11 +850,11 @@ Protected Class DaysProcessingMultiRegion
 		  
 		  If nStart > nEnd Then Return list
 		  
-		  // Copy the relevant items ClosingPeriod
-		  Var cp() As ClosingPeriod 
+		  // Copy the relevant items ClosurePeriod
+		  Var cp() As ClosurePeriod 
 		  For r As Integer = 0 To Me.Regions.LastIndex
 		    If Me.Regions(r).Enabled Then
-		      AddClosingPeriods(starting, ending, cp, Me.Regions(r))
+		      AddClosurePeriods(starting, ending, cp, Me.Regions(r))
 		    End If
 		  next
 		  
@@ -885,7 +885,7 @@ Protected Class DaysProcessingMultiRegion
 		        Exit For
 		      End
 		      
-		      If Me.Regions(i).DateEventMatch(d, True) Then 
+		      If Me.Regions(i).AnnualEventMatch(d, True) Then 
 		        blOK = True
 		        Exit For
 		      End

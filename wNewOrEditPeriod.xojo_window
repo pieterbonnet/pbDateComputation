@@ -21,7 +21,7 @@ Begin DesktopWindow wNewOrEditPeriod
    MinimumHeight   =   64
    MinimumWidth    =   64
    Resizeable      =   False
-   Title           =   "Adding closing period"
+   Title           =   "Adding Closure period"
    Type            =   1
    Visible         =   True
    Width           =   580
@@ -297,21 +297,21 @@ End
 
 #tag WindowCode
 	#tag Method, Flags = &h0
-		Function Charge(p as ClosingPeriod = Nil) As ClosingPeriod
+		Function Charge(p as ClosurePeriod = Nil) As ClosurePeriod
 		  If p <> Nil Then
-		    Me.Title = "Edit closing period"
+		    Me.Title = "Edit Closure period"
 		    btnOK.Caption = "&OK"
 		    LoadPeriod(p)
 		  End
 		  
 		  Me.ShowModal
 		  
-		  Return ClosingPeriodReturned
+		  Return ClosurePeriodReturned
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub LoadPeriod(p as ClosingPeriod)
+		Sub LoadPeriod(p as ClosurePeriod)
 		  txtCaption.Text= p.Caption
 		  dtStart.SelectedDate = p.FirstDay
 		  dtEnd.SelectedDate = p.LastDay
@@ -322,7 +322,7 @@ End
 
 
 	#tag Property, Flags = &h21
-		Private ClosingPeriodReturned As ClosingPeriod
+		Private ClosurePeriodReturned As ClosurePeriod
 	#tag EndProperty
 
 
@@ -366,9 +366,9 @@ End
 		    
 		  end
 		  
-		  Var p as new ClosingPeriod(dtStart.SelectedDate, dtEnd.SelectedDate, txtCaption.Text)
+		  Var p as new ClosurePeriod(dtStart.SelectedDate, dtEnd.SelectedDate, txtCaption.Text)
 		  
-		  self.ClosingPeriodReturned = p
+		  self.ClosurePeriodReturned = p
 		  
 		  self.Close
 		End Sub

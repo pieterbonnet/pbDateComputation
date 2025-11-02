@@ -1,7 +1,7 @@
 #tag Class
 Protected Class DaysProcessingRegion
 	#tag Method, Flags = &h0
-		Sub AddDefinitions(d() as AnnualEvent, NoDuplicates as Boolean = False)
+		Sub AddAnnualEvents(d() as AnnualEvent, NoDuplicates as Boolean = False)
 		  If d.Count = 0 Then Exit Sub
 		  
 		  // Create a dictionnary to speed up duplicate searches
@@ -12,11 +12,11 @@ Protected Class DaysProcessingRegion
 		    
 		    // Filling the dictionary with existing values
 		    
-		    If Me.EventDefinitions.Count > 0 Then
+		    If Me.AnnualEvents.Count > 0 Then
 		      
-		      For i As Integer = 0 To Me.EventDefinitions.LastIndex
-		        dic.value(me.EventDefinitions(i).FingerPrint) = i
-		        dicCaption.Value(me.EventDefinitions(i).Caption.Lowercase) = i
+		      For i As Integer = 0 To Me.AnnualEvents.LastIndex
+		        dic.value(me.AnnualEvents(i).FingerPrint) = i
+		        dicCaption.Value(me.AnnualEvents(i).Caption.Lowercase) = i
 		      Next
 		      
 		    End If
@@ -30,12 +30,12 @@ Protected Class DaysProcessingRegion
 		      If Not dicCaption.Lookup(d(i).Caption.Lowercase, "clear") = "clear" Then Continue // Already exist ! Skip this definition
 		    end
 		    
-		    me.EventDefinitions.Add d(i)
+		    me.AnnualEvents.Add d(i)
 		    
 		    // Adding the new value in the dictionary
 		    If NoDuplicates Then 
-		      dic.value(Me.EventDefinitions(Me.EventDefinitions.LastIndex).FingerPrint) = Me.EventDefinitions.LastIndex
-		      dicCaption.value(Me.EventDefinitions(Me.EventDefinitions.LastIndex).Caption.Lowercase) = Me.EventDefinitions.LastIndex
+		      dic.value(Me.AnnualEvents(Me.AnnualEvents.LastIndex).FingerPrint) = Me.AnnualEvents.LastIndex
+		      dicCaption.value(Me.AnnualEvents(Me.AnnualEvents.LastIndex).Caption.Lowercase) = Me.AnnualEvents.LastIndex
 		    end
 		  next
 		  
@@ -44,27 +44,27 @@ Protected Class DaysProcessingRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub AddDefinitions(NewDefinition as AnnualEvent, NoDuplicates as Boolean = False)
+		Sub AddAnnualEvents(NewEvent as AnnualEvent, NoDuplicates as Boolean = False)
 		  // Create a dictionnary to speed up duplicate searches
 		  
-		  if me.EventDefinitions.Count > 0 and NoDuplicates then
+		  if me.AnnualEvents.Count > 0 and NoDuplicates then
 		    
 		    Var dic As New Dictionary
 		    
 		    // Filling the dictionary with existing values
 		    
-		    If Me.EventDefinitions.Count > 0 Then
+		    If Me.AnnualEvents.Count > 0 Then
 		      
-		      For i As Integer = 0 To Me.EventDefinitions.LastIndex
-		        dic.value(me.EventDefinitions(i).FingerPrint) = i
+		      For i As Integer = 0 To Me.AnnualEvents.LastIndex
+		        dic.value(me.AnnualEvents(i).FingerPrint) = i
 		      Next
 		      
 		    End If
 		    
-		    If Not dic.Lookup(NewDefinition, "clear") = "clear" Then exit sub // Already exist ! Skip this definition
+		    If Not dic.Lookup(NewEvent, "clear") = "clear" Then exit sub // Already exist ! Skip this definition
 		  end
 		  
-		  me.EventDefinitions.Add NewDefinition
+		  me.AnnualEvents.Add NewEvent
 		  
 		  
 		End Sub
@@ -94,20 +94,198 @@ Protected Class DaysProcessingRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Function AffectedClosingPeriods(FirstDay as DateTime, LastDay as DateTime) As ClosingPeriod()
-		  Var cp() As ClosingPeriod // Copy the relevant items ClosingPeriod
+		Private Function AffectedClosurePeriods(FirstDay as DateTime, LastDay as DateTime) As ClosurePeriod()
+		  Var cp() As ClosurePeriod // Copy the relevant items ClosurePeriod
 		  
-		  If Me.ClosingPeriods.Count > 0 Then
+		  If Me.ClosurePeriods.Count > 0 Then
 		    
-		    For c As Integer = 0 To Me.ClosingPeriods.LastIndex
+		    For c As Integer = 0 To Me.ClosurePeriods.LastIndex
 		      
-		      If FirstDay <= ClosingPeriods(c).LastDay And LastDay >= ClosingPeriods(c).FirstDay Then cp.Add ClosingPeriods(c)
+		      If FirstDay <= ClosurePeriods(c).LastDay And LastDay >= ClosurePeriods(c).FirstDay Then cp.Add ClosurePeriods(c)
 		      
 		    Next
 		    
 		  End
 		  
 		  Return cp
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function AnnualEventMatch(d as DateTime, OnlyIfDayOff as Boolean = False) As Boolean
+		  If d = Nil Then 
+		    Raise New NilObjectException
+		    Return False
+		  End
+		  
+		  
+		  Var r As DateAndCaption
+		  r = AnnualEventMatchDateAndCaption(d, OnlyIfDayOff)
+		  Return r <> Nil
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function AnnualEventMatchCaption(d as DateTime, OnlyIfDayOff as Boolean = False) As String
+		  If d = Nil Then 
+		    Raise New NilObjectException
+		    Return ""
+		  End
+		  
+		  Var r As DateAndCaption
+		  r = AnnualEventMatchDateAndCaption(d, OnlyIfDayOff)
+		  if r = Nil then Return "" else return r.Caption
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function AnnualEventMatchDateAndCaption(d as DateTime, OnlyIfDayOff as Boolean = False) As DateAndCaption
+		  If d = Nil Then 
+		    Raise New NilObjectException
+		    Return Nil
+		  End
+		  
+		  If Me.AnnualEvents.LastIndex = -1 Then Return nil
+		  
+		  For i As Integer = 0 To Me.AnnualEvents.LastIndex
+		    
+		    if OnlyIfDayOff and not me.AnnualEvents(i).DayOff then Continue
+		    If d < Me.AnnualEvents(i).StartOfValidity Or d > Me.AnnualEvents(i).EndOfValidity Then Continue
+		    If Me.AnnualEvents(i).TestDate(d) Then Return new DateAndCaption(d, me.AnnualEvents(i).Caption, me.Identifier)
+		    
+		  Next i
+		  
+		  Return Nil
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function AnnualEventMatchObject(d as DateTime, OnlyIfDayOff as Boolean = False) As AnnualEvent
+		  If d = Nil Then 
+		    Raise New NilObjectException
+		    Return Nil
+		  End
+		  
+		  If Me.AnnualEvents.LastIndex = -1 Then Return Nil
+		  
+		  For i As Integer = 0 To Me.AnnualEvents.LastIndex
+		    
+		    If OnlyIfDayOff And Not Me.AnnualEvents(i).DayOff Then Continue
+		    If d < Me.AnnualEvents(i).StartOfValidity Or d > Me.AnnualEvents(i).EndOfValidity Then Continue
+		    If Me.AnnualEvents(i).TestDate(d) Then return Me.AnnualEvents(i)
+		    
+		  Next i
+		  
+		  Return Nil
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function AnnualEventMatchRegion(d as DateTime, OnlyIfDayOff as Boolean = False) As Variant
+		  If d = Nil Then 
+		    Raise New NilObjectException
+		    Return Nil
+		  End
+		  
+		  Var r As DateAndCaption
+		  r = AnnualEventMatchDateAndCaption(d, OnlyIfDayOff)
+		  if r = Nil then Return Nil else return r.RegionIdentifier
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function AnnualEventsFromRowSet(rs as RowSet, Identifier as Variant = Nil, Encoding as TextEncoding = Nil) As AnnualEvent()
+		  // if Encoding = nil, using UTF8
+		  
+		  Var EventsArray() as AnnualEvent
+		  Var caption as string, region as String
+		  
+		  Var df As AnnualEventFix
+		  Var de As AnnualEventEaster
+		  Var deo As AnnualEventOrthodoxEaster
+		  var dw as AnnualEventWeekDay
+		  
+		  Var id As String
+		  if Identifier = nil Then id = "" else id = Identifier.StringValue.Lowercase.Trim
+		  
+		  If rs = Nil Then Return EventsArray
+		  
+		  // using the field "day", for fix and easters definitions
+		  
+		  Do Until rs.AfterLastRow
+		    
+		    
+		    If Encoding <> Nil Then // Converting all text data
+		      caption = rs.Column("caption").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8)
+		      region = rs.Column("region").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8)
+		    else
+		      caption = rs.Column("caption").StringValue.DefineEncoding(Encodings.UTF8)
+		      region = rs.Column("region").StringValue.DefineEncoding(Encodings.UTF8)
+		    end
+		    
+		    If region.trim.Lowercase <> id Then 
+		      rs.MoveToNextRow
+		      Continue Do
+		    End
+		    
+		    
+		    Select Case rs.Column("definitiontype").StringValue
+		      
+		    Case "f" // Fix
+		      
+		      df = New AnnualEventFix(caption, rs.Column("month").IntegerValue, rs.Column("day").IntegerValue, rs.Column("saturdaytofriday").BooleanValue, rs.Column("sundaytomonday").BooleanValue)
+		      df.MondayIfSaturday = rs.Column("saturdaytomonday")
+		      
+		      df.AddDays = rs.Column("adddays").IntegerValue
+		      
+		      Var nd As Integer =  rs.Column("nextweekday").IntegerValue
+		      Var pd as Integer = rs.Column("previousweekday").IntegerValue
+		      
+		      if rs.Column("alwaysdayshift").BooleanValue then
+		        df.AlwaysNextWeekDay = rs.Column("nextweekday").IntegerValue
+		        df.AlwaysPreviousWeekDay = rs.Column("previousweekday").IntegerValue
+		      else
+		        df.NextWeekDay = rs.Column("nextweekday").IntegerValue
+		        df.PreviousWeekDay = rs.Column("previousweekday").IntegerValue
+		      end
+		      EventsArray.Add df
+		      
+		    Case "WD" // Weekday
+		      
+		      dw = new AnnualEventWeekDay(caption, rs.Column("month").IntegerValue, rs.Column("weekday").IntegerValue, rs.Column("rank").IntegerValue)
+		      
+		      dw.AddDays = rs.Column("adddays").IntegerValue
+		      dw.NextWeekDay = rs.Column("nextweekday").IntegerValue
+		      dw.PreviousWeekDay = rs.Column("previousweekday").IntegerValue
+		      
+		      EventsArray.Add dw  
+		      
+		    Case  "E" // Easter
+		      
+		      de = New AnnualEventEaster(caption, rs.Column("day").IntegerValue)
+		      
+		      EventsArray.add de
+		      
+		      
+		    case "EO" // Orthodox Easter 
+		      
+		      deo = New AnnualEventOrthodoxEaster(caption, rs.Column("day").IntegerValue)
+		      
+		      EventsArray.add deo
+		      
+		      
+		    end
+		    
+		    EventsArray(EventsArray.LastIndex).CycleFirstYear = rs.Column("cyclefirstyear").IntegerValue
+		    EventsArray(EventsArray.LastIndex).CycleYearDuration = rs.Column("cycleyearduration").IntegerValue
+		    EventsArray(EventsArray.LastIndex).StartOfValidity = rs.Column("start").DateTimeValue
+		    EventsArray(EventsArray.LastIndex).EndOfValidity = rs.Column("end").DateTimeValue
+		    EventsArray(EventsArray.LastIndex).DayOff = rs.Column("dayoff").BooleanValue
+		    
+		    rs.MoveToNextRow
+		  Loop
+		  
+		  Return EventsArray
 		End Function
 	#tag EndMethod
 
@@ -125,11 +303,11 @@ Protected Class DaysProcessingRegion
 		  
 		  
 		  Var list() As DateTime
-		  Var nStart As New DateTime(starting.Year, starting.Month, starting.day)
-		  Var nEnd As New DateTime(ending.Year, ending.Month, ending.day)
+		  Var nStart As New DateTime(starting.Year, starting.Month, starting.day,0,0,0)
+		  Var nEnd As New DateTime(ending.Year, ending.Month, ending.day,0,0,0)
 		  If nStart > nEnd Then Return list
 		  
-		  Var cp() as ClosingPeriod = me.AffectedClosingPeriods(nStart, nEnd) // Copy the relevant items ClosingPeriod
+		  Var cp() as ClosurePeriod = me.AffectedClosurePeriods(nStart, nEnd) // Copy the relevant items ClosurePeriod
 		  
 		  
 		  Var d As DateTime = nStart.SubtractInterval(0,0,1)
@@ -141,14 +319,14 @@ Protected Class DaysProcessingRegion
 		    //  Is this never a workday ?
 		    if not me.WorkingWeekDays.WorkingDay(d.DayOfWeek) then Continue Do // Sufficient condition, no need to check anything else
 		    
-		    // Is this a closing period ?
+		    // Is this a Closure period ?
 		    For i As Integer = 0 To cp.LastIndex
 		      If d >= cp(i).FirstDay And d <= cp(i).LastDay Then Continue Do // Sufficient condition, no need to check anything else
 		    Next
 		    
 		    // Is this a non-worked event ?
 		    // This is the most time-consuming part to calculate, so it is calculated last only if necessary.
-		    If DateEventMatch(d, true) Then Continue  Do
+		    If AnnualEventMatch(d, true) Then Continue  Do
 		    
 		    list.Add New DateTime(d) // okay, we work
 		    
@@ -169,12 +347,12 @@ Protected Class DaysProcessingRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ClosingPeriodMatch(d as DateTime) As Boolean
+		Function ClosurePeriodMatch(d as DateTime) As Boolean
 		  Var d1 As New DateTime(d.Year, d.Month, d.day,0,0,0) // 00:00
 		  
-		  For p As Integer = 0 To Me.ClosingPeriods.LastIndex
+		  For p As Integer = 0 To Me.ClosurePeriods.LastIndex
 		    
-		    if me.ClosingPeriods(p).FirstDay <= d1 and me.ClosingPeriods(p) >= d1 then Return true
+		    if me.ClosurePeriods(p).FirstDay <= d1 and me.ClosurePeriods(p) >= d1 then Return true
 		    
 		  Next
 		  
@@ -183,16 +361,51 @@ Protected Class DaysProcessingRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ClosingPeriodMatchCaption(d as DateTime) As string
+		Function ClosurePeriodMatchCaption(d as DateTime) As string
 		  Var d1 As New DateTime(d.Year, d.Month, d.day,0,0,0) // 00:00
 		  
-		  For p As Integer = 0 To Me.ClosingPeriods.LastIndex
+		  For p As Integer = 0 To Me.ClosurePeriods.LastIndex
 		    
-		    if me.ClosingPeriods(p).FirstDay <= d1 and me.ClosingPeriods(p) >= d1 then Return me.ClosingPeriods(p).Caption
+		    if me.ClosurePeriods(p).FirstDay <= d1 and me.ClosurePeriods(p) >= d1 then Return me.ClosurePeriods(p).Caption
 		    
 		  Next
 		  
 		  Return ""
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function ClosurePeriodsFromRowSet(rs as RowSet, Identifier as variant = nil, Encoding as TextEncoding = Nil) As ClosurePeriod()
+		  Var id As String
+		  if Identifier = nil Then id = "" else id = Identifier.StringValue.Lowercase.Trim
+		  
+		  Var cp() as ClosurePeriod
+		  
+		  If rs = Nil Then Return cp // Empty array
+		  If rs.AfterLastRow Then Return cp // Empty array
+		  Var r1 As String, caption As String
+		  
+		  Do Until rs.AfterLastRow
+		    
+		    If Encoding = Nil Or Encoding = Encodings.UTF8 Then
+		      r1 = rs.Column("region").StringValue.DefineEncoding(Encodings.UTF8).Lowercase.Trim
+		      caption = rs.Column("caption").StringValue.DefineEncoding(Encodings.UTF8)
+		    Else
+		      r1 = rs.Column("region").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8).Lowercase.Trim
+		      caption = rs.Column("caption").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8)
+		    End
+		    
+		    
+		    If r1.Trim.Lowercase <> id Then 
+		      rs.MoveToNextRow
+		      Continue do
+		    End
+		    
+		    
+		    cp.Add New ClosurePeriod(rs.Column("firstday").DateTimeValue, rs.Column("lastday").DateTimeValue, caption)
+		    
+		    rs.MoveToNextRow
+		  Loop
 		End Function
 	#tag EndMethod
 
@@ -221,35 +434,44 @@ Protected Class DaysProcessingRegion
 		  Var doe As AnnualEventOrthodoxEaster
 		  var dwd as AnnualEventWeekDay
 		  
-		  If copy.EventDefinitions.Count > 0 Then
+		  If copy.AnnualEvents.Count > 0 Then
 		    
-		    For i As Integer = 0 To copy.EventDefinitions.LastIndex
+		    
+		    For i As Integer = 0 To copy.AnnualEvents.LastIndex
 		      
-		      select case copy.EventDefinitions(i) 
+		      select case copy.AnnualEvents(i) 
 		        
 		      Case IsA AnnualEventFix
 		        
-		        df = copy.EventDefinitions(i).DefinitionObject
-		        me.EventDefinitions.Add new AnnualEventFix(df)
+		        df = copy.AnnualEvents(i).DefinitionObject
+		        me.AnnualEvents.Add new AnnualEventFix(df)
 		        
 		      Case IsA AnnualEventEaster
 		        
-		        de =  copy.EventDefinitions(i).DefinitionObject
-		        me.EventDefinitions.Add new AnnualEventEaster(de)
+		        de =  copy.AnnualEvents(i).DefinitionObject
+		        me.AnnualEvents.Add new AnnualEventEaster(de)
 		        
 		      Case IsA AnnualEventOrthodoxEaster
 		        
-		        doe =  copy.EventDefinitions(i).DefinitionObject
-		        Me.EventDefinitions.Add New AnnualEventOrthodoxEaster(doe)
+		        doe =  copy.AnnualEvents(i).DefinitionObject
+		        Me.AnnualEvents.Add New AnnualEventOrthodoxEaster(doe)
 		        
 		      Case IsA AnnualEventWeekDay
 		        
-		        dwd =  copy.EventDefinitions(i).DefinitionObject
-		        Me.EventDefinitions.Add New AnnualEventWeekDay(dwd)
+		        dwd =  copy.AnnualEvents(i).DefinitionObject
+		        Me.AnnualEvents.Add New AnnualEventWeekDay(dwd)
 		        
 		      end
 		      
-		    Next
+		    Next i
+		    
+		  End If
+		  
+		  If copy.ClosurePeriods.LastIndex > 0 Then
+		    
+		    For p As Integer = 0 To copy.ClosurePeriods.LastIndex
+		      me.ClosurePeriods.Add new ClosurePeriod(copy.ClosurePeriods(p))
+		    Next p
 		    
 		  End If
 		End Sub
@@ -266,7 +488,7 @@ Protected Class DaysProcessingRegion
 		Sub Constructor(lIdentifier as Variant, lDefinitions() as AnnualEvent)
 		  Me.WorkingWeekDays = New dprWorkingWeekDays
 		  Me.Identifier  = lIdentifier
-		  me.EventDefinitions = lDefinitions
+		  me.AnnualEvents = lDefinitions
 		End Sub
 	#tag EndMethod
 
@@ -285,8 +507,12 @@ Protected Class DaysProcessingRegion
 		  End
 		  
 		  If date1.day= date2.day _
-		  And date1.Month = date2.Month _
-		  and date1.Year = date2.Year Then Return 0
+		    And date1.Month = date2.Month _
+		    And date1.Year = date2.Year Then 
+		    
+		    if IsWorkingDay(date1)  then Return 1 else return 0
+		    
+		  end
 		  
 		  Var dtCurrent As DateTime, dtMax As DateTime, counter As Integer
 		  
@@ -298,7 +524,7 @@ Protected Class DaysProcessingRegion
 		    dtCurrent = New DateTime(Date1)
 		  End
 		  
-		  Var cp() As ClosingPeriod  = AffectedClosingPeriods(date1, date2) // Copy the relevant items ClosingPeriod
+		  Var cp() As ClosurePeriod  = AffectedClosurePeriods(date1, date2) // Copy the relevant items ClosurePeriod
 		  
 		  
 		  dtCurrent = dtCurrent.SubtractInterval(0,0,1)
@@ -310,14 +536,14 @@ Protected Class DaysProcessingRegion
 		    //  Is this never a workday ?
 		    If not me.WorkingWeekDays.WorkingDay(dtCurrent.DayOfWeek ) then Continue do
 		    
-		    // Is this a closing period ?
+		    // Is this a Closure period ?
 		    For i As Integer = 0 To cp.LastIndex
 		      If dtCurrent >= cp(i).FirstDay And dtCurrent <= cp(i).LastDay Then Continue Do
 		    Next
 		    
 		    // Is this a non-worked event ?
 		    // This is the most time-consuming part to calculate, so it's calculated last, only if necessary.
-		    If Me.DateEventMatch(dtCurrent, True) Then Continue
+		    If Me.AnnualEventMatch(dtCurrent, True) Then Continue
 		    
 		    counter = counter + 1
 		    
@@ -349,8 +575,12 @@ Protected Class DaysProcessingRegion
 		  End
 		  
 		  If date1.day= date2.day _
-		  And date1.Month = date2.Month _
-		  And date1.Year = date2.Year Then Return 0
+		    And date1.Month = date2.Month _
+		    And date1.Year = date2.Year Then 
+		    
+		    if IsWorkingDay(date1) then Return 0 else return 1
+		    
+		  end
 		  
 		  Var dtCurrent As DateTime, dtMax As DateTime, counter As Integer
 		  
@@ -362,7 +592,7 @@ Protected Class DaysProcessingRegion
 		    dtCurrent = New DateTime(Date1)
 		  End
 		  
-		  Var cp() As ClosingPeriod  = AffectedClosingPeriods(date1, date2) // Copy the relevant items ClosingPeriod
+		  Var cp() As ClosurePeriod  = AffectedClosurePeriods(date1, date2) // Copy the relevant items ClosurePeriod
 		  
 		  dtCurrent = dtCurrent.SubtractInterval(0,0,1)
 		  
@@ -376,7 +606,7 @@ Protected Class DaysProcessingRegion
 		      Continue
 		    end
 		    
-		    // Is this a closing period ?
+		    // Is this a Closure period ?
 		    For i As Integer = 0 To cp.LastIndex
 		      If dtCurrent >= cp(i).FirstDay And dtCurrent <= cp(i).LastDay Then 
 		        counter = counter + 1
@@ -386,7 +616,7 @@ Protected Class DaysProcessingRegion
 		    
 		    // Is this a non-worked event ?
 		    // This is the most time-consuming part to calculate, so it is calculated last only if necessary.
-		    If DateEventMatch(dtCurrent, true) Then 
+		    If AnnualEventMatch(dtCurrent, true) Then 
 		      counter = counter + 1
 		      Continue
 		    End
@@ -401,67 +631,6 @@ Protected Class DaysProcessingRegion
 		  
 		  
 		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function DateEventMatch(d as DateTime, OnlyIfDayOff as Boolean = False) As Boolean
-		  If d = Nil Then 
-		    Raise New NilObjectException
-		    Return False
-		  End
-		  
-		  
-		  Var r As DateAndCaption
-		  r = DateEventMatchDateAndCaption(d, OnlyIfDayOff)
-		  Return r <> Nil
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function DateEventMatchCaption(d as DateTime, OnlyIfDayOff as Boolean = False) As String
-		  If d = Nil Then 
-		    Raise New NilObjectException
-		    Return ""
-		  End
-		  
-		  Var r As DateAndCaption
-		  r = DateEventMatchDateAndCaption(d, OnlyIfDayOff)
-		  if r = Nil then Return "" else return r.Caption
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function DateEventMatchDateAndCaption(d as DateTime, OnlyIfDayOff as Boolean = False) As DateAndCaption
-		  If d = Nil Then 
-		    Raise New NilObjectException
-		    Return Nil
-		  End
-		  
-		  If Me.EventDefinitions.LastIndex = -1 Then Return nil
-		  
-		  For i As Integer = 0 To Me.EventDefinitions.LastIndex
-		    
-		    if OnlyIfDayOff and not me.EventDefinitions(i).DayOff then Continue
-		    If d < Me.EventDefinitions(i).StartOfValidity Or d > Me.EventDefinitions(i).EndOfValidity Then Continue
-		    If Me.EventDefinitions(i).TestDate(d) Then Return new DateAndCaption(d, me.EventDefinitions(i).Caption, me.Identifier)
-		    
-		  Next i
-		  
-		  Return Nil
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function DateEventMatchRegion(d as DateTime, OnlyIfDayOff as Boolean = False) As Variant
-		  If d = Nil Then 
-		    Raise New NilObjectException
-		    Return Nil
-		  End
-		  
-		  Var r As DateAndCaption
-		  r = DateEventMatchDateAndCaption(d, OnlyIfDayOff)
-		  if r = Nil then Return Nil else return r.RegionIdentifier
 		End Function
 	#tag EndMethod
 
@@ -486,7 +655,7 @@ Protected Class DaysProcessingRegion
 		    df.Add New AnnualEventFix("Noël", 12, 25)
 		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
 		    df.Add New AnnualEventEaster("Ascension", 39)
-		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 5)
+		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
 		    
 		  case Belgium.NationaleDagenInDeVlaamseTaal
 		    
@@ -503,7 +672,7 @@ Protected Class DaysProcessingRegion
 		    
 		    df.Add New AnnualEventEaster("Paasmaandag", 1)
 		    df.Add New AnnualEventEaster("Onze-Lieve-Heer Hemelvaart", 39)
-		    df.Add New AnnualEventEaster("Pinkstermaandag", 5)
+		    df.Add New AnnualEventEaster("Pinkstermaandag", 50)
 		    
 		  case Belgium.NationalfeiertageAufDeutsch
 		    
@@ -518,7 +687,7 @@ Protected Class DaysProcessingRegion
 		    df.Add New AnnualEventFix("Weihnachten", 12, 25)
 		    df.Add New AnnualEventEaster("Ostermontag", 1)
 		    df.Add New AnnualEventEaster("Christi Himmelfahrt", 39)
-		    df.Add New AnnualEventEaster("Pfingstmontag", 5)
+		    df.Add New AnnualEventEaster("Pfingstmontag", 50)
 		    
 		  Case Belgium.BruxellesCapitale
 		    
@@ -535,7 +704,7 @@ Protected Class DaysProcessingRegion
 		    
 		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
 		    df.Add New AnnualEventEaster("Ascension", 39)
-		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 5)
+		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
 		    
 		    
 		    if PublicService then
@@ -563,7 +732,7 @@ Protected Class DaysProcessingRegion
 		    
 		    df.Add New AnnualEventEaster("Paasmaandag", 1)
 		    df.Add New AnnualEventEaster("Onze-Lieve-Heer Hemelvaart", 39)
-		    df.Add New AnnualEventEaster("Pinkstermaandag", 5)
+		    df.Add New AnnualEventEaster("Pinkstermaandag", 50)
 		    
 		    If PublicService Then
 		      df.Add New AnnualEventFix("Allerzielen", 11, 2)
@@ -585,7 +754,7 @@ Protected Class DaysProcessingRegion
 		    
 		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
 		    df.Add New AnnualEventEaster("Ascension", 39)
-		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 5)
+		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
 		    
 		    
 		    If PublicService Then
@@ -615,7 +784,7 @@ Protected Class DaysProcessingRegion
 		    df.Add New AnnualEventFix("Weihnachten", 12, 25)
 		    df.Add New AnnualEventEaster("Ostermontag", 1)
 		    df.Add New AnnualEventEaster("Christi Himmelfahrt", 39)
-		    df.Add New AnnualEventEaster("Pfingstmontag", 5)
+		    df.Add New AnnualEventEaster("Pfingstmontag", 50)
 		    
 		    df.Add New AnnualEventFix("Tag der Deutschsprachigen Gemeinschaft", 11, 15)
 		    
@@ -1050,108 +1219,21 @@ Protected Class DaysProcessingRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function FromRowSet(rs as RowSet, Encoding as TextEncoding = Nil) As AnnualEvent()
-		  // if Encoding = nil, using UTF8
-		  
-		  Var DefinitionsArray() as AnnualEvent
-		  Var label as string, region as String
-		  
-		  Var df As AnnualEventFix
-		  Var de As AnnualEventEaster
-		  Var deo As AnnualEventOrthodoxEaster
-		  var dw as AnnualEventWeekDay
-		  
-		  If rs = Nil Then Return DefinitionsArray
-		  
-		  // using the field "day", for fix and easters definitions
-		  
-		  Do Until rs.AfterLastRow
-		    
-		    
-		    If Encoding <> Nil Then // Converting all text data
-		      label = rs.Column("caption").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8)
-		      region = rs.Column("region").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8)
-		    else
-		      label = rs.Column("caption").StringValue.DefineEncoding(Encodings.UTF8)
-		      region = rs.Column("region").StringValue.DefineEncoding(Encodings.UTF8)
-		    end
-		    
-		    Select Case rs.Column("definitiontype").StringValue
-		      
-		    Case "f" // Fix
-		      
-		      df = New AnnualEventFix(label, rs.Column("month").IntegerValue, rs.Column("day").IntegerValue, rs.Column("saturdaytofriday").BooleanValue, rs.Column("sundaytomonday").BooleanValue)
-		      df.MondayIfSaturday = rs.Column("saturdaytomonday")
-		      
-		      df.AddDays = rs.Column("adddays").IntegerValue
-		      
-		      Var nd As Integer =  rs.Column("nextweekday").IntegerValue
-		      Var pd as Integer = rs.Column("previousweekday").IntegerValue
-		      
-		      if rs.Column("alwaysdayshift").BooleanValue then
-		        df.AlwaysNextWeekDay = rs.Column("nextweekday").IntegerValue
-		        df.AlwaysPreviousWeekDay = rs.Column("previousweekday").IntegerValue
-		      else
-		        df.NextWeekDay = rs.Column("nextweekday").IntegerValue
-		        df.PreviousWeekDay = rs.Column("previousweekday").IntegerValue
-		      end
-		      DefinitionsArray.Add df
-		      
-		    Case "WD" // Weekday
-		      
-		      dw = new AnnualEventWeekDay(label, rs.Column("month").IntegerValue, rs.Column("weekday").IntegerValue, rs.Column("rank").IntegerValue)
-		      
-		      dw.AddDays = rs.Column("adddays").IntegerValue
-		      dw.NextWeekDay = rs.Column("nextweekday").IntegerValue
-		      dw.PreviousWeekDay = rs.Column("previousweekday").IntegerValue
-		      
-		      DefinitionsArray.Add dw  
-		      
-		    Case  "E" // Easter
-		      
-		      de = New AnnualEventEaster(label, rs.Column("day").IntegerValue)
-		      
-		      DefinitionsArray.add de
-		      
-		      
-		    case "EO" // Orthodox Easter 
-		      
-		      deo = New AnnualEventOrthodoxEaster(label, rs.Column("day").IntegerValue)
-		      
-		      DefinitionsArray.add deo
-		      
-		      
-		    end
-		    
-		    DefinitionsArray(DefinitionsArray.LastIndex).CycleFirstYear = rs.Column("cyclefirstyear").IntegerValue
-		    DefinitionsArray(DefinitionsArray.LastIndex).CycleYearDuration = rs.Column("cycleyearduration").IntegerValue
-		    DefinitionsArray(DefinitionsArray.LastIndex).StartOfValidity = rs.Column("start").DateTimeValue
-		    DefinitionsArray(DefinitionsArray.LastIndex).EndOfValidity = rs.Column("end").DateTimeValue
-		    DefinitionsArray(DefinitionsArray.LastIndex).DayOff = rs.Column("dayoff").BooleanValue
-		    
-		    rs.MoveToNextRow
-		  Loop
-		  
-		  Return DefinitionsArray
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function IsWorkingDay(d as DateTime) As Boolean
 		  If Not Me.WorkingWeekDays.WorkingDay(d.DayOfWeek) Then Return False
 		  
-		  For p As Integer = 0 To Me.ClosingPeriods.LastIndex
-		    If Me.ClosingPeriods(p).IsIncluded(d) Then Return False
+		  For p As Integer = 0 To Me.ClosurePeriods.LastIndex
+		    If Me.ClosurePeriods(p).IsIncluded(d) Then Return False
 		  Next p
 		  
-		  For i As Integer = 0 To Me.EventDefinitions.LastIndex
+		  For i As Integer = 0 To Me.AnnualEvents.LastIndex
 		    
-		    if not (d >= me.EventDefinitions(i).StartOfValidity and d <= me.EventDefinitions(i).EndOfValidity) then Continue 
-		    if not me.EventDefinitions(i).DayOff then Continue // No need to test, it's not a holiday
+		    if not (d >= me.AnnualEvents(i).StartOfValidity and d <= me.AnnualEvents(i).EndOfValidity) then Continue 
+		    if not me.AnnualEvents(i).DayOff then Continue // No need to test, it's not a holiday
 		    
 		    // Is this a non-worked event ?
 		    // This is the most time-consuming part to calculate, so it is calculated last only if necessary.
-		    if me.EventDefinitions(i).TestDate(d) then Return False
+		    if me.AnnualEvents(i).TestDate(d) then Return False
 		    
 		  Next i
 		  
@@ -1160,9 +1242,9 @@ Protected Class DaysProcessingRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ListOfEvents(Starting as DateTime, Ending as DateTime, IncludeSaturday as Boolean = True, IncludeSunday as Boolean = True, IncludeMonday as Boolean = True, IncludeTuesday as Boolean = True, IncludeWednesday as Boolean = True, IncludeThursday as Boolean = True, IncludeFriday as Boolean = True) As DateAndCaption()
+		Function ListOfAnnualEvents(Starting as DateTime, Ending as DateTime, IncludeSaturday as Boolean = True, IncludeSunday as Boolean = True, IncludeMonday as Boolean = True, IncludeTuesday as Boolean = True, IncludeWednesday as Boolean = True, IncludeThursday as Boolean = True, IncludeFriday as Boolean = True) As DateAndCaption()
 		  Var list() As DateAndCaption
-		  If Me.EventDefinitions.LastIndex = -1 Then Return list
+		  If Me.AnnualEvents.LastIndex = -1 Then Return list
 		  
 		  If Starting = Nil Then 
 		    Raise New NilObjectException
@@ -1180,7 +1262,7 @@ Protected Class DaysProcessingRegion
 		  
 		  If nStart > nEnd Then Return list // Empty
 		  If nStart = nEnd Then
-		    Var temp As DateAndCaption = Me.DateEventMatchDateAndCaption(nStart)
+		    Var temp As DateAndCaption = Me.AnnualEventMatchDateAndCaption(nStart)
 		    If temp <> Nil Then list.Add temp
 		    Return list
 		  End
@@ -1190,9 +1272,9 @@ Protected Class DaysProcessingRegion
 		  
 		  For year As Integer = nStart.Year To nEnd.Year
 		    
-		    For i As Integer = 0 To Me.EventDefinitions.LastIndex
+		    For i As Integer = 0 To Me.AnnualEvents.LastIndex
 		      
-		      Valeur = Me.EventDefinitions(i).Calculate(year)
+		      Valeur = Me.AnnualEvents(i).Calculate(year)
 		      
 		      If valeur = Nil Then Continue
 		      If valeur.DateValue < nStart Or valeur.DateValue > nEnd Then Continue
@@ -1217,15 +1299,15 @@ Protected Class DaysProcessingRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ListOfEvents(Year as integer, IncludeSaturday as Boolean = True, IncludeSunday as Boolean = True, IncludeMonday as Boolean = True, IncludeTuesday as Boolean = True, IncludeWednesday as Boolean = True, IncludeThursday as Boolean = True, IncludeFriday as Boolean = True) As DateAndCaption()
+		Function ListOfAnnualEvents(Year as integer, IncludeSaturday as Boolean = True, IncludeSunday as Boolean = True, IncludeMonday as Boolean = True, IncludeTuesday as Boolean = True, IncludeWednesday as Boolean = True, IncludeThursday as Boolean = True, IncludeFriday as Boolean = True) As DateAndCaption()
 		  Var list() As DateAndCaption
-		  If Me.EventDefinitions.LastIndex = -1 Then Return list
+		  If Me.AnnualEvents.LastIndex = -1 Then Return list
 		  
 		  Var Valeur As DateAndCaption
 		  
-		  For i As Integer = 0 To Me.EventDefinitions.LastIndex
+		  For i As Integer = 0 To Me.AnnualEvents.LastIndex
 		    
-		    Valeur = Me.EventDefinitions(i).Calculate(year)
+		    Valeur = Me.AnnualEvents(i).Calculate(year)
 		    
 		    If valeur = Nil Then Continue
 		    
@@ -1247,106 +1329,28 @@ Protected Class DaysProcessingRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub LoadClosingPeriods(rs as RowSet, Encoding as TextEncoding = Nil)
+		Sub LoadClosurePeriods(rs as RowSet, Encoding as TextEncoding = Nil)
 		  If rs = Nil Then Exit Sub
 		  if rs.AfterLastRow then exit sub
 		  
-		  Var r1 as string, caption as string
+		  Var cp() As ClosurePeriod = DaysProcessingRegion.ClosurePeriodsFromRowSet(rs, Me.Identifier, Encoding)
 		  
-		  do until rs.AfterLastRow
-		    
-		    If Encoding = Nil Or Encoding = Encodings.UTF8 Then
-		      r1 = rs.Column("region").StringValue.DefineEncoding(Encodings.UTF8).Lowercase.Trim
-		      caption = rs.Column("caption").StringValue.DefineEncoding(Encodings.UTF8)
-		    else
-		      r1 = rs.Column("region").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8).Lowercase.Trim
-		      caption = rs.Column("caption").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8)
-		    end
-		    
-		    if r1 <> me.Identifier.StringValue.Trim.Lowercase then continue
-		    Me.ClosingPeriods.Add new ClosingPeriod(rs.Column("firstday").DateTimeValue, rs.Column("lastday").DateTimeValue, caption)
-		    
-		    
-		    rs.MoveToNextRow
-		  Loop
+		  For p As Integer = 0 To cp.LastIndex
+		    Me.ClosurePeriods.add cp(p)
+		  next p
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Sub LoadEventsFromRowSet(rs as RowSet, Encoding as TextEncoding = Nil)
-		  // if Encoding = nil, using UTF8
+		  if rs = nil then exit sub
+		  if rs.AfterLastRow then exit sub
 		  
-		  Var caption as string, r1 as String
+		  Var ae() as AnnualEvent = DaysProcessingRegion.AnnualEventsFromRowSet(rs, me.Identifier, encoding)
 		  
-		  Var df As AnnualEventFix
-		  Var de As AnnualEventEaster
-		  Var deo As AnnualEventOrthodoxEaster
-		  var dw as AnnualEventWeekDay
-		  
-		  
-		  If rs = Nil Then exit sub
-		  // using the field "day", for fix and easters definitions
-		  
-		  Do Until rs.AfterLastRow
-		    
-		    If Encoding = Nil Or Encoding = Encodings.UTF8 Then // Converting all text data
-		      caption = rs.Column("caption").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8)
-		      r1 = rs.Column("region").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8).trim.Lowercase
-		    else
-		      caption = rs.Column("caption").StringValue.DefineEncoding(Encodings.UTF8)
-		      r1 = rs.Column("region").StringValue.DefineEncoding(Encodings.UTF8).trim.Lowercase
-		    end
-		    
-		    if r1 <> me.Identifier.StringValue.Trim.Lowercase then continue
-		    
-		    
-		    Select Case rs.Column("definitiontype").StringValue.Uppercase
-		      
-		    Case "F" // Fix
-		      
-		      df = New AnnualEventFix(caption, rs.Column("month").IntegerValue, rs.Column("day").IntegerValue, rs.Column("saturdaytofriday").BooleanValue, rs.Column("sundaytomonday").BooleanValue)
-		      df.MondayIfSaturday = rs.Column("saturdaytomonday")
-		      
-		      df.AddDays = rs.Column("adddays").IntegerValue
-		      df.NextWeekDay = rs.Column("nextweekday").IntegerValue
-		      df.PreviousWeekDay = rs.Column("previousweekday").IntegerValue
-		      
-		      Me.EventDefinitions.Add df
-		      
-		    Case "WD" // Weekday
-		      
-		      dw = new AnnualEventWeekDay(caption, rs.Column("month").IntegerValue, rs.Column("weekday").IntegerValue, rs.Column("rank").IntegerValue)
-		      
-		      dw.AddDays = rs.Column("adddays").IntegerValue
-		      dw.NextWeekDay = rs.Column("nextweekday").IntegerValue
-		      dw.PreviousWeekDay = rs.Column("previousweekday").IntegerValue
-		      
-		      Me.EventDefinitions.Add dw  
-		      
-		    Case  "E" // Easter
-		      
-		      de = New AnnualEventEaster(caption, rs.Column("day").IntegerValue)
-		      
-		      Me.EventDefinitions.Add de
-		      
-		      
-		    case "EO" // Orthodox Easter 
-		      
-		      deo = New AnnualEventOrthodoxEaster(caption, rs.Column("day").IntegerValue)
-		      
-		      Me.EventDefinitions.Add deo
-		      
-		      
-		    end
-		    
-		    Me.EventDefinitions(Me.EventDefinitions.LastIndex).CycleFirstYear = rs.Column("cyclefirstyear").IntegerValue
-		    Me.EventDefinitions(Me.EventDefinitions.LastIndex).CycleYearDuration = rs.Column("cycleyearduration").IntegerValue
-		    Me.EventDefinitions(Me.EventDefinitions.LastIndex).StartOfValidity = rs.Column("start").DateTimeValue
-		    Me.EventDefinitions(Me.EventDefinitions.LastIndex).EndOfValidity = rs.Column("end").DateTimeValue
-		    Me.EventDefinitions(Me.EventDefinitions.LastIndex).DayOff = rs.Column("dayoff").BooleanValue
-		    
-		    rs.MoveToNextRow
-		  Loop
+		  For i As Integer = 0 To ae.LastIndex
+		    me.AnnualEvents.Add ae(i)
+		  next 
 		End Sub
 	#tag EndMethod
 
@@ -1355,23 +1359,33 @@ Protected Class DaysProcessingRegion
 		  If rs = Nil Then Exit Sub
 		  if rs.AfterLastRow then exit sub
 		  
-		  Var r1 as String
+		  Var r1 As String, id As String
 		  
-		  if Encoding = Nil Or Encoding = Encodings.UTF8 then
-		    r1 = rs.Column("region").StringValue.DefineEncoding(encodings.UTF8).Lowercase.Trim 
-		  else
-		    r1 = rs.Column("region").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.utf8).DefineEncoding(encodings.UTF8).Lowercase.Trim 
-		  end
+		  if me.Identifier = nil Then id = "" else id = Me.Identifier.StringValue.Lowercase.Trim
 		  
-		  If r1 <> Me.Identifier.StringValue.Lowercase.Trim Then Exit Sub
-		  
-		  me.WorkingWeekDays.WorkingSunday = rs.Column("sunday").BooleanValue
-		  Me.WorkingWeekDays.WorkingMonday = rs.Column("monday").BooleanValue
-		  Me.WorkingWeekDays.WorkingTuesday = rs.Column("tuesday").BooleanValue
-		  Me.WorkingWeekDays.WorkingWednesday = rs.Column("wednesday").BooleanValue
-		  Me.WorkingWeekDays.WorkingThursday = rs.Column("thursday").BooleanValue
-		  Me.WorkingWeekDays.WorkingFriday = rs.Column("friday").BooleanValue
-		  me.WorkingWeekDays.WorkingSaturday = rs.Column("saturday").BooleanValue
+		  do until rs.AfterLastRow
+		    
+		    if Encoding = Nil Or Encoding = Encodings.UTF8 then
+		      r1 = rs.Column("region").StringValue.DefineEncoding(encodings.UTF8).Lowercase.Trim 
+		    else
+		      r1 = rs.Column("region").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.utf8).DefineEncoding(encodings.UTF8).Lowercase.Trim 
+		    end
+		    
+		    If r1 = id Then 
+		      
+		      me.WorkingWeekDays.WorkingSunday = rs.Column("sunday").BooleanValue
+		      Me.WorkingWeekDays.WorkingMonday = rs.Column("monday").BooleanValue
+		      Me.WorkingWeekDays.WorkingTuesday = rs.Column("tuesday").BooleanValue
+		      Me.WorkingWeekDays.WorkingWednesday = rs.Column("wednesday").BooleanValue
+		      Me.WorkingWeekDays.WorkingThursday = rs.Column("thursday").BooleanValue
+		      Me.WorkingWeekDays.WorkingFriday = rs.Column("friday").BooleanValue
+		      Me.WorkingWeekDays.WorkingSaturday = rs.Column("saturday").BooleanValue
+		      
+		      exit sub
+		      
+		    end
+		    
+		  loop
 		End Sub
 	#tag EndMethod
 
@@ -1402,14 +1416,14 @@ Protected Class DaysProcessingRegion
 		    //  Is this never a workday ?
 		    if not me.WorkingWeekDays.WorkingDay(dt.DayOfWeek) then Continue // Skip
 		    
-		    // Is this a closing period ?
-		    For i As Integer = 0 To Me.ClosingPeriods.LastIndex
-		      if dt >= Me.ClosingPeriods(i).FirstDay  and dt <= Me.ClosingPeriods(i).LastDay then continue // skip
+		    // Is this a Closure period ?
+		    For i As Integer = 0 To Me.ClosurePeriods.LastIndex
+		      if dt >= Me.ClosurePeriods(i).FirstDay  and dt <= Me.ClosurePeriods(i).LastDay then continue // skip
 		    Next
 		    
 		    // Is this a non-worked event ?
 		    // This is the most time-consuming part to calculate, so it is calculated last only if necessary.
-		    If Me.DateEventMatch(dt, True) Then Continue // Skip
+		    If Me.AnnualEventMatch(dt, True) Then Continue // Skip
 		    
 		    counter = counter + 1
 		    
@@ -1457,9 +1471,9 @@ Protected Class DaysProcessingRegion
 		      Continue // Skip
 		    end
 		    
-		    // Is this a closing period ?
-		    For i As Integer = 0 To Me.ClosingPeriods.LastIndex
-		      If dt >= Me.ClosingPeriods(i).FirstDay  And dt <= Me.ClosingPeriods(i).LastDay Then 
+		    // Is this a Closure period ?
+		    For i As Integer = 0 To Me.ClosurePeriods.LastIndex
+		      If dt >= Me.ClosurePeriods(i).FirstDay  And dt <= Me.ClosurePeriods(i).LastDay Then 
 		        counter = counter + 1
 		        continue do // skip
 		      end
@@ -1467,7 +1481,7 @@ Protected Class DaysProcessingRegion
 		    
 		    // Is this a non-worked event ?
 		    // This is the most time-consuming part to calculate, so it is calculated last only if necessary.
-		    If Me.DateEventMatch(dt, True) Then counter = counter + 1
+		    If Me.AnnualEventMatch(dt, True) Then counter = counter + 1
 		    
 		  Loop Until counter = abs(number)
 		  
@@ -1492,17 +1506,17 @@ Protected Class DaysProcessingRegion
 		  
 		  if not me.WorkingWeekDays.WorkingDay(d.DayOfWeek) then Return d.ToString("EEEE")
 		  
-		  For i As Integer = 0 To Me.ClosingPeriods.LastIndex
-		    If Me.ClosingPeriods(i).IsIncluded(d) Then Return Me.ClosingPeriods(i).Caption
+		  For i As Integer = 0 To Me.ClosurePeriods.LastIndex
+		    If Me.ClosurePeriods(i).IsIncluded(d) Then Return Me.ClosurePeriods(i).Caption
 		  next
 		  
 		  
 		  
-		  For i As Integer = 0 To Me.EventDefinitions.LastIndex
+		  For i As Integer = 0 To Me.AnnualEvents.LastIndex
 		    
-		    If Not Me.EventDefinitions(i).DayOff Then Continue
-		    If d < Me.EventDefinitions(i).StartOfValidity Or d > Me.EventDefinitions(i).EndOfValidity Then Continue
-		    If Me.EventDefinitions(i).TestDate(d) Then Return me.EventDefinitions(i).Caption
+		    If Not Me.AnnualEvents(i).DayOff Then Continue
+		    If d < Me.AnnualEvents(i).StartOfValidity Or d > Me.AnnualEvents(i).EndOfValidity Then Continue
+		    If Me.AnnualEvents(i).TestDate(d) Then Return me.AnnualEvents(i).Caption
 		    
 		  Next i
 		  
@@ -1519,17 +1533,17 @@ Protected Class DaysProcessingRegion
 		  
 		  if not me.WorkingWeekDays.WorkingDay(d.DayOfWeek) then Return 1
 		  
-		  For i As Integer = 0 To Me.ClosingPeriods.LastIndex
-		    If Me.ClosingPeriods(i).IsIncluded(d) Then Return 2
+		  For i As Integer = 0 To Me.ClosurePeriods.LastIndex
+		    If Me.ClosurePeriods(i).IsIncluded(d) Then Return 2
 		  next
 		  
 		  
 		  
-		  For i As Integer = 0 To Me.EventDefinitions.LastIndex
+		  For i As Integer = 0 To Me.AnnualEvents.LastIndex
 		    
-		    If Not Me.EventDefinitions(i).DayOff Then Continue
-		    If d < Me.EventDefinitions(i).StartOfValidity Or d > Me.EventDefinitions(i).EndOfValidity Then Continue
-		    If Me.EventDefinitions(i).TestDate(d) Then Return 3
+		    If Not Me.AnnualEvents(i).DayOff Then Continue
+		    If d < Me.AnnualEvents(i).StartOfValidity Or d > Me.AnnualEvents(i).EndOfValidity Then Continue
+		    If Me.AnnualEvents(i).TestDate(d) Then Return 3
 		    
 		  Next i
 		  
@@ -1546,7 +1560,7 @@ Protected Class DaysProcessingRegion
 		  If nStart > nEnd Then Return list
 		  
 		  
-		  Var cp() As ClosingPeriod  = AffectedClosingPeriods(starting, ending) // Copy the relevant items ClosingPeriod
+		  Var cp() As ClosurePeriod  = AffectedClosurePeriods(starting, ending) // Copy the relevant items ClosurePeriod
 		  
 		  Var d As DateTime =  nStart.SubtractInterval(0,0,1)
 		  
@@ -1560,7 +1574,7 @@ Protected Class DaysProcessingRegion
 		      continue // Sufficient condition, no need to check anything else
 		    end
 		    
-		    // Is this a closing period ?
+		    // Is this a Closure period ?
 		    For i As Integer = 0 To cp.LastIndex
 		      If d >= cp(i).FirstDay And d <= cp(i).LastDay Then 
 		        list.Add New DateTime(d)
@@ -1571,7 +1585,7 @@ Protected Class DaysProcessingRegion
 		    // Is this a non-worked event ?
 		    // This is the most time-consuming part to calculate, so it is calculated last only if necessary.
 		    
-		    If DateEventMatch(d, True) Then 
+		    If AnnualEventMatch(d, True) Then 
 		      list.Add New DateTime(d)
 		    end
 		    
@@ -1600,7 +1614,7 @@ Protected Class DaysProcessingRegion
 		  If nStart > nEnd Then Return list
 		  
 		  
-		  Var cp() As ClosingPeriod  = AffectedClosingPeriods(starting, ending) // Copy the relevant items ClosingPeriod
+		  Var cp() As ClosurePeriod  = AffectedClosurePeriods(starting, ending) // Copy the relevant items ClosurePeriod
 		  
 		  Var d As DateTime =  nStart.SubtractInterval(0,0,1)
 		  Var s as string
@@ -1615,7 +1629,7 @@ Protected Class DaysProcessingRegion
 		      continue // Sufficient condition, no need to check anything else
 		    end
 		    
-		    // Is this a closing period ?
+		    // Is this a Closure period ?
 		    For i As Integer = 0 To cp.LastIndex
 		      If d >= cp(i).FirstDay And d <= cp(i).LastDay Then 
 		        list.Add new DateAndCaption(DateTime(d), cp(i).Caption)
@@ -1626,7 +1640,7 @@ Protected Class DaysProcessingRegion
 		    // Is this a non-worked event ?
 		    // This is the most time-consuming part to calculate, so it is calculated last only if necessary.
 		    
-		    s = DateEventMatchCaption(d, True)
+		    s = AnnualEventMatchCaption(d, True)
 		    if s <> "" then list.Add new DateAndCaption(DateTime(d), s)
 		    
 		    
@@ -1748,7 +1762,11 @@ Protected Class DaysProcessingRegion
 
 
 	#tag Property, Flags = &h0
-		ClosingPeriods() As ClosingPeriod
+		AnnualEvents() As AnnualEvent
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		ClosurePeriods() As ClosurePeriod
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -1756,11 +1774,11 @@ Protected Class DaysProcessingRegion
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		EventDefinitions() As AnnualEvent
+		Identifier As Variant
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Identifier As Variant
+		Tag As Variant
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
