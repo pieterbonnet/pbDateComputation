@@ -1,5 +1,5 @@
 #tag Class
-Protected Class DaysProcessingRegion
+Protected Class RegionDatesWorked
 	#tag Method, Flags = &h0
 		Sub AddAnnualEvents(d() as AnnualEvent, NoDuplicates as Boolean = False)
 		  If d.Count = 0 Then Exit Sub
@@ -352,7 +352,7 @@ Protected Class DaysProcessingRegion
 		  
 		  For p As Integer = 0 To Me.ClosurePeriods.LastIndex
 		    
-		    if me.ClosurePeriods(p).FirstDay <= d1 and me.ClosurePeriods(p) >= d1 then Return true
+		    if me.ClosurePeriods(p).FirstDay <= d1 and me.ClosurePeriods(p).LastDay >= d1 then Return true
 		    
 		  Next
 		  
@@ -366,11 +366,25 @@ Protected Class DaysProcessingRegion
 		  
 		  For p As Integer = 0 To Me.ClosurePeriods.LastIndex
 		    
-		    if me.ClosurePeriods(p).FirstDay <= d1 and me.ClosurePeriods(p) >= d1 then Return me.ClosurePeriods(p).Caption
+		    if me.ClosurePeriods(p).FirstDay <= d1 and me.ClosurePeriods(p).LastDay >= d1 then Return me.ClosurePeriods(p).Caption
 		    
 		  Next
 		  
 		  Return ""
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ClosurePeriodMatchObject(d as DateTime) As ClosurePeriod
+		  Var d1 As New DateTime(d.Year, d.Month, d.day,0,0,0) // 00:00
+		  
+		  For p As Integer = 0 To Me.ClosurePeriods.LastIndex
+		    
+		    if me.ClosurePeriods(p).FirstDay <= d1 and me.ClosurePeriods(p).LastDay >= d1 then Return me.ClosurePeriods(p)
+		    
+		  Next
+		  
+		  Return nil
 		End Function
 	#tag EndMethod
 
@@ -416,7 +430,7 @@ Protected Class DaysProcessingRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(copy as DaysProcessingRegion, NewIdentifier as Variant = Nil)
+		Sub Constructor(copy as RegionDatesWorked, NewIdentifier as Variant = Nil)
 		  Me.WorkingWeekDays = New dprWorkingWeekDays
 		  
 		  If NewIdentifier = Nil Then
@@ -1242,7 +1256,7 @@ Protected Class DaysProcessingRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ListOfAnnualEvents(Starting as DateTime, Ending as DateTime, IncludeSaturday as Boolean = True, IncludeSunday as Boolean = True, IncludeMonday as Boolean = True, IncludeTuesday as Boolean = True, IncludeWednesday as Boolean = True, IncludeThursday as Boolean = True, IncludeFriday as Boolean = True) As DateAndCaption()
+		Function ListOfAnnualEvents(Starting as DateTime, Ending as DateTime, OnlyDayOff as boolean = False, IncludeSaturday as Boolean = True, IncludeSunday as Boolean = True, IncludeMonday as Boolean = True, IncludeTuesday as Boolean = True, IncludeWednesday as Boolean = True, IncludeThursday as Boolean = True, IncludeFriday as Boolean = True) As DateAndCaption()
 		  Var list() As DateAndCaption
 		  If Me.AnnualEvents.LastIndex = -1 Then Return list
 		  
@@ -1274,10 +1288,13 @@ Protected Class DaysProcessingRegion
 		    
 		    For i As Integer = 0 To Me.AnnualEvents.LastIndex
 		      
+		      if OnlyDayOff and not me.AnnualEvents(i).DayOff then Continue
+		      
 		      Valeur = Me.AnnualEvents(i).Calculate(year)
 		      
 		      If valeur = Nil Then Continue
 		      If valeur.DateValue < nStart Or valeur.DateValue > nEnd Then Continue
+		      
 		      
 		      If valeur.DateValue.DayOfWeek = 7 And Not IncludeSaturday Then Continue
 		      If valeur.DateValue.DayOfWeek = 1 And Not IncludeSunday Then Continue
@@ -1299,17 +1316,23 @@ Protected Class DaysProcessingRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ListOfAnnualEvents(Year as integer, IncludeSaturday as Boolean = True, IncludeSunday as Boolean = True, IncludeMonday as Boolean = True, IncludeTuesday as Boolean = True, IncludeWednesday as Boolean = True, IncludeThursday as Boolean = True, IncludeFriday as Boolean = True) As DateAndCaption()
+		Function ListOfAnnualEvents(Year as integer, OnlyDayOff as boolean = False, IncludeSaturday as Boolean = True, IncludeSunday as Boolean = True, IncludeMonday as Boolean = True, IncludeTuesday as Boolean = True, IncludeWednesday as Boolean = True, IncludeThursday as Boolean = True, IncludeFriday as Boolean = True) As DateAndCaption()
 		  Var list() As DateAndCaption
 		  If Me.AnnualEvents.LastIndex = -1 Then Return list
 		  
 		  Var Valeur As DateAndCaption
+		  Var nStart As New DateTime(Year,1,1,0,0,0)
+		  Var nEnd as new DateTime(Year,12,31,23,59,59)
+		  
 		  
 		  For i As Integer = 0 To Me.AnnualEvents.LastIndex
+		    
+		    if OnlyDayOff and not me.AnnualEvents(i).DayOff then Continue
 		    
 		    Valeur = Me.AnnualEvents(i).Calculate(year)
 		    
 		    If valeur = Nil Then Continue
+		    If valeur.DateValue < nStart Or valeur.DateValue > nEnd Then Continue
 		    
 		    If valeur.DateValue.DayOfWeek = 7 And Not IncludeSaturday Then Continue
 		    If valeur.DateValue.DayOfWeek = 1 And Not IncludeSunday Then Continue
@@ -1333,7 +1356,7 @@ Protected Class DaysProcessingRegion
 		  If rs = Nil Then Exit Sub
 		  if rs.AfterLastRow then exit sub
 		  
-		  Var cp() As ClosurePeriod = DaysProcessingRegion.ClosurePeriodsFromRowSet(rs, Me.Identifier, Encoding)
+		  Var cp() As ClosurePeriod = RegionDatesWorked.ClosurePeriodsFromRowSet(rs, Me.Identifier, Encoding)
 		  
 		  For p As Integer = 0 To cp.LastIndex
 		    Me.ClosurePeriods.add cp(p)
@@ -1346,7 +1369,7 @@ Protected Class DaysProcessingRegion
 		  if rs = nil then exit sub
 		  if rs.AfterLastRow then exit sub
 		  
-		  Var ae() as AnnualEvent = DaysProcessingRegion.AnnualEventsFromRowSet(rs, me.Identifier, encoding)
+		  Var ae() as AnnualEvent = RegionDatesWorked.AnnualEventsFromRowSet(rs, me.Identifier, encoding)
 		  
 		  For i As Integer = 0 To ae.LastIndex
 		    me.AnnualEvents.Add ae(i)

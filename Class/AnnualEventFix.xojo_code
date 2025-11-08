@@ -27,9 +27,23 @@ Implements AnnualEvent
 		  end
 		  #Pragma BreakOnExceptions True
 		  
-		  if d.DayOfWeek = 7 and me.FridayIfSaturday then Return new DateAndCaption(d.SubtractInterval(0,0,1), Me.mCaption)
-		  If d.DayOfWeek = 7 And Me.MondayIfSaturday Then Return New DateAndCaption(d.AddInterval(0,0,2), Me.mCaption)
-		  If d.DayOfWeek = 1 And Me.MondayIfSunday Then Return New DateAndCaption(d.AddInterval(0,0,1), Me.mCaption)
+		  If d.DayOfWeek = 7 And Me.FridayIfSaturday Then 
+		    d = d.SubtractInterval(0,0,1)
+		    If d < Me.StartOfValidity Or d > Me.EndOfValidity Then Return Nil
+		    Return new DateAndCaption(d, Me.mCaption)
+		  end
+		  
+		  If d.DayOfWeek = 7 And Me.MondayIfSaturday Then 
+		    d = d.AddInterval(0,0,2)
+		    If d < Me.StartOfValidity Or d > Me.EndOfValidity Then Return Nil
+		    Return New DateAndCaption(d, Me.mCaption)
+		  end
+		  
+		  If d.DayOfWeek = 1 And Me.MondayIfSunday Then 
+		    d = d.AddInterval(0,0,1)
+		    If d < Me.StartOfValidity Or d > Me.EndOfValidity Then Return Nil
+		    Return New DateAndCaption(d, Me.mCaption)
+		  end
 		  
 		  if AlwaysPreviousWeekDay > 0 then
 		    
@@ -184,11 +198,9 @@ Implements AnnualEvent
 
 	#tag Method, Flags = &h0
 		Function DateValue(year as Integer) As DateTime
-		  
-		  
-		  Var jf As DateAndCaption = Me.Calculate(year)
-		  If jf = Nil Then Return Nil
-		  Return jf.DateValue
+		  Var dc As DateAndCaption = Me.Calculate(year)
+		  If dc = Nil Then Return Nil
+		  Return dc.DateValue
 		End Function
 	#tag EndMethod
 
@@ -306,6 +318,18 @@ Implements AnnualEvent
 		Sub StartOfValidity(assigns d as DateTime)
 		  Var d1 as new DateTime(d.Year, d.Month, d.day, 0, 0, 0)
 		  mStartOfValidity = d1
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Tag() As Variant
+		  Return mTag
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Tag(assigns value as Variant)
+		  me.mTag = value
 		End Sub
 	#tag EndMethod
 
@@ -461,16 +485,16 @@ Implements AnnualEvent
 		Private mStartOfValidity As DateTime
 	#tag EndProperty
 
+	#tag Property, Flags = &h21
+		Private mTag As Variant
+	#tag EndProperty
+
 	#tag Property, Flags = &h0
 		NextWeekDay As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
 		PreviousWeekDay As Integer = 0
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		Tag As Variant
 	#tag EndProperty
 
 
@@ -573,6 +597,22 @@ Implements AnnualEvent
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="PreviousWeekDay"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="AlwaysNextWeekDay"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="AlwaysPreviousWeekDay"
 			Visible=false
 			Group="Behavior"
 			InitialValue="0"

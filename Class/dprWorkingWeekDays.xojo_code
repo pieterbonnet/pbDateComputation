@@ -81,7 +81,7 @@ Protected Class dprWorkingWeekDays
 	#tag EndMethod
 
 
-	#tag Note, Name = This class is required for the DaysProcessingRegion class
+	#tag Note, Name = This class is required for the RegionDatesWorked class
 		
 		
 	#tag EndNote

@@ -20,11 +20,6 @@ Implements AnnualEvent
 		  Var d As DateTime = Me.Easter(year)
 		  d = d.AddInterval(0,0,me.DeltaEaster)
 		  
-		  'If NextWeekDay > 0 Then
-		  'Do Until d.DayOfWeek = NextWeekDay 
-		  'd = d.AddInterval(0,0,1)
-		  'Loop
-		  'end
 		  
 		  If d < Me.StartOfValidity Or d > Me.EndOfValidity Then Return Nil
 		  
@@ -246,6 +241,18 @@ Implements AnnualEvent
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Tag() As Variant
+		  Return mTag
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Tag(assigns value as Variant)
+		  me.mTag = value
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function TestDate(d as DateTime) As Boolean
 		  If Me.CycleYearDuration > 1 Then
 		    if me.CycleFirstYear > d.year then Return False
@@ -292,8 +299,8 @@ Implements AnnualEvent
 		Private mStartOfValidity As DateTime
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
-		Tag As Variant
+	#tag Property, Flags = &h21
+		Private mTag As Variant
 	#tag EndProperty
 
 

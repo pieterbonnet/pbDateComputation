@@ -3800,7 +3800,7 @@ End
 		    // Creating a muli-region object
 		    // We could also create it for the window and work on its Regions array
 		    
-		    Var mr As New DaysProcessingMultiRegion
+		    Var mr As New MultiRegionDatesWorked
 		    mr.Regions = Self.Regions
 		    
 		    chkWorkingDay.Value = mr.IsWorkingDay(dtThisDate.SelectedDate)
@@ -3882,13 +3882,13 @@ End
 		  s = s + "Var Value" + d.Year.ToString +" as Datetime = dFixFixedDay.DateValue(" + d.Year.ToString + ")"
 		  
 		  s = s + EndOfLine + EndOfLine
-		  s = s + "// Adding the definition to a DaysProcessingRegion"
-		  s = s + EndOfLine + "// Can use the DaysProcessingRegion for calculate bussiness days or a list of holydays for a region"
-		  s = s + EndOfLine + "// If you want to process data for multiple regions, use the DaysProcessingMultiRegion class."
+		  s = s + "// Adding the definition to a RegionDatesWorked"
+		  s = s + EndOfLine + "// Can use the RegionDatesWorked for calculate bussiness days or a list of holydays for a region"
+		  s = s + EndOfLine + "// If you want to process data for multiple regions, use the MultiRegionDatesWorked class."
 		  s = s + EndOfLine + "// If the event is not a holiday, set the DayOff property to False"
 		  
 		  s = s + EndOfLine
-		  s = s + EndOfLine + "Var DatesEngine as new DaysProcessingRegion"
+		  s = s + EndOfLine + "Var DatesEngine as new RegionDatesWorked"
 		  s = s + EndOfLine + "DatesEngine.AnnualEvents.add dFixedDay"
 		  
 		  
@@ -3989,12 +3989,12 @@ End
 		  s = s + "Var Value" + d.Year.ToString +" as Datetime = dEasterDay.DateValue(" + d.Year.ToString + ")"
 		  
 		  s = s + EndOfLine + EndOfLine
-		  s = s + "// Adding the definition to a DaysProcessingRegion"
-		  s = s + EndOfLine + "// Can use the DaysProcessingRegion for calculate bussiness days or a list of holydays for a region"
-		  s = s + EndOfLine + "// If you want to process data for multiple regions, use the DaysProcessingMultiRegion class."
+		  s = s + "// Adding the definition to a RegionDatesWorked"
+		  s = s + EndOfLine + "// Can use the RegionDatesWorked for calculate bussiness days or a list of holydays for a region"
+		  s = s + EndOfLine + "// If you want to process data for multiple regions, use the MultiRegionDatesWorked class."
 		  s = s + EndOfLine + "// If the event is not a holiday, set the DayOff property to False"
 		  s = s + EndOfLine
-		  s = s + EndOfLine + "Var DatesEngine as new DaysProcessingRegion"
+		  s = s + EndOfLine + "Var DatesEngine as new RegionDatesWorked"
 		  s = s + EndOfLine + "DatesEngine.AnnualEvents.add dEasterDay"
 		  
 		  
@@ -4067,7 +4067,7 @@ End
 		  End Try
 		  
 		  Me.Regions.RemoveAll
-		  DaysProcessingMultiRegion.LoadRegions(me.Regions, rs)
+		  MultiRegionDatesWorked.LoadRegions(me.Regions, rs)
 		  
 		  if me.Regions.Count = 0 then exit sub
 		  
@@ -4080,7 +4080,7 @@ End
 		    Exit Sub
 		  End Try
 		  
-		  DaysProcessingMultiRegion.LoadEventsFromRowSet(me.Regions, rs)
+		  MultiRegionDatesWorked.LoadEventsFromRowSet(me.Regions, rs)
 		  
 		  // Loading weekdays for all regions
 		  
@@ -4093,7 +4093,7 @@ End
 		    Exit Sub
 		  End Try
 		  
-		  DaysProcessingMultiRegion.LoadWeekDaysFromRowSet(me.Regions, rs)
+		  MultiRegionDatesWorked.LoadWeekDaysFromRowSet(me.Regions, rs)
 		  
 		  // Loading Closure periofs for all regions
 		  
@@ -4105,7 +4105,7 @@ End
 		    Exit Sub
 		  End Try
 		  
-		  DaysProcessingMultiRegion.LoadClosurePeriods(me.Regions, rs)
+		  MultiRegionDatesWorked.LoadClosurePeriods(me.Regions, rs)
 		  
 		  PopulateLstRegions
 		  
@@ -4136,7 +4136,7 @@ End
 		    lstRegionItems.RemoveAllRows
 		    If lstRegionItems.SelectedRowIndex = DesktopListBox.NoSelection Then Exit Sub
 		    
-		    Var r As DaysProcessingRegion = Me.Regions(lstRegions.SelectedRowIndex)
+		    Var r As RegionDatesWorked = Me.Regions(lstRegions.SelectedRowIndex)
 		    
 		    For p As Integer = 0 To r.ClosurePeriods.LastIndex
 		      
@@ -4156,7 +4156,7 @@ End
 		    lstRegionItems.RemoveAllRows
 		    If lstRegions.SelectedRowIndex = DesktopListBox.NoSelection Then Exit Sub
 		    
-		    Var r As DaysProcessingRegion = Me.Regions(lstRegions.SelectedRowIndex)
+		    Var r As RegionDatesWorked = Me.Regions(lstRegions.SelectedRowIndex)
 		    
 		    If r.AnnualEvents.Count = 0 Then 
 		      Break
@@ -4198,9 +4198,9 @@ End
 		        lstRegions.CellCheckBoxValueAt(lstRegions.LastAddedRowIndex, 1) = True
 		        'popRegions.AddRow me.Regions(i).Identifier.StringValue.Lowercase
 		      Else
-		        lstRegions.AddRow "DaysProcessingRegion without identifier"
+		        lstRegions.AddRow "RegionDatesWorked without identifier"
 		        lstRegions.CellCheckBoxValueAt(lstRegions.LastAddedRowIndex, 1) = True
-		        'popRegions.AddRow "DaysProcessingRegion without identifier"
+		        'popRegions.AddRow "RegionDatesWorked without identifier"
 		      End
 		    Next
 		    
@@ -4249,12 +4249,12 @@ End
 		  s = s + "Var Value" + d.Year.ToString +" as Datetime = dWeekDay.DateValue(" + d.Year.ToString + ")"
 		  
 		  s = s + EndOfLine + EndOfLine
-		  s = s + "// Adding the definition to a DaysProcessingRegion"
-		  s = s + EndOfLine + "// Can use the DaysProcessingRegion for calculate bussiness days or a list of holydays for a region"
-		  s = s + EndOfLine + "// If you want to process data for multiple regions, use the DaysProcessingMultiRegion class."
+		  s = s + "// Adding the definition to a RegionDatesWorked"
+		  s = s + EndOfLine + "// Can use the RegionDatesWorked for calculate bussiness days or a list of holydays for a region"
+		  s = s + EndOfLine + "// If you want to process data for multiple regions, use the MultiRegionDatesWorked class."
 		  s = s + EndOfLine + "// If the event is not a holiday, set the DayOff property to False"
 		  s = s + EndOfLine
-		  s = s + EndOfLine + "Var DatesEngine as new DaysProcessingRegion"
+		  s = s + EndOfLine + "Var DatesEngine as new RegionDatesWorked"
 		  s = s + EndOfLine + "DatesEngine.AnnualEvents.add dWeekDay"
 		  
 		  
@@ -4330,7 +4330,7 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Regions() As DaysProcessingRegion
+		Regions() As RegionDatesWorked
 	#tag EndProperty
 
 
@@ -4768,7 +4768,7 @@ End
 	#tag Event
 		Sub Pressed()
 		  If txtNewRegion.Text.Trim = "" Then Exit Sub
-		  Self.Regions.Add New DaysProcessingRegion(txtNewRegion.Text.Trim.Lowercase)
+		  Self.Regions.Add New RegionDatesWorked(txtNewRegion.Text.Trim.Lowercase)
 		End Sub
 	#tag EndEvent
 #tag EndEvents
@@ -4838,36 +4838,36 @@ End
 		Sub Pressed()
 		  Self.Regions.RemoveAll
 		  
-		  Self.Regions.Add New DaysProcessingRegion("usa-federal")
-		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Federal)
+		  Self.Regions.Add New RegionDatesWorked("usa-federal")
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents RegionDatesWorked.DefinitionsUSA(RegionDatesWorked.USA.Federal)
 		  
-		  Self.Regions.Add New DaysProcessingRegion("usa-alabama")
-		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Alabama)
+		  Self.Regions.Add New RegionDatesWorked("usa-alabama")
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents RegionDatesWorked.DefinitionsUSA(RegionDatesWorked.USA.Alabama)
 		  
-		  Self.Regions.Add New DaysProcessingRegion("usa-alaska")
-		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Alaska)
+		  Self.Regions.Add New RegionDatesWorked("usa-alaska")
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents RegionDatesWorked.DefinitionsUSA(RegionDatesWorked.USA.Alaska)
 		  
-		  Self.Regions.Add New DaysProcessingRegion("usa-arkansas")
-		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Arkansas)
+		  Self.Regions.Add New RegionDatesWorked("usa-arkansas")
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents RegionDatesWorked.DefinitionsUSA(RegionDatesWorked.USA.Arkansas)
 		  
-		  Self.Regions.Add New DaysProcessingRegion("usa-arizona")
-		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Arizona)
+		  Self.Regions.Add New RegionDatesWorked("usa-arizona")
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents RegionDatesWorked.DefinitionsUSA(RegionDatesWorked.USA.Arizona)
 		  
-		  Self.Regions.Add New DaysProcessingRegion("usa-california")
-		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.California)
+		  Self.Regions.Add New RegionDatesWorked("usa-california")
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents RegionDatesWorked.DefinitionsUSA(RegionDatesWorked.USA.California)
 		  
-		  Self.Regions.Add New DaysProcessingRegion("usa-colorado")
-		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Colorado)
+		  Self.Regions.Add New RegionDatesWorked("usa-colorado")
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents RegionDatesWorked.DefinitionsUSA(RegionDatesWorked.USA.Colorado)
 		  
-		  Self.Regions.Add New DaysProcessingRegion("usa-connecticut")
-		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Connecticut)
+		  Self.Regions.Add New RegionDatesWorked("usa-connecticut")
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents RegionDatesWorked.DefinitionsUSA(RegionDatesWorked.USA.Connecticut)
 		  
-		  Self.Regions.Add New DaysProcessingRegion("usa-delaware")
-		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.Delaware)
+		  Self.Regions.Add New RegionDatesWorked("usa-delaware")
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents RegionDatesWorked.DefinitionsUSA(RegionDatesWorked.USA.Delaware)
 		  
 		  
-		  Self.Regions.Add New DaysProcessingRegion("usa-dc")
-		  Self.Regions(Regions.LastIndex).AddAnnualEvents DaysProcessingRegion.DefinitionsUSA(DaysProcessingRegion.USA.DistrictOfColumbia)
+		  Self.Regions.Add New RegionDatesWorked("usa-dc")
+		  Self.Regions(Regions.LastIndex).AddAnnualEvents RegionDatesWorked.DefinitionsUSA(RegionDatesWorked.USA.DistrictOfColumbia)
 		  
 		  
 		  // No more states implanted, because it's a bit time-consuming to find the official texts for each state. Not to mention the counties...
@@ -6071,7 +6071,7 @@ End
 		    // Creating a muli-region object
 		    // We could also create it for the window and work on its Regions array
 		    
-		    Var mr As new DaysProcessingMultiRegion
+		    Var mr As new MultiRegionDatesWorked
 		    mr.Regions = self.Regions
 		    
 		    // Only days that are worked for ALL regions at the same time.
@@ -6118,7 +6118,7 @@ End
 		    // Creating a muli-region object
 		    // We could also create it for the window and work on its Regions array
 		    
-		    Var mr As new DaysProcessingMultiRegion
+		    Var mr As new MultiRegionDatesWorked
 		    mr.Regions = self.Regions
 		    
 		    // Only days that are worked for ALL regions at the same time.

@@ -103,6 +103,18 @@ Protected Interface AnnualEvent
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Tag() As Variant
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Tag(assigns value as Variant)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function TestDate(d as DateTime) As Boolean
 		  
 		End Function

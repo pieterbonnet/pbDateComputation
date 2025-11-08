@@ -41,7 +41,7 @@ Inherits DesktopApplication
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Regions() As DaysProcessingRegion
+		Regions() As RegionDatesWorked
 	#tag EndProperty
 
 

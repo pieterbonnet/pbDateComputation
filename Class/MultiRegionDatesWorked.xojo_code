@@ -1,7 +1,7 @@
 #tag Class
-Protected Class DaysProcessingMultiRegion
+Protected Class MultiRegionDatesWorked
 	#tag Method, Flags = &h21
-		Private Sub AddClosurePeriods(FirstDay as DateTime, LastDay as DateTime, cp() as ClosurePeriod, R as DaysProcessingRegion)
+		Private Sub AddClosurePeriods(FirstDay as DateTime, LastDay as DateTime, cp() as ClosurePeriod, R as RegionDatesWorked)
 		  For c As Integer = 0 To R.ClosurePeriods.LastIndex
 		    If FirstDay <= R.ClosurePeriods(c).LastDay And LastDay >= R.ClosurePeriods(c).FirstDay Then cp.Add R.ClosurePeriods(c)
 		  Next
@@ -142,12 +142,12 @@ Protected Class DaysProcessingMultiRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(copy as DaysProcessingMultiRegion)
+		Sub Constructor(copy as MultiRegionDatesWorked)
 		  If copy.Regions.Count > 0 Then
 		    
 		    For r As Integer = 0 To copy.Regions.LastIndex
 		      
-		      me.Regions.Add new DaysProcessingRegion(copy.Regions(r))
+		      me.Regions.Add new RegionDatesWorked(copy.Regions(r))
 		      
 		    next
 		    
@@ -561,7 +561,7 @@ Protected Class DaysProcessingMultiRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub LoadClosurePeriods(regions() as DaysProcessingRegion, rs as RowSet, Encoding as TextEncoding = Nil)
+		Shared Sub LoadClosurePeriods(regions() as RegionDatesWorked, rs as RowSet, Encoding as TextEncoding = Nil)
 		  If rs = Nil Then Exit Sub
 		  If Regions.Count = 0 Then Exit Sub
 		  
@@ -591,7 +591,7 @@ Protected Class DaysProcessingMultiRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub LoadEventsFromRowSet(Regions() as DaysProcessingRegion, rs as RowSet, Encoding as TextEncoding = Nil)
+		Shared Sub LoadEventsFromRowSet(Regions() as RegionDatesWorked, rs as RowSet, Encoding as TextEncoding = Nil)
 		  // if Encoding = nil, using UTF8
 		  if Regions.Count = 0 then exit Sub
 		  
@@ -603,7 +603,7 @@ Protected Class DaysProcessingMultiRegion
 		  Var deo As AnnualEventOrthodoxEaster
 		  var dw as AnnualEventWeekDay
 		  
-		  Var CurrentRegion as DaysProcessingRegion
+		  Var CurrentRegion as RegionDatesWorked
 		  If rs = Nil Then exit sub
 		  // using the field "day", for fix and easters definitions
 		  
@@ -678,7 +678,7 @@ Protected Class DaysProcessingMultiRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub LoadRegions(regions() as DaysProcessingRegion, rs as RowSet, encoding as TextEncoding = Nil)
+		Shared Sub LoadRegions(regions() as RegionDatesWorked, rs as RowSet, encoding as TextEncoding = Nil)
 		  If rs = Nil Then Exit Sub
 		  
 		  Var identifier As String
@@ -691,7 +691,7 @@ Protected Class DaysProcessingMultiRegion
 		      identifier = rs.Column("identifier").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8).Lowercase.Trim
 		    End
 		    
-		    regions.Add new DaysProcessingRegion(identifier)
+		    regions.Add new RegionDatesWorked(identifier)
 		    
 		    rs.MoveToNextRow
 		    
@@ -700,7 +700,7 @@ Protected Class DaysProcessingMultiRegion
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub LoadWeekDaysFromRowSet(regions() as DaysProcessingRegion, rs as RowSet, Encoding as TextEncoding = Nil)
+		Shared Sub LoadWeekDaysFromRowSet(regions() as RegionDatesWorked, rs as RowSet, Encoding as TextEncoding = Nil)
 		  If rs = Nil Then Exit Sub
 		  If Regions.Count = 0 Then Exit Sub
 		  
@@ -945,7 +945,7 @@ Protected Class DaysProcessingMultiRegion
 
 
 	#tag Property, Flags = &h0
-		Regions() As DaysProcessingRegion
+		Regions() As RegionDatesWorked
 	#tag EndProperty
 
 

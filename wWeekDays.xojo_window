@@ -271,7 +271,7 @@ End
 
 #tag WindowCode
 	#tag Method, Flags = &h0
-		Sub Charge(lsender as DaysProcessingRegion)
+		Sub Charge(lsender as RegionDatesWorked)
 		  Me.Sender = lsender
 		  
 		  // Loading the values
@@ -285,7 +285,7 @@ End
 
 
 	#tag Property, Flags = &h21
-		Private Sender As DaysProcessingRegion
+		Private Sender As RegionDatesWorked
 	#tag EndProperty
 
 
