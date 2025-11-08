@@ -7,6 +7,7 @@ This is old Real Studio code updated to meet Xojo's API 2.0 requirements. There 
 # Table of contents
 
 [Features and generalities](#features)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Object class diagram](#object-class-diagram)<br>
 [Annual Event Classes](#the-4-classes-that-implement-the-annualevent-interface)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;[Common methods and properties](#cmap)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Common properties](#common-properties)<br>
@@ -15,7 +16,7 @@ This is old Real Studio code updated to meet Xojo's API 2.0 requirements. There 
 &nbsp;&nbsp;&nbsp;&nbsp;[AnnualEventEaster & AnnualEventOrthodoxEaster Classes](#annualeventeaster-and-annualeventorthodoxeaster-classes)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;[AnnualEventWeekDay Class](#annualeventweekday-class)<br>
 [ClosurePeriod Class](#closureperiod-class)<br>
-[DaysProcessingRegion Class](#daysprocessingregion-class)<br>
+[RegionDatesWorked Class](#regiondatesworked-class)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;[Properties](#dprproperties)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;[Methods](#dprmethods)<br>
 # Features
@@ -28,13 +29,13 @@ The features consist of 8 classes.
 
 These 4 classes implement the **AnnualEvent** interface, allowing them to be used in the same array, for example.
 
-#### A class to indicate periods of closure or holidays, for the class DaysProcessingRegion
+#### A class to indicate periods of closure or holidays, for the class RegionDatesWorked
 
 - ClosurePeriod
 
 #### A class to calculate, for the same region, the working days, closed days, etc. according to holidays, closure periods and working days of the week.
 
-- DaysProcessingRegion
+- RegionDatesWorked
 
 #### A class to work with multiple regions, which do not have the same public holidays or vacation periods, for example.
 
@@ -46,16 +47,16 @@ These 4 classes implement the **AnnualEvent** interface, allowing them to be use
 
 For example, you can request a list of all public holidays for a given year. An array of this type will be returned, specifying the date and name of the event for each row.
 
-*A final class (dprWorkingWeekDays), which is only there to be a property of the DaysProcessingRegion class, is also provided, but is not designed to be used on its own.*
-
+*A final class (dprWorkingWeekDays), which is only there to be a property of the RegionDatesWorked class, is also provided, but is not designed to be used on its own.*
+### Object class diagram
 ```mermaid
 graph LR
 A[DaysProcessingMultiRegion]
-A --> B(DaysProcessingRegion #1)
+A --> B(RegionDatesWorked #1)
 B --> C(Annuals Events)
 B --> D(Closure Periods)
 B --> E(Working days of week)
-A --> F(DaysProcessingRegion #2)
+A --> F(RegionDatesWorked #2)
 F --> G(Annuals Events)
 F --> H(Closure Periods)
 F --> I(Working days of week)
@@ -74,7 +75,7 @@ F --> G(Annuals Events of Alaska)
 F --> H(Closure Periods of Alaska)
 F --> I(Working days of week in Alaska)
 ```
-
+[🔝 Back to Table of contents](#table-of-contents)
 
 # The 4 classes that implement the AnnualEvent interface
  These classes are used to manipulate "annual events", such as holidays, celebrations, or events where calculating the date is a bit complicated (like "The Tuesday after the first Monday of November", for the U.S. Election Day).
@@ -179,7 +180,7 @@ You can specify the RegionIdentifer for the event if you are working with multip
 You can also specify a specific encoding, particularly for databases that do not support UTF-8. By default, it is UTF-8.
 
 Below is the SQL (SQLite) code to create a table to store event definitions.
-The DaysProcessingRegion class provides a method to load events from a RowSet.
+The RegionDatesWorked class provides a method to load events from a RowSet.
 
     CREATE TABLE "tdays" (
 	"id_date"	INTEGER NOT NULL,
@@ -315,7 +316,7 @@ Determines whether the event should be moved to the previous Friday if it takes 
 ##### NextWeekDay, PreviousWeekDay, AlwaysNextWeekDay, AlwaysPreviousWeekDay
 Type : Integer
 
-Determines whether the day will be shifted to the corresponding day of the following week (or the previous one)
+Determines whether the day will be shifted to the corresponding day of the following week day (or the previous one)
 
 Use NextWeekDay/PreviousWeekDat if shifting is only necessary if the calculation does not fall on the requested day of the week.
 
@@ -476,7 +477,7 @@ The algorithm will apply only ONE of the following conditions in the order below
 ## ClosurePeriod Class
 This class is used to define closure or vacation periods.
 
-Its main purpose is to add it to the ClosurePeriods array of a DaysProcessingRegion class.
+Its main purpose is to add it to the ClosurePeriods array of a RegionDatesWorked class.
 #### Methods
 ##### Constructor(lFirstDay as DateTime = Nil, lLastDay as DateTime = Nil, lCaption as string = "")
 Creates a new object ClosurePeriods whose properties are defined in the method arguments.
@@ -508,7 +509,7 @@ These define the first and last days of the period.
 Note that when you assign these values, the first day is automatically set to 00:00:00 and the last day to 23:59:59.
 
 [🔝 Back to Table of contents](#table-of-contents)
-## DaysProcessingRegion Class
+## RegionDatesWorked Class
 
 This class allows you to manage closure periods, non-working events, and working or non-working days of the week.
 By combining these three elements, it helps you calculate the list of working days, the list of non-working days, the next working day, etc.
@@ -531,7 +532,7 @@ Type : AnnualEvent
 This array contains all the annual events in the region.
 For example, for the District of Columbia :
 
-    Var r as new DaysProcessingRegion("DC")
+    Var r as new RegionDatesWorked("DC")
     
     // https://edpm.dc.gov/chapter/12/#section-1220
     
@@ -552,7 +553,7 @@ For example, for the District of Columbia :
     r.AnnualEvents.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
 Another example, for the Wallonie, region of Belgium    
 
-    Var r as new DaysProcessingRegion("belgium-wallonie")
+    Var r as new RegionDatesWorked("belgium-wallonie")
     r.AnnualEvents.Add New AnnualEventFix("Premier janvier", 1, 1)
     r.AnnualEvents.Add New AnnualEventFix("Fête du travail", 5, 1)
     r.AnnualEvents.Add New AnnualEventFix("Fête Nationale", 7, 21)
@@ -578,7 +579,7 @@ This array contains all the ClosurePeriod objects for the region.
 
 For example, for school holidays in the District of Columbia (if your business is related to the school system).
 
-    Var r as new DaysProcessingRegion("DC")
+    Var r as new RegionDatesWorked("DC")
     // https://washingtonparent.com/dc-public-school-calendar-2025-2026/
     
     r.ClosurePeriods.Add New ClosurePeriod(New DateTime(2025,11,26), New DateTime(2025,11,30), "Thanksiving Break")
@@ -591,7 +592,7 @@ Type : dprWorkingWeekDays
 Use this property to define the days of the week that are usually worked.
 By default, only Saturday and Sunday are non-working days.
 
-    Var r as new DaysProcessingRegion("DC")
+    Var r as new RegionDatesWorked("DC")
     r.WorkingWeekDays.WorkingSaturday = True // In my business, we works Saturday
     // The same setting, but indicating the day number of the week, to be used in a For...Next loop for example.
     r.WorkingWeekDays.WorkingDay(7) = True // In my business, we works Saturday
@@ -606,15 +607,15 @@ Variable to put whatever you need in it.
 <a id=dprmethods></a>
 #### Methods
 ##### Constructor (lIdentifier as variant)
-Create a new object DaysProcessingRegion and assign the Identifier property
+Create a new object RegionDatesWorked and assign the Identifier property
 
-    Var r as new DaysProcessingRegion("DC")
+    Var r as new RegionDatesWorked("DC")
 
-##### Constructor (copy as DaysProcessingRegion, NewIdentifier as Variant = Nil)
-Create a new object DaysProcessingRegion whose properties are the same as the **copy** object passed (duplication), and assign the Identifier property
+##### Constructor (copy as RegionDatesWorked, NewIdentifier as Variant = Nil)
+Create a new object RegionDatesWorked whose properties are the same as the **copy** object passed (duplication), and assign the Identifier property
 
-    Var rDC as new DaysProcessingRegion("DC")
-    Var MySchool as new DaysProcessingRegion(rDC, "My Fabulous School")
+    Var rDC as new RegionDatesWorked("DC")
+    Var MySchool as new RegionDatesWorked(rDC, "My Fabulous School")
 ##### BusinnesDays(starting as DateTime, ending as DateTime) as DateTime()
 ##### BusinnesDays(Year as integer) as DateTime()
 Returns an array of DateTime objects, corresponding to each open day, based on the specified working days of the week, closure periods, and public holidays.
@@ -622,8 +623,10 @@ The calculation is performed either between two dates or over a year.
 All dates are set to 00:00:00
 ##### ClosurePeriodMatch(d as DateTime) as Boolean
 Returns True if the date is included in at least one closure period.
-##### ClosurePeriodMatch(d as DateTime) as Boolean
-Returns the caption of the period, if the date is included in at least one closure period (return the caption of the first period found).
+##### ClosurePeriodMatchCaption(d as DateTime) as Boolean
+Returns the caption of the period, if the date is included in at least one closure period (return the caption of the first period found in the array).
+##### ClosurePeriodMatchObject(d as DateTime) as ClosurePeriod
+Returns ClosurePeriod object, if the date is included in at least one closure period (return the first period found in the array).
 ##### CountBusinessDays(Date1 as datetime, Date2 as datetime) as integer
 Returns the number of working days corresponding to each opening day, based on the specified weekdays, closure periods, and public holidays.
 If Date1 and Date2 are on the same day and the date is a working day, then 1 will be returned, otherwise 0.
@@ -645,7 +648,7 @@ If True:
 - AnnualEventMatchCaption returns a string contains the caption of annual event. If no match is found, it returns a empty string.
 -  AnnualEventMatchRegion returns the region Identifier (this is used when looping through multiple regions to determine which region has a public holiday). If no match is found, it returns Nil.
 
-In this example, r is a DaysProcessingRegion object, for the District of Columbia (see above for the code to add holidays)
+In this example, r is a RegionDatesWorked object, for the District of Columbia (see above for the code to add holidays)
 
     Var dTest as New DateTime(2024,11,11) 
     Var AE as AnnualEvent = r.AnnualEventMatchObject(dTest)
@@ -672,5 +675,76 @@ In this example, r is a DaysProcessingRegion object, for the District of Columbi
     End If 
 ##### IsWorkingDay(d as DateTime) as Boolean
 Returns True if the date is a working day, depending on the specified working days, closing periods and public holidays.
+
+In this example, r is a RegionDatesWorked object, for the District of Columbia (see above for the code to add holidays)
+
+    Var d as DateTime = DateTime.Now()
+    if r.IsWorkingDay(d) then MessageBox "Today, it's a working day !"
+
+##### ListOfAnnualEvents(Starting as DateTime, Ending as DateTime, OnlyDayOff as boolean = False, IncludeSaturday as Boolean = True, IncludeSunday as Boolean = True, IncludeMonday as Boolean = True, IncludeTuesday as Boolean = True, IncludeWednesday as Boolean = True, IncludeThursday as Boolean = True, IncludeFriday as Boolean = True) as DateAndCaption
+##### ListOfAnnualEvents(Year as integer, OnlyDayOff as boolean = False, IncludeSaturday as Boolean = True, IncludeSunday as Boolean = True, IncludeMonday as Boolean = True, IncludeTuesday as Boolean = True, IncludeWednesday as Boolean = True, IncludeThursday as Boolean = True, IncludeFriday as Boolean = True) as DateAndCaption
+Returns an array of DateAndCaption objects, listing all events between the two dates (or over the chosen year).
+
+You can filter to show only events that are holidays (OnlyDayOff = True). By default, OnlyDayOff = False.
+
+You can also choose whether or not to include events that take place on a specific day of the week in the results. By default, all days of the week are included.
+
+In this example, r is a RegionDatesWorked object, for the District of Columbia (see above for the code to add holidays)
+
+    //  All events for 2025, only holydays (non working event) and unless they fall on Sunday
+    Var Holidays() as DateAndCaption = r.ListOfAnnualEvents(2025, True, True, False)
+##### NextBusinessDay(d as datetime, number as integer = 1) as DateTime
+##### PreviousBusinessDay(d as datetime, number as integer = 1) as DateTime
+Returns the next open day (1), or the second (2), ... depending on the parameter number. The function takes into account working days of the week, closing periods, and events.
+AnnualEvents with the DayOff property = True are non-working days.
+Negative values ​​give the same result as the PreviousBusinessDay function. Similarly, negative values ​​for the PreviousBusinessDay function give the same result as for the NextBusinessDay function.
+
+In this example, r is a RegionDatesWorked object, for the District of Columbia (see above for the code to add holidays)
+
+    Var d as DateTime = DateTime.Now()
+    Var DeliveryDay = r.NextBusinessDay(4) // Four business days for a delivery
+
+##### NextNonWorkingDay(d as datetime, number as integer = 1) as DateTime
+##### PreviousNonWorkingDay(d as datetime, number as integer = 1) as DateTime
+Returns the next non-working day (1), or the second (2), ... depending on the parameter number. The function takes into account working days of the week, closure periods, and events.
+AnnualEvents with the DayOff property = True are non-working days.
+Negative values ​​give the same result as the PreviousNonWorkingDay function. Similarly, negative values ​​for the PreviousNonWorkingDay function give the same result as for the NextNonWorkingDay function.
+
+##### NonWorkingDayReasonCaption(d as DateTime) as string
+##### NonWorkingDayReasonType(d as DateTime) as integer
+
+ForNonWorkingDayReasonCaption, if the date is a non-working day, returns, according to this order of priority:
+
+ - the name of the day of the week (if that's why it's a non-working day)    
+ - the caption of the closure period (if the date falls within that period)
+  - the caption of the annual event (if the date corresponds to an event)
+  - If it's a working day, return an empty string
+
+For NonWorkingDayReasonType, if the date is a non-working day, return, according to this order of priority:
+
+ - 1, if that's why it's a non-working day in the week    
+ - 2, if the date falls in a closure period
+  - 3, if the date corresponds to an event 
+  - 0, if it's a working day
+##### NonWorkingDays(starting as DateTime, ending as DateTime) as DateTime()
+##### NonWorkingDays(year as integer) as DateTime()
+##### NonWorkingDaysDateAndCaption(starting as DateTime, ending as DateTime) as DateAndCaption()
+##### NonWorkingDaysDateAndCaption(year as integer) as DateAndCaption()
+Returns an array of DateTime objects, corresponding to each non-working day, based on the specified working days of the week, closing periods, and public holidays.
+
+The calculation can be requested between two dates or over a year.
+
+All dates are initialized to 00:00:00.
+
+NonWorkingDaysDateAndCaption returns an array of DateAndCaption objects.
+For the methods NonWorkingDaysDateAndCaption, the caption property, according to this order of priority, is :
+
+- the name of the day of the week (if that's why it's a non-working day)
+
+- the caption for the closing period (if the date falls within that period)
+
+- the caption for the annual event (if the date corresponds to an event)
+
+- If it's a working day, return an empty string
 
 [🔝 Back to Table of contents](#table-of-contents)
