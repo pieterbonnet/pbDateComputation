@@ -698,8 +698,8 @@ Protected Class MultiRegionDatesWorked
 
 	#tag Method, Flags = &h0
 		Shared Function LoadRegions(rs as RowSet, encoding as TextEncoding = Nil) As RegionDatesWorked()
-		  If rs = Nil Then Exit Sub
-		  
+		  Var r() as RegionDatesWorked
+		  If rs = Nil Then Return r
 		  Var identifier As String
 		  
 		  Do Until rs.AfterLastRow
@@ -710,11 +710,13 @@ Protected Class MultiRegionDatesWorked
 		      identifier = rs.Column("identifier").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8).Lowercase.Trim
 		    End
 		    
-		    regions.Add new RegionDatesWorked(identifier)
+		    r.Add new RegionDatesWorked(identifier)
 		    
 		    rs.MoveToNextRow
 		    
 		  Loop
+		  
+		  Return r
 		End Function
 	#tag EndMethod
 

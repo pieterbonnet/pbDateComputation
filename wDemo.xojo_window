@@ -3805,7 +3805,7 @@ End
 		    
 		    chkWorkingDay.Value = mr.IsWorkingDay(dtThisDate.SelectedDate)
 		    chkIsDayOff.Value = Not chkWorkingDay.Value
-		    chkIsEvent.Value = mr.IsEvent(dtThisDate.SelectedDate)
+		    chkIsEvent.Value = mr.IsAnnualEvent(dtThisDate.SelectedDate)
 		    
 		    Var nbd As DateTime = mr.NextBusinessDay(dtThisDate.SelectedDate, txtFollowingBD.Text.ToInteger)
 		    lblNextBusinessDay.Text = "following business day is " + nbd.ToString(DateTime.FormatStyles.Long, DateTime.FormatStyles.None)
@@ -4080,7 +4080,7 @@ End
 		    Exit Sub
 		  End Try
 		  
-		  MultiRegionDatesWorked.LoadEventsFromRowSet(me.Regions, rs)
+		  MultiRegionDatesWorked.LoadAnnualEventsFromRowSet(me.Regions, rs)
 		  
 		  // Loading weekdays for all regions
 		  
@@ -4105,7 +4105,7 @@ End
 		    Exit Sub
 		  End Try
 		  
-		  MultiRegionDatesWorked.LoadClosurePeriods(me.Regions, rs)
+		  MultiRegionDatesWorked.LoadClosurePeriodsFromRowSet(me.Regions, rs)
 		  
 		  PopulateLstRegions
 		  
