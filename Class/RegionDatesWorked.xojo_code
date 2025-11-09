@@ -194,6 +194,335 @@ Protected Class RegionDatesWorked
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Shared Function AnnualEventsBelgium(Region as Belgium = Belgium.NationauxEnFrancais, PublicService as Boolean = True) As AnnualEvent()
+		  Var df() As AnnualEvent
+		  
+		  // I use Belgium so as not to offend any Belgian language community.
+		  
+		  Select Case Region
+		    
+		  Case Belgium.NationauxEnFrancais
+		    
+		    df.Add New AnnualEventFix("Premier janvier", 1, 1)
+		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
+		    df.Add New AnnualEventFix("Fête Nationale", 7, 21)
+		    df.Add New AnnualEventFix("Assomption", 8, 15)
+		    
+		    df.Add New AnnualEventFix("Toussaint", 11, 1)
+		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
+		    
+		    df.Add New AnnualEventFix("Noël", 12, 25)
+		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
+		    df.Add New AnnualEventEaster("Ascension", 39)
+		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
+		    
+		  case Belgium.NationaleDagenInDeVlaamseTaal
+		    
+		    df.Add New AnnualEventFix("Nieuwjaarsdag", 1, 1) 
+		    df.Add New AnnualEventFix("Feest van de Arbeid", 5, 1)
+		    df.Add New AnnualEventFix("Feest van de Vlaamse Gemeenschap", 7, 11)
+		    df.Add New AnnualEventFix("Nationale Feestdag", 7, 21)
+		    df.Add New AnnualEventFix("Onze-Lieve-Vrouw Hemelvaart", 8, 15)
+		    
+		    df.Add New AnnualEventFix("Allerheiligen", 11, 1)
+		    df.Add New AnnualEventFix("Wapenstilstand", 11, 11)
+		    
+		    df.Add New AnnualEventFix("Kerstmis", 12, 25)
+		    
+		    df.Add New AnnualEventEaster("Paasmaandag", 1)
+		    df.Add New AnnualEventEaster("Onze-Lieve-Heer Hemelvaart", 39)
+		    df.Add New AnnualEventEaster("Pinkstermaandag", 50)
+		    
+		  case Belgium.NationalfeiertageAufDeutsch
+		    
+		    df.Add New AnnualEventFix("Neujahr", 1, 1)
+		    df.Add New AnnualEventFix("Tag der Arbeit", 5, 1)
+		    df.Add New AnnualEventFix("Nationalfeiertag", 7, 21)
+		    df.Add New AnnualEventFix("Mariä Himmelfahrt", 8, 15)
+		    
+		    df.Add New AnnualEventFix("Allerheiligen", 11, 1)
+		    df.Add New AnnualEventFix("Waffenstillstand", 11, 11)
+		    
+		    df.Add New AnnualEventFix("Weihnachten", 12, 25)
+		    df.Add New AnnualEventEaster("Ostermontag", 1)
+		    df.Add New AnnualEventEaster("Christi Himmelfahrt", 39)
+		    df.Add New AnnualEventEaster("Pfingstmontag", 50)
+		    
+		  Case Belgium.BruxellesCapitale
+		    
+		    // https://www.talent.brussels/fr/fonctionnaires/jours-feries-la-region-bruxelloise
+		    
+		    df.Add New AnnualEventFix("Premier janvier", 1, 1)
+		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
+		    df.Add New AnnualEventFix("Fête Nationale", 7, 21)
+		    df.Add New AnnualEventFix("Assomption", 8, 15)
+		    
+		    df.Add New AnnualEventFix("Toussaint", 11, 1)
+		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
+		    df.Add New AnnualEventFix("Noël", 12, 25)
+		    
+		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
+		    df.Add New AnnualEventEaster("Ascension", 39)
+		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
+		    
+		    
+		    if PublicService then
+		      df.Add New AnnualEventFix("Fête de l'Iris", 5, 8)
+		      df.Add New AnnualEventFix("Fête de la Fédération Wallonie-Bruxelles", 9,27)
+		      df.Add New AnnualEventFix("Fête des morts", 11, 2)
+		      df.Add New AnnualEventFix("Jour de la Dynastie", 11, 15)
+		      df.Add New AnnualEventFix("Deuxième jour de Noël", 12, 26)
+		    end
+		    
+		  Case Belgium.vlaanderen
+		    
+		    // https://www.vlaanderen.be/intern/personeel/verloven-en-afwezigheden/feestdagen
+		    
+		    df.Add New AnnualEventFix("Nieuwjaarsdag", 1, 1) 
+		    df.Add New AnnualEventFix("Feest van de Arbeid", 5, 1)
+		    df.Add New AnnualEventFix("Feest van de Vlaamse Gemeenschap", 7, 11)
+		    df.Add New AnnualEventFix("Nationale Feestdag", 7, 21)
+		    df.Add New AnnualEventFix("Onze-Lieve-Vrouw Hemelvaart", 8, 15)
+		    
+		    df.Add New AnnualEventFix("Allerheiligen", 11, 1)
+		    df.Add New AnnualEventFix("Wapenstilstand", 11, 11)
+		    
+		    df.Add New AnnualEventFix("Kerstmis", 12, 25)
+		    
+		    df.Add New AnnualEventEaster("Paasmaandag", 1)
+		    df.Add New AnnualEventEaster("Onze-Lieve-Heer Hemelvaart", 39)
+		    df.Add New AnnualEventEaster("Pinkstermaandag", 50)
+		    
+		    If PublicService Then
+		      df.Add New AnnualEventFix("Allerzielen", 11, 2)
+		      df.Add New AnnualEventFix("Koningsdag", 11, 15)
+		      df.Add New AnnualEventFix("Tweede kerstdag", 12, 26)
+		    End
+		    
+		    
+		  Case Belgium.Wallonie
+		    
+		    df.Add New AnnualEventFix("Premier janvier", 1, 1)
+		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
+		    df.Add New AnnualEventFix("Fête Nationale", 7, 21)
+		    df.Add New AnnualEventFix("Assomption", 8, 15)
+		    
+		    df.Add New AnnualEventFix("Toussaint", 11, 1)
+		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
+		    df.Add New AnnualEventFix("Noël", 12, 25)
+		    
+		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
+		    df.Add New AnnualEventEaster("Ascension", 39)
+		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
+		    
+		    
+		    If PublicService Then
+		      df.Add New AnnualEventFix("Fête de la Fédération Wallonie-Bruxelles", 9,27)
+		      
+		      df.Add New AnnualEventFix("Fête des morts", 11, 2)
+		      df.Add New AnnualEventFix("Jour de la Dynastie", 11, 15)
+		      df.Add New AnnualEventFix("Deuxième jour de Noël", 12, 26)
+		    end
+		    
+		    
+		    df.Add new AnnualEventWeekDay("Fête de la Région wallone", 9, 1, 3) // 3ème dimanche de septembre
+		    df(df.LastIndex).DayOff = False
+		    
+		  case Belgium.DeutschsprachigeGemeinschaft
+		    
+		    // https://de.wikipedia.org/wiki/Deutschsprachige_Gemeinschaft
+		    
+		    df.Add New AnnualEventFix("Neujahr", 1, 1)
+		    df.Add New AnnualEventFix("Tag der Arbeit", 5, 1)
+		    df.Add New AnnualEventFix("Nationalfeiertag", 7, 21)
+		    df.Add New AnnualEventFix("Mariä Himmelfahrt", 8, 15)
+		    
+		    df.Add New AnnualEventFix("Allerheiligen", 11, 1)
+		    df.Add New AnnualEventFix("Waffenstillstand", 11, 11)
+		    
+		    df.Add New AnnualEventFix("Weihnachten", 12, 25)
+		    df.Add New AnnualEventEaster("Ostermontag", 1)
+		    df.Add New AnnualEventEaster("Christi Himmelfahrt", 39)
+		    df.Add New AnnualEventEaster("Pfingstmontag", 50)
+		    
+		    df.Add New AnnualEventFix("Tag der Deutschsprachigen Gemeinschaft", 11, 15)
+		    
+		  End
+		  
+		  Return df
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function AnnualEventsFrance(Region as France = France.General) As AnnualEvent()
+		  Var df() As AnnualEvent
+		  
+		  
+		  Select Case region
+		    
+		  Case France.General
+		    
+		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
+		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
+		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
+		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
+		    df.Add New AnnualEventFix("Assomption", 8, 15)
+		    df.Add New AnnualEventFix("Toussaint", 11, 1)
+		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
+		    df.Add New AnnualEventFix("Noël", 12, 25)
+		    
+		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
+		    df.Add New AnnualEventEaster("Ascension", 39)
+		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
+		    
+		  Case France.Guadeloupe
+		    
+		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
+		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
+		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
+		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
+		    df.Add New AnnualEventFix("Assomption", 8, 15)
+		    df.Add New AnnualEventFix("Toussaint", 11, 1)
+		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
+		    df.Add New AnnualEventFix("Noël", 12, 25)
+		    
+		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
+		    df.Add New AnnualEventEaster("Ascension", 39)
+		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
+		    
+		    df.Add New AnnualEventFix("Abolition de l'esclavage", 05, 27)
+		    
+		  case France.SaintMartin
+		    
+		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
+		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
+		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
+		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
+		    df.Add New AnnualEventFix("Assomption", 8, 15)
+		    df.Add New AnnualEventFix("Toussaint", 11, 1)
+		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
+		    df.Add New AnnualEventFix("Noël", 12, 25)
+		    
+		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
+		    df.Add New AnnualEventEaster("Ascension", 39)
+		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
+		    
+		    df.Add New AnnualEventFix("Abolition de l'esclavage", 05, 27)
+		    
+		  Case France.AlsaceMoselle
+		    
+		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
+		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
+		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
+		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
+		    df.Add New AnnualEventFix("Assomption", 8, 15)
+		    df.Add New AnnualEventFix("Toussaint", 11, 1)
+		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
+		    df.Add New AnnualEventFix("Noël", 12, 25)
+		    
+		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
+		    df.Add New AnnualEventEaster("Ascension", 39)
+		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
+		    
+		    
+		    df.Add New AnnualEventEaster("Vendredi Saint", -2)
+		    df.Add New AnnualEventFix("Lendemain Noël - St Étienne", 12, 26)
+		    
+		  Case France.Martinique
+		    
+		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
+		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
+		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
+		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
+		    df.Add New AnnualEventFix("Assomption", 8, 15)
+		    df.Add New AnnualEventFix("Toussaint", 11, 1)
+		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
+		    df.Add New AnnualEventFix("Noël", 12, 25)
+		    
+		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
+		    df.Add New AnnualEventEaster("Ascension", 39)
+		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
+		    
+		    df.Add New AnnualEventFix("Abolition de l'esclavage", 05, 22)
+		    
+		  Case France.Guyane
+		    
+		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
+		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
+		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
+		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
+		    df.Add New AnnualEventFix("Assomption", 8, 15)
+		    df.Add New AnnualEventFix("Toussaint", 11, 1)
+		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
+		    df.Add New AnnualEventFix("Noël", 12, 25)
+		    
+		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
+		    df.Add New AnnualEventEaster("Ascension", 39)
+		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
+		    
+		    df.Add New AnnualEventFix("Abolition de l'esclavage", 06, 10)
+		    
+		  Case France.Reunion
+		    
+		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
+		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
+		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
+		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
+		    df.Add New AnnualEventFix("Assomption", 8, 15)
+		    df.Add New AnnualEventFix("Toussaint", 11, 1)
+		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
+		    df.Add New AnnualEventFix("Noël", 12, 25)
+		    
+		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
+		    df.Add New AnnualEventEaster("Ascension", 39)
+		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
+		    
+		    df.Add New AnnualEventFix("Abolition de l'esclavage", 12, 20)
+		    
+		  Case France.Mayotte
+		    
+		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
+		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
+		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
+		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
+		    df.Add New AnnualEventFix("Assomption", 8, 15)
+		    df.Add New AnnualEventFix("Toussaint", 11, 1)
+		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
+		    df.Add New AnnualEventFix("Noël", 12, 25)
+		    
+		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
+		    df.Add New AnnualEventEaster("Ascension", 39)
+		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
+		    
+		    
+		    df.Add New AnnualEventFix("Abolition de l'esclavage", 04, 27)
+		    
+		  Case France.SaintBarthelemy
+		    
+		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
+		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
+		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
+		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
+		    df.Add New AnnualEventFix("Assomption", 8, 15)
+		    df.Add New AnnualEventFix("Toussaint", 11, 1)
+		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
+		    df.Add New AnnualEventFix("Noël", 12, 25)
+		    
+		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
+		    df.Add New AnnualEventEaster("Ascension", 39)
+		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
+		    
+		    df.Add New AnnualEventFix("Abolition de l'esclavage", 10, 9)
+		    
+		  End
+		  
+		  Return df
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Function AnnualEventsFromRowSet(rs as RowSet, Identifier as Variant = Nil, Encoding as TextEncoding = Nil) As AnnualEvent()
 		  // if Encoding = nil, using UTF8
 		  
@@ -286,6 +615,240 @@ Protected Class RegionDatesWorked
 		  Loop
 		  
 		  Return EventsArray
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function AnnualEventsUSA(State as USA = USA.Federal) As AnnualEvent()
+		  Var List() As AnnualEvent
+		  
+		  Select Case state
+		    
+		  Case usa.Federal
+		    
+		    // https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/#url=Overview
+		    
+		    // The change from Sunday to Monday, or from Saturday to Friday, 
+		    // was announced on the official website.
+		    
+		    List.Add New AnnualEventFix("New Year's Day", 1, 1,  True, True) // January, 1st
+		    List.Add New AnnualEventFix("Juneteenth National Independence Day", 6,19,  True, True) // June, 19
+		    List.Add New AnnualEventFix("Independence Day", 7,4,  True, True) // July, 4
+		    List.Add New AnnualEventFix("Christmas",12,25,  True, True) // December, 25
+		    List.Add New AnnualEventFix("Veterans Day", 11,11,  True, True) // November, 11
+		    
+		    
+		    list.Add New AnnualEventWeekDay("Birthday of Martin Luther King, Jr.", 1,2,3) // January, Monday, The Third
+		    list.Add New AnnualEventWeekDay("Washington's Birthday", 2,2,3) // Frebruary, Monday, The Third
+		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
+		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
+		    List.Add New AnnualEventWeekDay("Columbus Day",10, 2, 2) // October, the second monday
+		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
+		    
+		  Case usa.Alabama // Alabama
+		    
+		    // https://personnel.alabama.gov/Downloads/StateHolidays.pdf
+		    // https://admincode.legislature.state.al.us/administrative-code/670-X-12-.01
+		    // No mention of a schedule change from Sunday to Monday, or from Saturday to Friday, 
+		    // was found on this website (or I couldn't find it). 
+		    
+		    List.Add New AnnualEventFix("New Year's Day", 1, 1) // January, 1st
+		    List.Add New AnnualEventWeekDay("Martin Luther King Day & Robert E. Lee’s Birthday",1,2,3)' Januray, third monday
+		    List.Add new AnnualEventEaster("Mardi gras", -47)
+		    List.Add New AnnualEventWeekDay("George Washington & Thomas Jefferson’s Birthday", 2, 2, 3) // February, the third monday
+		    List.Add New AnnualEventWeekDay("Confederate Memorial Day",4,2,4) // April, the fourth monday
+		    List.Add New AnnualEventWeekDay("National Memorial Day",5,2,6) // May, the last monday
+		    List.Add New AnnualEventWeekDay("Jefferson Davis birthday",6,2,1) // June, the first monday
+		    List.Add New AnnualEventFix("Independence Day", 7,4) // July, 4
+		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
+		    list.Add New AnnualEventWeekDay("Columbus Day & Fraternal Day & American Indian Heritage Day",10,2,2) // October, the second monday
+		    List.Add New AnnualEventFix("Veterans Day", 11,11,  True, True) // November, 11
+		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
+		    List.Add New AnnualEventFix("Christmas",12,25) // December, 25
+		    
+		  Case USA.Alaska // Alaska
+		    
+		    // https://library.alaska.gov/akholidays.html
+		    // No mention of a schedule change from Sunday to Monday, or from Saturday to Friday, 
+		    // was found on this website (or I couldn't find it). 
+		    
+		    list.Add New AnnualEventWeekDay("President's day", 2,2,3) // Frebruary, Monday, The Third
+		    list.Add New AnnualEventWeekDay("Seward Day",3,2,6) // March, the last monday
+		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
+		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
+		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
+		    
+		    List.Add New AnnualEventFix("New Year's Day", 1, 1) // January, 1st
+		    List.Add New AnnualEventFix("Independence Day", 7,4) // July, 4
+		    List.Add New AnnualEventFix("Alaska day",10,18) // October, 18
+		    List.Add New AnnualEventFix("Veterans Day", 11,11) // November, 
+		    List.Add New AnnualEventFix("Christmas",12,25) // December, 25
+		    
+		  Case usa.Arkansas // Arkansas
+		    
+		    // https://law.justia.com/codes/arkansas/title-1/chapter-5/section-1-5-101/
+		    // https://arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2001%2FPublic%2FACT304.pdf
+		    // https://arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2017R%2FPublic%2FACT561.pdf
+		    
+		    // The change from Sunday to Monday, or from Saturday to Friday, 
+		    // was announced in the law.
+		    
+		    list.Add New AnnualEventWeekDay("Dr. Martin Luther King Jr.'s Birthday", 1,2,3) // January, Monday, The Third
+		    list.Add New AnnualEventWeekDay("Washington's Birthday and Daisy Gatson Bates Day", 2,2,3) // Frebruary, Monday, The Third
+		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
+		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
+		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
+		    
+		    
+		    List.Add New AnnualEventFix("New Year's Day", 1, 1, True, True) // January, 1st
+		    List.Add New AnnualEventFix("Independence Day", 7,4, True, True) // July, 4
+		    List.Add New AnnualEventFix("Veterans Day", 11,11, True, True) // November, 11
+		    
+		    List.Add New AnnualEventFix("Christmas Eve",12,24, True, True) // December, 24
+		    List.Add New AnnualEventFix("Christmas",12,25, True, True) // December, 25
+		    
+		    
+		  Case USA.Arizona // Arizona
+		    // https://hr.az.gov/2024-holiday-calendar
+		    // The change from Sunday to Monday, or from Saturday to Friday, 
+		    // was announced on the this website.
+		    
+		    
+		    List.Add New AnnualEventFix("New Year's Day", 1, 1, True, True) // January, 1st
+		    List.Add New AnnualEventFix("Independence Day", 7,4, True, True) // July, 4
+		    List.Add New AnnualEventFix("Veterans Day", 11,11, True, True) // November, 11
+		    List.Add New AnnualEventFix("Christmas",12,25, True, True) // December, 25
+		    
+		    
+		    
+		    list.Add New AnnualEventWeekDay("Martin Luther King, Jr. / Civil Rights", 1,2,3) // January, Monday, The Third
+		    list.Add New AnnualEventWeekDay("President's day", 2,2,3) // Frebruary, Monday, The Third
+		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
+		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
+		    List.add New AnnualEventWeekDay("Columbus Day",10, 2, 2) // October, the second monday
+		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
+		    
+		    
+		    
+		  Case USA.California // California
+		    
+		    // https://www.sos.ca.gov/state-holidays
+		    // No mention of a schedule change from Sunday to Monday, or from Saturday to Friday, 
+		    // was found on this website (or I couldn't find it). 
+		    
+		    List.Add New AnnualEventFix("New Year's Day", 1, 1, True, True) // January, 1st
+		    List.Add New AnnualEventFix("Independence Day", 7,4, True, True) // July, 4
+		    List.Add New AnnualEventFix("Veterans Day", 11,11, True, True) // November, 11
+		    List.Add New AnnualEventFix("Christmas",12,25, True, True) // December, 25
+		    List.Add New AnnualEventFix("Cesar Chavez Day",03,31) // October, 18
+		    
+		    
+		    list.Add New AnnualEventWeekDay("Martin Luther King Jr. Day", 1,2,3) // January, Monday, The Third
+		    list.Add New AnnualEventWeekDay("President's day", 2,2,3) // Frebruary, Monday, The Third
+		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
+		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
+		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
+		    
+		    var dw as New AnnualEventWeekDay("Day after thanksgiving",11,5,4) // // November, the 4th thursday
+		    dw.AddDays = 1 // The day after...
+		    List.Add dw
+		    
+		  Case USA.Colorado // Colorado
+		    
+		    // Colorado C.R.S. 24-11-101
+		    // https://tax.colorado.gov/holidays
+		    
+		    List.Add New AnnualEventFix("New Year's Day", 1, 1, False, True) // January, 1st
+		    List.Add New AnnualEventFix("Juneteenth National Independence Day", 6,19, False, True)
+		    List.Add New AnnualEventFix("Independence Day", 7,4, False, True) // July, 4
+		    List.Add New AnnualEventFix("Veterans Day", 11,11, False, True) // November, 11
+		    List.Add New AnnualEventFix("Christmas",12,25, False, True) // December, 25
+		    
+		    list.Add New AnnualEventWeekDay("Martin Luther King Jr. Day", 1,2,3) // January, Monday, The Third
+		    list.Add New AnnualEventWeekDay("Washington-Lincoln day", 2,2,3) // Frebruary, Monday, The Third
+		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
+		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
+		    list.Add New AnnualEventWeekDay("Frances Xavier Cabrini day", 10,2,1) // October, the first monday
+		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
+		    
+		  case usa.Connecticut // Connecticut
+		    
+		    // https://portal.ct.gov/about/legal-state-holidays
+		    
+		    List.Add New AnnualEventFix("New Year's Day", 1, 1, True, True) // January, 1st
+		    
+		    Var df as New AnnualEventFix("Martin Luther King Jr. Day", 1,15) // The first monday after the 15
+		    df.NextWeekDay = 2
+		    List.Add df
+		    
+		    List.Add New AnnualEventFix("Lincoln's Birthday", 2, 12, True, True) // January, 1st
+		    List.Add New AnnualEventFix("Juneteenth", 6, 19, true, true)
+		    List.Add New AnnualEventFix("Independence Day", 7,4, True, True) // July, 4
+		    List.Add New AnnualEventFix("Veterans Day", 11,11, True, True) // November, 11
+		    List.Add New AnnualEventFix("Christmas",12,25, True, True) // December, 25
+		    
+		    list.Add New AnnualEventWeekDay("Washington's Birthday", 2,2,3) // Frebruary, Monday, The Third
+		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
+		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
+		    List.Add New AnnualEventWeekDay("Columbus Day",10, 2, 2) // October, the second monday
+		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
+		    
+		  Case USA.Delaware // Delaware
+		    
+		    // https://delcode.delaware.gov/title1/c005/index.html
+		    
+		    List.Add New AnnualEventFix("New Year's Day", 1, 1, True, True) // January, 1st
+		    List.Add New AnnualEventFix("Juneteenth", 6, 19, true, true)
+		    List.Add New AnnualEventFix("Independence Day", 7,4, True, True) // July, 4
+		    List.Add New AnnualEventFix("Veterans Day", 11,11, True, True) // November, 11
+		    List.Add New AnnualEventFix("Christmas",12,25, True, True) // December, 25
+		    
+		    list.Add new AnnualEventEaster("Good friday", AnnualEventEaster.GoodFriday)
+		    
+		    list.Add New AnnualEventWeekDay("Martin Luther King, Jr.", 1,2,3) // January, Monday, The Third
+		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
+		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
+		    Var dw As New AnnualEventWeekDay("Day after thanksgiving",11,5,4) // // November, the 4th thursday
+		    dw.AddDays = 1 // The day after...
+		    List.Add dw
+		    
+		  case usa.DistrictOfColumbia
+		    
+		    // https://edpm.dc.gov/chapter/12/#section-1220
+		    
+		    Var df as New AnnualEventFix("Inauguration Day", 1, 20, False, True)
+		    df.CycleFirstYear = 1849
+		    df.CycleYearDuration = 4
+		    
+		    List.Add New AnnualEventFix("New Year's Day", 1, 1,  True, True) // January, 1st
+		    List.Add New AnnualEventFix("Independence Day", 7,4,  True, True) // July, 4
+		    List.Add New AnnualEventFix("Veterans Day", 11,11,  True, True) // November, 11
+		    List.Add New AnnualEventFix("Christmas",12,25,  True, True) // December, 25
+		    
+		    list.Add New AnnualEventWeekDay("Birthday of Martin Luther King, Jr.", 1,2,3) // January, Monday, The Third
+		    list.Add New AnnualEventWeekDay("Washington's Birthday", 2,2,3) // Frebruary, Monday, The Third
+		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
+		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
+		    List.Add New AnnualEventWeekDay("Columbus Day",10, 2, 2) // October, the second monday
+		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
+		    
+		    
+		  case usa.Florida 
+		    
+		  Case USA.Georgia 
+		    
+		  Case USA.Hawai
+		    
+		  case usa.Idaho
+		    
+		    
+		    
+		  end Select
+		  
+		  
+		  
+		  Return List
+		  
 		End Function
 	#tag EndMethod
 
@@ -645,590 +1208,6 @@ Protected Class RegionDatesWorked
 		  
 		  
 		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Function DefinitionsBelgium(Region as Belgium = Belgium.NationauxEnFrancais, PublicService as Boolean = True) As AnnualEvent()
-		  Var df() As AnnualEvent
-		  
-		  // I use Belgium so as not to offend any Belgian language community.
-		  
-		  Select Case Region
-		    
-		  Case Belgium.NationauxEnFrancais
-		    
-		    df.Add New AnnualEventFix("Premier janvier", 1, 1)
-		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
-		    df.Add New AnnualEventFix("Fête Nationale", 7, 21)
-		    df.Add New AnnualEventFix("Assomption", 8, 15)
-		    
-		    df.Add New AnnualEventFix("Toussaint", 11, 1)
-		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
-		    
-		    df.Add New AnnualEventFix("Noël", 12, 25)
-		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
-		    df.Add New AnnualEventEaster("Ascension", 39)
-		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
-		    
-		  case Belgium.NationaleDagenInDeVlaamseTaal
-		    
-		    df.Add New AnnualEventFix("Nieuwjaarsdag", 1, 1) 
-		    df.Add New AnnualEventFix("Feest van de Arbeid", 5, 1)
-		    df.Add New AnnualEventFix("Feest van de Vlaamse Gemeenschap", 7, 11)
-		    df.Add New AnnualEventFix("Nationale Feestdag", 7, 21)
-		    df.Add New AnnualEventFix("Onze-Lieve-Vrouw Hemelvaart", 8, 15)
-		    
-		    df.Add New AnnualEventFix("Allerheiligen", 11, 1)
-		    df.Add New AnnualEventFix("Wapenstilstand", 11, 11)
-		    
-		    df.Add New AnnualEventFix("Kerstmis", 12, 25)
-		    
-		    df.Add New AnnualEventEaster("Paasmaandag", 1)
-		    df.Add New AnnualEventEaster("Onze-Lieve-Heer Hemelvaart", 39)
-		    df.Add New AnnualEventEaster("Pinkstermaandag", 50)
-		    
-		  case Belgium.NationalfeiertageAufDeutsch
-		    
-		    df.Add New AnnualEventFix("Neujahr", 1, 1)
-		    df.Add New AnnualEventFix("Tag der Arbeit", 5, 1)
-		    df.Add New AnnualEventFix("Nationalfeiertag", 7, 21)
-		    df.Add New AnnualEventFix("Mariä Himmelfahrt", 8, 15)
-		    
-		    df.Add New AnnualEventFix("Allerheiligen", 11, 1)
-		    df.Add New AnnualEventFix("Waffenstillstand", 11, 11)
-		    
-		    df.Add New AnnualEventFix("Weihnachten", 12, 25)
-		    df.Add New AnnualEventEaster("Ostermontag", 1)
-		    df.Add New AnnualEventEaster("Christi Himmelfahrt", 39)
-		    df.Add New AnnualEventEaster("Pfingstmontag", 50)
-		    
-		  Case Belgium.BruxellesCapitale
-		    
-		    // https://www.talent.brussels/fr/fonctionnaires/jours-feries-la-region-bruxelloise
-		    
-		    df.Add New AnnualEventFix("Premier janvier", 1, 1)
-		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
-		    df.Add New AnnualEventFix("Fête Nationale", 7, 21)
-		    df.Add New AnnualEventFix("Assomption", 8, 15)
-		    
-		    df.Add New AnnualEventFix("Toussaint", 11, 1)
-		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
-		    df.Add New AnnualEventFix("Noël", 12, 25)
-		    
-		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
-		    df.Add New AnnualEventEaster("Ascension", 39)
-		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
-		    
-		    
-		    if PublicService then
-		      df.Add New AnnualEventFix("Fête de l'Iris", 5, 8)
-		      df.Add New AnnualEventFix("Fête de la Fédération Wallonie-Bruxelles", 9,27)
-		      df.Add New AnnualEventFix("Fête des morts", 11, 2)
-		      df.Add New AnnualEventFix("Jour de la Dynastie", 11, 15)
-		      df.Add New AnnualEventFix("Deuxième jour de Noël", 12, 26)
-		    end
-		    
-		  Case Belgium.vlaanderen
-		    
-		    // https://www.vlaanderen.be/intern/personeel/verloven-en-afwezigheden/feestdagen
-		    
-		    df.Add New AnnualEventFix("Nieuwjaarsdag", 1, 1) 
-		    df.Add New AnnualEventFix("Feest van de Arbeid", 5, 1)
-		    df.Add New AnnualEventFix("Feest van de Vlaamse Gemeenschap", 7, 11)
-		    df.Add New AnnualEventFix("Nationale Feestdag", 7, 21)
-		    df.Add New AnnualEventFix("Onze-Lieve-Vrouw Hemelvaart", 8, 15)
-		    
-		    df.Add New AnnualEventFix("Allerheiligen", 11, 1)
-		    df.Add New AnnualEventFix("Wapenstilstand", 11, 11)
-		    
-		    df.Add New AnnualEventFix("Kerstmis", 12, 25)
-		    
-		    df.Add New AnnualEventEaster("Paasmaandag", 1)
-		    df.Add New AnnualEventEaster("Onze-Lieve-Heer Hemelvaart", 39)
-		    df.Add New AnnualEventEaster("Pinkstermaandag", 50)
-		    
-		    If PublicService Then
-		      df.Add New AnnualEventFix("Allerzielen", 11, 2)
-		      df.Add New AnnualEventFix("Koningsdag", 11, 15)
-		      df.Add New AnnualEventFix("Tweede kerstdag", 12, 26)
-		    End
-		    
-		    
-		  Case Belgium.Wallonie
-		    
-		    df.Add New AnnualEventFix("Premier janvier", 1, 1)
-		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
-		    df.Add New AnnualEventFix("Fête Nationale", 7, 21)
-		    df.Add New AnnualEventFix("Assomption", 8, 15)
-		    
-		    df.Add New AnnualEventFix("Toussaint", 11, 1)
-		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
-		    df.Add New AnnualEventFix("Noël", 12, 25)
-		    
-		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
-		    df.Add New AnnualEventEaster("Ascension", 39)
-		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
-		    
-		    
-		    If PublicService Then
-		      df.Add New AnnualEventFix("Fête de la Fédération Wallonie-Bruxelles", 9,27)
-		      
-		      df.Add New AnnualEventFix("Fête des morts", 11, 2)
-		      df.Add New AnnualEventFix("Jour de la Dynastie", 11, 15)
-		      df.Add New AnnualEventFix("Deuxième jour de Noël", 12, 26)
-		    end
-		    
-		    
-		    df.Add new AnnualEventWeekDay("Fête de la Région wallone", 9, 1, 3) // 3ème dimanche de septembre
-		    df(df.LastIndex).DayOff = False
-		    
-		  case Belgium.DeutschsprachigeGemeinschaft
-		    
-		    // https://de.wikipedia.org/wiki/Deutschsprachige_Gemeinschaft
-		    
-		    df.Add New AnnualEventFix("Neujahr", 1, 1)
-		    df.Add New AnnualEventFix("Tag der Arbeit", 5, 1)
-		    df.Add New AnnualEventFix("Nationalfeiertag", 7, 21)
-		    df.Add New AnnualEventFix("Mariä Himmelfahrt", 8, 15)
-		    
-		    df.Add New AnnualEventFix("Allerheiligen", 11, 1)
-		    df.Add New AnnualEventFix("Waffenstillstand", 11, 11)
-		    
-		    df.Add New AnnualEventFix("Weihnachten", 12, 25)
-		    df.Add New AnnualEventEaster("Ostermontag", 1)
-		    df.Add New AnnualEventEaster("Christi Himmelfahrt", 39)
-		    df.Add New AnnualEventEaster("Pfingstmontag", 50)
-		    
-		    df.Add New AnnualEventFix("Tag der Deutschsprachigen Gemeinschaft", 11, 15)
-		    
-		  End
-		  
-		  Return df
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Function DefinitionsFrance(Region as France = France.General) As AnnualEvent()
-		  Var df() As AnnualEvent
-		  
-		  
-		  Select Case region
-		    
-		  Case France.General
-		    
-		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
-		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
-		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
-		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
-		    df.Add New AnnualEventFix("Assomption", 8, 15)
-		    df.Add New AnnualEventFix("Toussaint", 11, 1)
-		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
-		    df.Add New AnnualEventFix("Noël", 12, 25)
-		    
-		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
-		    df.Add New AnnualEventEaster("Ascension", 39)
-		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
-		    
-		  Case France.Guadeloupe
-		    
-		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
-		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
-		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
-		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
-		    df.Add New AnnualEventFix("Assomption", 8, 15)
-		    df.Add New AnnualEventFix("Toussaint", 11, 1)
-		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
-		    df.Add New AnnualEventFix("Noël", 12, 25)
-		    
-		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
-		    df.Add New AnnualEventEaster("Ascension", 39)
-		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
-		    
-		    df.Add New AnnualEventFix("Abolition de l'esclavage", 05, 27)
-		    
-		  case France.SaintMartin
-		    
-		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
-		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
-		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
-		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
-		    df.Add New AnnualEventFix("Assomption", 8, 15)
-		    df.Add New AnnualEventFix("Toussaint", 11, 1)
-		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
-		    df.Add New AnnualEventFix("Noël", 12, 25)
-		    
-		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
-		    df.Add New AnnualEventEaster("Ascension", 39)
-		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
-		    
-		    df.Add New AnnualEventFix("Abolition de l'esclavage", 05, 27)
-		    
-		  Case France.AlsaceMoselle
-		    
-		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
-		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
-		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
-		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
-		    df.Add New AnnualEventFix("Assomption", 8, 15)
-		    df.Add New AnnualEventFix("Toussaint", 11, 1)
-		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
-		    df.Add New AnnualEventFix("Noël", 12, 25)
-		    
-		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
-		    df.Add New AnnualEventEaster("Ascension", 39)
-		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
-		    
-		    
-		    df.Add New AnnualEventEaster("Vendredi Saint", -2)
-		    df.Add New AnnualEventFix("Lendemain Noël - St Étienne", 12, 26)
-		    
-		  Case France.Martinique
-		    
-		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
-		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
-		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
-		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
-		    df.Add New AnnualEventFix("Assomption", 8, 15)
-		    df.Add New AnnualEventFix("Toussaint", 11, 1)
-		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
-		    df.Add New AnnualEventFix("Noël", 12, 25)
-		    
-		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
-		    df.Add New AnnualEventEaster("Ascension", 39)
-		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
-		    
-		    df.Add New AnnualEventFix("Abolition de l'esclavage", 05, 22)
-		    
-		  Case France.Guyane
-		    
-		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
-		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
-		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
-		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
-		    df.Add New AnnualEventFix("Assomption", 8, 15)
-		    df.Add New AnnualEventFix("Toussaint", 11, 1)
-		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
-		    df.Add New AnnualEventFix("Noël", 12, 25)
-		    
-		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
-		    df.Add New AnnualEventEaster("Ascension", 39)
-		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
-		    
-		    df.Add New AnnualEventFix("Abolition de l'esclavage", 06, 10)
-		    
-		  Case France.Reunion
-		    
-		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
-		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
-		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
-		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
-		    df.Add New AnnualEventFix("Assomption", 8, 15)
-		    df.Add New AnnualEventFix("Toussaint", 11, 1)
-		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
-		    df.Add New AnnualEventFix("Noël", 12, 25)
-		    
-		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
-		    df.Add New AnnualEventEaster("Ascension", 39)
-		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
-		    
-		    df.Add New AnnualEventFix("Abolition de l'esclavage", 12, 20)
-		    
-		  Case France.Mayotte
-		    
-		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
-		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
-		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
-		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
-		    df.Add New AnnualEventFix("Assomption", 8, 15)
-		    df.Add New AnnualEventFix("Toussaint", 11, 1)
-		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
-		    df.Add New AnnualEventFix("Noël", 12, 25)
-		    
-		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
-		    df.Add New AnnualEventEaster("Ascension", 39)
-		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
-		    
-		    
-		    df.Add New AnnualEventFix("Abolition de l'esclavage", 04, 27)
-		    
-		  Case France.SaintBarthelemy
-		    
-		    df.Add New AnnualEventFix("Jour de l'an", 1, 1)
-		    df.Add New AnnualEventFix("Fête du travail", 5, 1)
-		    df.Add New AnnualEventFix("Victoire 1945", 5, 8)
-		    df.Add New AnnualEventFix("Fête Nationale", 7, 14)
-		    df.Add New AnnualEventFix("Assomption", 8, 15)
-		    df.Add New AnnualEventFix("Toussaint", 11, 1)
-		    df.Add New AnnualEventFix("Armistice 1918", 11, 11)
-		    df.Add New AnnualEventFix("Noël", 12, 25)
-		    
-		    df.Add New AnnualEventEaster("Lundi de Pâques", 1)
-		    df.Add New AnnualEventEaster("Ascension", 39)
-		    df.Add New AnnualEventEaster("Lundi de Pentecôte", 50)
-		    
-		    df.Add New AnnualEventFix("Abolition de l'esclavage", 10, 9)
-		    
-		  End
-		  
-		  Return df
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Function DefinitionsUSA(State as USA = USA.Federal) As AnnualEvent()
-		  Var List() As AnnualEvent
-		  
-		  Select Case state
-		    
-		  Case usa.Federal
-		    
-		    // https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/#url=Overview
-		    
-		    // The change from Sunday to Monday, or from Saturday to Friday, 
-		    // was announced on the official website.
-		    
-		    List.Add New AnnualEventFix("New Year's Day", 1, 1,  True, True) // January, 1st
-		    List.Add New AnnualEventFix("Juneteenth National Independence Day", 6,19,  True, True) // June, 19
-		    List.Add New AnnualEventFix("Independence Day", 7,4,  True, True) // July, 4
-		    List.Add New AnnualEventFix("Christmas",12,25,  True, True) // December, 25
-		    List.Add New AnnualEventFix("Veterans Day", 11,11,  True, True) // November, 11
-		    
-		    
-		    list.Add New AnnualEventWeekDay("Birthday of Martin Luther King, Jr.", 1,2,3) // January, Monday, The Third
-		    list.Add New AnnualEventWeekDay("Washington's Birthday", 2,2,3) // Frebruary, Monday, The Third
-		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
-		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
-		    List.Add New AnnualEventWeekDay("Columbus Day",10, 2, 2) // October, the second monday
-		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
-		    
-		  Case usa.Alabama // Alabama
-		    
-		    // https://personnel.alabama.gov/Downloads/StateHolidays.pdf
-		    // https://admincode.legislature.state.al.us/administrative-code/670-X-12-.01
-		    // No mention of a schedule change from Sunday to Monday, or from Saturday to Friday, 
-		    // was found on this website (or I couldn't find it). 
-		    
-		    List.Add New AnnualEventFix("New Year's Day", 1, 1) // January, 1st
-		    List.Add New AnnualEventWeekDay("Martin Luther King Day & Robert E. Lee’s Birthday",1,2,3)' Januray, third monday
-		    List.Add new AnnualEventEaster("Mardi gras", -47)
-		    List.Add New AnnualEventWeekDay("George Washington & Thomas Jefferson’s Birthday", 2, 2, 3) // February, the third monday
-		    List.Add New AnnualEventWeekDay("Confederate Memorial Day",4,2,4) // April, the fourth monday
-		    List.Add New AnnualEventWeekDay("National Memorial Day",5,2,6) // May, the last monday
-		    List.Add New AnnualEventWeekDay("Jefferson Davis birthday",6,2,1) // June, the first monday
-		    List.Add New AnnualEventFix("Independence Day", 7,4) // July, 4
-		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
-		    list.Add New AnnualEventWeekDay("Columbus Day & Fraternal Day & American Indian Heritage Day",10,2,2) // October, the second monday
-		    List.Add New AnnualEventFix("Veterans Day", 11,11,  True, True) // November, 11
-		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
-		    List.Add New AnnualEventFix("Christmas",12,25) // December, 25
-		    
-		  Case USA.Alaska // Alaska
-		    
-		    // https://library.alaska.gov/akholidays.html
-		    // No mention of a schedule change from Sunday to Monday, or from Saturday to Friday, 
-		    // was found on this website (or I couldn't find it). 
-		    
-		    list.Add New AnnualEventWeekDay("President's day", 2,2,3) // Frebruary, Monday, The Third
-		    list.Add New AnnualEventWeekDay("Seward Day",3,2,6) // March, the last monday
-		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
-		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
-		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
-		    
-		    List.Add New AnnualEventFix("New Year's Day", 1, 1) // January, 1st
-		    List.Add New AnnualEventFix("Independence Day", 7,4) // July, 4
-		    List.Add New AnnualEventFix("Alaska day",10,18) // October, 18
-		    List.Add New AnnualEventFix("Veterans Day", 11,11) // November, 
-		    List.Add New AnnualEventFix("Christmas",12,25) // December, 25
-		    
-		  Case usa.Arkansas // Arkansas
-		    
-		    // https://law.justia.com/codes/arkansas/title-1/chapter-5/section-1-5-101/
-		    // https://arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2001%2FPublic%2FACT304.pdf
-		    // https://arkleg.state.ar.us/Home/FTPDocument?path=%2FACTS%2F2017R%2FPublic%2FACT561.pdf
-		    
-		    // The change from Sunday to Monday, or from Saturday to Friday, 
-		    // was announced in the law.
-		    
-		    list.Add New AnnualEventWeekDay("Dr. Martin Luther King Jr.'s Birthday", 1,2,3) // January, Monday, The Third
-		    list.Add New AnnualEventWeekDay("Washington's Birthday and Daisy Gatson Bates Day", 2,2,3) // Frebruary, Monday, The Third
-		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
-		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
-		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
-		    
-		    
-		    List.Add New AnnualEventFix("New Year's Day", 1, 1, True, True) // January, 1st
-		    List.Add New AnnualEventFix("Independence Day", 7,4, True, True) // July, 4
-		    List.Add New AnnualEventFix("Veterans Day", 11,11, True, True) // November, 11
-		    
-		    List.Add New AnnualEventFix("Christmas Eve",12,24, True, True) // December, 24
-		    List.Add New AnnualEventFix("Christmas",12,25, True, True) // December, 25
-		    
-		    
-		  Case USA.Arizona // Arizona
-		    // https://hr.az.gov/2024-holiday-calendar
-		    // The change from Sunday to Monday, or from Saturday to Friday, 
-		    // was announced on the this website.
-		    
-		    
-		    List.Add New AnnualEventFix("New Year's Day", 1, 1, True, True) // January, 1st
-		    List.Add New AnnualEventFix("Independence Day", 7,4, True, True) // July, 4
-		    List.Add New AnnualEventFix("Veterans Day", 11,11, True, True) // November, 11
-		    List.Add New AnnualEventFix("Christmas",12,25, True, True) // December, 25
-		    
-		    
-		    
-		    list.Add New AnnualEventWeekDay("Martin Luther King, Jr. / Civil Rights", 1,2,3) // January, Monday, The Third
-		    list.Add New AnnualEventWeekDay("President's day", 2,2,3) // Frebruary, Monday, The Third
-		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
-		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
-		    List.add New AnnualEventWeekDay("Columbus Day",10, 2, 2) // October, the second monday
-		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
-		    
-		    
-		    
-		  Case USA.California // California
-		    
-		    // https://www.sos.ca.gov/state-holidays
-		    // No mention of a schedule change from Sunday to Monday, or from Saturday to Friday, 
-		    // was found on this website (or I couldn't find it). 
-		    
-		    List.Add New AnnualEventFix("New Year's Day", 1, 1, True, True) // January, 1st
-		    List.Add New AnnualEventFix("Independence Day", 7,4, True, True) // July, 4
-		    List.Add New AnnualEventFix("Veterans Day", 11,11, True, True) // November, 11
-		    List.Add New AnnualEventFix("Christmas",12,25, True, True) // December, 25
-		    List.Add New AnnualEventFix("Cesar Chavez Day",03,31) // October, 18
-		    
-		    
-		    list.Add New AnnualEventWeekDay("Martin Luther King Jr. Day", 1,2,3) // January, Monday, The Third
-		    list.Add New AnnualEventWeekDay("President's day", 2,2,3) // Frebruary, Monday, The Third
-		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
-		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
-		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
-		    
-		    var dw as New AnnualEventWeekDay("Day after thanksgiving",11,5,4) // // November, the 4th thursday
-		    dw.AddDays = 1 // The day after...
-		    List.Add dw
-		    
-		  Case USA.Colorado // Colorado
-		    
-		    // Colorado C.R.S. 24-11-101
-		    // https://tax.colorado.gov/holidays
-		    
-		    List.Add New AnnualEventFix("New Year's Day", 1, 1, False, True) // January, 1st
-		    List.Add New AnnualEventFix("Juneteenth National Independence Day", 6,19, False, True)
-		    List.Add New AnnualEventFix("Independence Day", 7,4, False, True) // July, 4
-		    List.Add New AnnualEventFix("Veterans Day", 11,11, False, True) // November, 11
-		    List.Add New AnnualEventFix("Christmas",12,25, False, True) // December, 25
-		    
-		    list.Add New AnnualEventWeekDay("Martin Luther King Jr. Day", 1,2,3) // January, Monday, The Third
-		    list.Add New AnnualEventWeekDay("Washington-Lincoln day", 2,2,3) // Frebruary, Monday, The Third
-		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
-		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
-		    list.Add New AnnualEventWeekDay("Frances Xavier Cabrini day", 10,2,1) // October, the first monday
-		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
-		    
-		  case usa.Connecticut // Connecticut
-		    
-		    // https://portal.ct.gov/about/legal-state-holidays
-		    
-		    List.Add New AnnualEventFix("New Year's Day", 1, 1, True, True) // January, 1st
-		    
-		    Var df as New AnnualEventFix("Martin Luther King Jr. Day", 1,15) // The first monday after the 15
-		    df.NextWeekDay = 2
-		    List.Add df
-		    
-		    List.Add New AnnualEventFix("Lincoln's Birthday", 2, 12, True, True) // January, 1st
-		    List.Add New AnnualEventFix("Juneteenth", 6, 19, true, true)
-		    List.Add New AnnualEventFix("Independence Day", 7,4, True, True) // July, 4
-		    List.Add New AnnualEventFix("Veterans Day", 11,11, True, True) // November, 11
-		    List.Add New AnnualEventFix("Christmas",12,25, True, True) // December, 25
-		    
-		    list.Add New AnnualEventWeekDay("Washington's Birthday", 2,2,3) // Frebruary, Monday, The Third
-		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
-		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
-		    List.Add New AnnualEventWeekDay("Columbus Day",10, 2, 2) // October, the second monday
-		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
-		    
-		  Case USA.Delaware // Delaware
-		    
-		    // https://delcode.delaware.gov/title1/c005/index.html
-		    
-		    List.Add New AnnualEventFix("New Year's Day", 1, 1, True, True) // January, 1st
-		    List.Add New AnnualEventFix("Juneteenth", 6, 19, true, true)
-		    List.Add New AnnualEventFix("Independence Day", 7,4, True, True) // July, 4
-		    List.Add New AnnualEventFix("Veterans Day", 11,11, True, True) // November, 11
-		    List.Add New AnnualEventFix("Christmas",12,25, True, True) // December, 25
-		    
-		    list.Add new AnnualEventEaster("Good friday", AnnualEventEaster.GoodFriday)
-		    
-		    list.Add New AnnualEventWeekDay("Martin Luther King, Jr.", 1,2,3) // January, Monday, The Third
-		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
-		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
-		    Var dw As New AnnualEventWeekDay("Day after thanksgiving",11,5,4) // // November, the 4th thursday
-		    dw.AddDays = 1 // The day after...
-		    List.Add dw
-		    
-		  case usa.DistrictOfColumbia
-		    
-		    // https://edpm.dc.gov/chapter/12/#section-1220
-		    
-		    Var df as New AnnualEventFix("Inauguration Day", 1, 20, False, True)
-		    df.CycleFirstYear = 1849
-		    df.CycleYearDuration = 4
-		    
-		    List.Add New AnnualEventFix("New Year's Day", 1, 1,  True, True) // January, 1st
-		    List.Add New AnnualEventFix("Independence Day", 7,4,  True, True) // July, 4
-		    List.Add New AnnualEventFix("Veterans Day", 11,11,  True, True) // November, 11
-		    List.Add New AnnualEventFix("Christmas",12,25,  True, True) // December, 25
-		    
-		    list.Add New AnnualEventWeekDay("Birthday of Martin Luther King, Jr.", 1,2,3) // January, Monday, The Third
-		    list.Add New AnnualEventWeekDay("Washington's Birthday", 2,2,3) // Frebruary, Monday, The Third
-		    List.Add New AnnualEventWeekDay("Memorial Day", 5, 2, 6) // May, the last monday
-		    List.Add New AnnualEventWeekDay("Labor Day",9, 2, 1) // September, the first monday
-		    List.Add New AnnualEventWeekDay("Columbus Day",10, 2, 2) // October, the second monday
-		    List.Add New AnnualEventWeekDay("Thanksgiving",11, 5, 4) // November, the 4th thursday
-		    
-		    
-		  case usa.Florida 
-		    
-		  Case USA.Georgia 
-		    
-		  Case USA.Hawai
-		    
-		  case usa.Idaho
-		    
-		    
-		    
-		  end Select
-		  
-		  
-		  
-		  Return List
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Function Easter(Year as Integer) As DateTime
-		  Var h As Integer
-		  Var i As Integer
-		  Var j As Integer
-		  Var l As Integer
-		  Var m As Integer
-		  Var d As Integer
-		  
-		  
-		  H = (24 + 19*(Year Mod 19)) Mod 30
-		  I = H - (H\28)
-		  J = (Year + Year\4 + I - 13) Mod 7
-		  L = I - J
-		  m = 3 + (L + 40)\44
-		  d= L + 28 - 31*(m\4)
-		  
-		  Return New DateTime(Year, m, d, 0, 0 , 0, 0)
 		End Function
 	#tag EndMethod
 
@@ -1680,28 +1659,6 @@ Protected Class RegionDatesWorked
 		  
 		  Return NonWorkingDaysDateAndCaption(d,f)
 		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Function OrthodoxEaster(year as integer) As DateTime
-		  Dim a,b,c As Integer
-		  Dim d,e As Integer
-		  Dim month As Integer, day As Integer
-		  
-		  a = year Mod 19
-		  b = Floor(year / 4)
-		  d = ((a * 19) + 15) Mod 30
-		  C = (year + B + d) Mod 7
-		  e = d - C
-		  
-		  e = e + Floor(0.75 * (Floor(year / 100) - 20 / 12))
-		  
-		  Month = 3 + Floor((e + 40) / 44) + Floor(e / 34)
-		  
-		  day = e + 28 - 31 * Floor(Month / 4) - 30 * Floor(Month / 5)
-		  
-		  Return New DateTime(year, month, day, 0, 0 , 0, 0)
 		End Function
 	#tag EndMethod
 

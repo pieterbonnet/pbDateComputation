@@ -17,7 +17,7 @@ Implements AnnualEvent
 		  If year < Me.StartOfValidity.Year Or year > Me.EndOfValidity.Year Then Return Nil
 		  
 		  
-		  Var d As DateTime = Me.Easter(year)
+		  Var d As DateTime = Me.lEaster(year)
 		  d = d.AddInterval(0,0,me.DeltaEaster)
 		  
 		  
@@ -183,8 +183,8 @@ Implements AnnualEvent
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h21
-		Private Function Easter(year as integer) As DateTime
+	#tag Method, Flags = &h0
+		Shared Function Easter(Year as Integer) As DateTime
 		  Var h As Integer
 		  Var i As Integer
 		  Var j As Integer
@@ -193,14 +193,14 @@ Implements AnnualEvent
 		  Var d As Integer
 		  
 		  
-		  H = (24 + 19*(year Mod 19)) Mod 30
+		  H = (24 + 19*(Year Mod 19)) Mod 30
 		  I = H - (H\28)
-		  J = (year + year\4 + I - 13) Mod 7
+		  J = (Year + Year\4 + I - 13) Mod 7
 		  L = I - J
 		  m = 3 + (L + 40)\44
 		  d= L + 28 - 31*(m\4)
 		  
-		  Return New DateTime(year, m, d, 0, 0 , 0, 0)
+		  Return New DateTime(Year, m, d, 0, 0 , 0, 0)
 		End Function
 	#tag EndMethod
 
@@ -224,6 +224,49 @@ Implements AnnualEvent
 		  + "|" + Me.mStartOfValidity.SQLDate _
 		  + "|" + Me.mEndOfValidity.SQLDate 
 		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function lEaster(year as integer) As DateTime
+		  Var h As Integer
+		  Var i As Integer
+		  Var j As Integer
+		  Var l As Integer
+		  Var m As Integer
+		  Var d As Integer
+		  
+		  
+		  H = (24 + 19*(year Mod 19)) Mod 30
+		  I = H - (H\28)
+		  J = (year + year\4 + I - 13) Mod 7
+		  L = I - J
+		  m = 3 + (L + 40)\44
+		  d= L + 28 - 31*(m\4)
+		  
+		  Return New DateTime(year, m, d, 0, 0 , 0, 0)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function OrthodoxEaster(year as integer) As DateTime
+		  Dim a,b,c As Integer
+		  Dim d,e As Integer
+		  Dim month As Integer, day As Integer
+		  
+		  a = year Mod 19
+		  b = Floor(year / 4)
+		  d = ((a * 19) + 15) Mod 30
+		  C = (year + B + d) Mod 7
+		  e = d - C
+		  
+		  e = e + Floor(0.75 * (Floor(year / 100) - 20 / 12))
+		  
+		  Month = 3 + Floor((e + 40) / 44) + Floor(e / 34)
+		  
+		  day = e + 28 - 31 * Floor(Month / 4) - 30 * Floor(Month / 5)
+		  
+		  Return New DateTime(year, month, day, 0, 0 , 0, 0)
 		End Function
 	#tag EndMethod
 
@@ -263,7 +306,7 @@ Implements AnnualEvent
 		  
 		  If d < Me.StartOfValidity Or d > Me.EndOfValidity Then Return False
 		  
-		  Var dtarget As DateTime = Easter(d.Year).AddInterval(0, 0, Me.DeltaEaster)
+		  Var dtarget As DateTime = me.lEaster(d.Year).AddInterval(0, 0, Me.DeltaEaster)
 		  If dtarget.day = d.Day And dtarget.month = d.Month Then Return True 
 		  
 		  Return false
