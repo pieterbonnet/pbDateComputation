@@ -120,6 +120,12 @@ Protected Interface AnnualEvent
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function ToString() As String
+		  
+		End Function
+	#tag EndMethod
+
 
 	#tag ViewBehavior
 		#tag ViewProperty

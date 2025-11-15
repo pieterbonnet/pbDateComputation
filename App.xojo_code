@@ -3,35 +3,28 @@ Protected Class App
 Inherits DesktopApplication
 	#tag Event
 		Sub Opening()
-		  'Var l as new Locale("en-US")
-		  'MessageBox l.Identifier
-		  
-		  Var c As New Clipboard
-		  c.text = FileTypeGroup1.DbType
 		  
 		  Var f As FolderItem
 		  
 		  #If DebugBuild Then
-		    
 		    f = new FolderItem("") // Current folder
 		    f = f.Parent
-		    f = f.Child("DateComputation")
-		    If f.Exists Then f = f.Child("days.db")
-		    if not f.Exists then f = nil
-		    
+		    'f = f.Child("DateComputation")
+		    If f.Exists Then 
+		      f = f.Child("days.db")
+		    Else
+		      f = nil
+		    end
 		  #Else
-		    
 		    f = new folderItem("")
 		    f = f.Child("days.db")
 		  #endif
 		  
 		  If Not (f = Nil) Then 
 		    if f.Exists then Me.db = New SQLiteDatabase(f)
-		  End
-		  
-		  
-		  
-		  
+		  Else
+		    Break
+		  end
 		End Sub
 	#tag EndEvent
 

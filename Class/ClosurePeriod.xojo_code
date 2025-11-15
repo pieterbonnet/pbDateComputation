@@ -20,6 +20,20 @@ Protected Class ClosurePeriod
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub Constructor(FromString as string)
+		  Var s() As String = FromString.Split("|")
+		  If s.LastIndex <> 2 Then 
+		    Raise New InvalidArgumentException
+		    Exit Sub
+		  end
+		  
+		  If s(0).Trim <> "" Then Me.Caption = DecodeBase64(s(0))
+		  Me.FirstDay = DateTime.FromString(s(1))
+		  Me.LastDay = DateTime.FromString(s(2))
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Duration() As Integer
 		  Var interval As DateInterval = Me.LastDay - Me.FirstDay
 		  Return interval.Days + 1
@@ -27,8 +41,37 @@ Protected Class ClosurePeriod
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Shared Function FromString(StringDefinition as String) As ClosurePeriod
+		  Var s() As String = StringDefinition.Split("|")
+		  If s.LastIndex <> 2 Then 
+		    Raise new InvalidArgumentException
+		    Return Nil
+		  end
+		  Var cp As New ClosurePeriod
+		  
+		  If s(0).Trim <> "" Then cp.Caption = DecodeBase64(s(0))
+		  cp.FirstDay = DateTime.FromString(s(1))
+		  cp.LastDay = DateTime.FromString(s(2))
+		  
+		  Return cp
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function IsIncluded(lDate as DateTime) As Boolean
 		  Return (lDate >= me.FirstDay and lDate <= me.LastDay)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ToString() As String
+		  Var s as string
+		  
+		  s = s + EncodeBase64(Me.Caption,0) 
+		  s = s + Me.FirstDay.ToString("yyyy-MM-dd") + "|"
+		  s = s + Me.LastDay.ToString("yyyy-MM-dd") 
+		  
+		  Return s
 		End Function
 	#tag EndMethod
 

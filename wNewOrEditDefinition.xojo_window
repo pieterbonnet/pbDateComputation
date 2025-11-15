@@ -1780,37 +1780,6 @@ Begin DesktopWindow wNewOrEditDefinition
          Visible         =   True
          Width           =   43
       End
-      Begin DesktopCheckBox cbFDMondayIfSaturday
-         AllowAutoDeactivate=   True
-         Bold            =   False
-         Caption         =   "Next monday if saturday"
-         Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   0.0
-         FontUnit        =   0
-         Height          =   20
-         Index           =   -2147483648
-         InitialParent   =   "PagePanel1"
-         Italic          =   False
-         Left            =   10
-         LockBottom      =   False
-         LockedInPosition=   False
-         LockLeft        =   True
-         LockRight       =   False
-         LockTop         =   True
-         Scope           =   0
-         TabIndex        =   6
-         TabPanelIndex   =   1
-         TabStop         =   True
-         Tooltip         =   ""
-         Top             =   183
-         Transparent     =   False
-         Underline       =   False
-         Value           =   False
-         Visible         =   True
-         VisualState     =   0
-         Width           =   149
-      End
       Begin DesktopCheckBox cbFDFridayIfSaturday
          AllowAutoDeactivate=   True
          Bold            =   False
@@ -1834,7 +1803,7 @@ Begin DesktopWindow wNewOrEditDefinition
          TabPanelIndex   =   1
          TabStop         =   True
          Tooltip         =   ""
-         Top             =   156
+         Top             =   167
          Transparent     =   False
          Underline       =   False
          Value           =   False
@@ -1865,7 +1834,7 @@ Begin DesktopWindow wNewOrEditDefinition
          TabPanelIndex   =   1
          TabStop         =   True
          Tooltip         =   ""
-         Top             =   156
+         Top             =   167
          Transparent     =   False
          Underline       =   False
          Value           =   False
@@ -2062,6 +2031,7 @@ Begin DesktopWindow wNewOrEditDefinition
          Top             =   248
          Transparent     =   False
          Underline       =   False
+         Value           =   False
          Visible         =   True
          VisualState     =   0
          Width           =   100
@@ -2197,7 +2167,6 @@ End
 		    popFDDay.SelectedRowIndex = df.day - 1
 		    cbFDMondayIfSunday.Value = df.MondayIfSunday
 		    cbFDFridayIfSaturday.Value = df.FridayIfSaturday
-		    cbFDMondayIfSaturday.Value = df.MondayIfSaturday
 		    
 		    If df.PreviousWeekDay > 0 Then
 		      popFDShiftMode.SelectedRowIndex = 0 // Previous
@@ -2858,35 +2827,6 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
-#tag Events cbFDMondayIfSaturday
-	#tag Event
-		Sub ValueChanged()
-		  If Me.value Then
-		    cbFDFridayIfSaturday.Value = False
-		  End
-		End Sub
-	#tag EndEvent
-#tag EndEvents
-#tag Events cbFDFridayIfSaturday
-	#tag Event
-		Sub ValueChanged()
-		  If Me.value Then
-		    cbFDMondayIfSaturday.Value = False
-		  End
-		End Sub
-	#tag EndEvent
-#tag EndEvents
-#tag Events cbFDMondayIfSunday
-	#tag Event
-		Sub ValueChanged()
-		  If Me.value Then
-		    cbFDMondayIfSaturday.Value = False
-		    cbFDFridayIfSaturday.Value = False
-		  End
-		  
-		End Sub
-	#tag EndEvent
-#tag EndEvents
 #tag Events txtEDDiff1
 	#tag Event
 		Function KeyDown(key As String) As Boolean
@@ -3056,14 +2996,9 @@ End
 		      day = 29
 		    end
 		    
-		    Var fd As New AnnualEventFix(txtCaption.Text, month, day)
+		    Var fd As New AnnualEventFix(txtCaption.Text.trim, month, day )
 		    
-		    If cbFDFridayIfSaturday.Value Then 
-		      fd.FridayIfSaturday = True
-		    ElseIf cbFDMondayIfSaturday.Value Then
-		      fd.MondayIfSaturday = True
-		    End
-		    
+		    If cbFDFridayIfSaturday.Value Then fd.FridayIfSaturday = True
 		    if cbFDMondayIfSunday.Value then fd.MondayIfSunday = True
 		    
 		    
@@ -3185,10 +3120,7 @@ End
 		    If cbFDFridayIfSaturday.Value Then 
 		      strCode = strCode + EndOfLine
 		      strCode = strCode + "NewEvent.FridayIfSaturday = True"
-		    ElseIf cbFDMondayIfSaturday.Value Then
-		      strCode = strCode + EndOfLine 
-		      strCode = strCode + "NewEvent.MondayIfSaturday = True"
-		    End
+		    end
 		    
 		    If cbFDMondayIfSunday.Value Then 
 		      strCode = strCode + EndOfLine

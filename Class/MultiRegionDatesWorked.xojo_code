@@ -585,12 +585,9 @@ Protected Class MultiRegionDatesWorked
 		  if Regions.Count = 0 then exit Sub
 		  
 		  Var DefinitionsArray() as AnnualEvent
-		  Var label as string, identifier as String
+		  Var  identifier as String
 		  
-		  Var df As AnnualEventFix
-		  Var de As AnnualEventEaster
-		  Var deo As AnnualEventOrthodoxEaster
-		  var dw as AnnualEventWeekDay
+		  Var ae as AnnualEvent
 		  
 		  Var CurrentRegion as RegionDatesWorked
 		  If rs = Nil Then exit sub
@@ -600,10 +597,8 @@ Protected Class MultiRegionDatesWorked
 		    
 		    
 		    If Encoding = Nil Or Encoding = Encodings.UTF8 Then // Converting all text data
-		      label = rs.Column("caption").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8)
 		      identifier = rs.Column("region").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8)
 		    else
-		      label = rs.Column("caption").StringValue.DefineEncoding(Encodings.UTF8)
 		      identifier = rs.Column("region").StringValue.DefineEncoding(Encodings.UTF8)
 		    end
 		    
@@ -615,51 +610,14 @@ Protected Class MultiRegionDatesWorked
 		    
 		    if CurrentRegion = nil then continue // No region to adding
 		    
-		    
-		    Select Case rs.Column("definitiontype").StringValue.Uppercase
-		      
-		    Case "F" // Fix
-		      
-		      df = New AnnualEventFix(label, rs.Column("month").IntegerValue, rs.Column("day").IntegerValue, rs.Column("saturdaytofriday").BooleanValue, rs.Column("sundaytomonday").BooleanValue)
-		      df.MondayIfSaturday = rs.Column("saturdaytomonday")
-		      
-		      df.AddDays = rs.Column("adddays").IntegerValue
-		      df.NextWeekDay = rs.Column("nextweekday").IntegerValue
-		      df.PreviousWeekDay = rs.Column("previousweekday").IntegerValue
-		      
-		      CurrentRegion.AnnualEvents.Add df
-		      
-		    Case "WD" // Weekday
-		      
-		      dw = new AnnualEventWeekDay(label, rs.Column("month").IntegerValue, rs.Column("weekday").IntegerValue, rs.Column("rank").IntegerValue)
-		      
-		      dw.AddDays = rs.Column("adddays").IntegerValue
-		      dw.NextWeekDay = rs.Column("nextweekday").IntegerValue
-		      dw.PreviousWeekDay = rs.Column("previousweekday").IntegerValue
-		      
-		      CurrentRegion.AnnualEvents.Add dw  
-		      
-		    Case  "E" // Easter
-		      
-		      de = New AnnualEventEaster(label, rs.Column("day").IntegerValue)
-		      
-		      CurrentRegion.AnnualEvents.Add de
-		      
-		      
-		    case "EO" // Orthodox Easter 
-		      
-		      deo = New AnnualEventOrthodoxEaster(label, rs.Column("day").IntegerValue)
-		      
-		      CurrentRegion.AnnualEvents.Add deo
-		      
-		      
+		    Try
+		      ae = AnnualEventFix.FromString(rs.Column("value"))
+		    Catch e As InvalidArgumentException
+		      Break
+		      Continue
 		    end
 		    
-		    CurrentRegion.AnnualEvents(CurrentRegion.AnnualEvents.LastIndex).CycleFirstYear = rs.Column("cyclefirstyear").IntegerValue
-		    CurrentRegion.AnnualEvents(CurrentRegion.AnnualEvents.LastIndex).CycleYearDuration = rs.Column("cycleyearduration").IntegerValue
-		    CurrentRegion.AnnualEvents(CurrentRegion.AnnualEvents.LastIndex).StartOfValidity = rs.Column("start").DateTimeValue
-		    CurrentRegion.AnnualEvents(CurrentRegion.AnnualEvents.LastIndex).EndOfValidity = rs.Column("end").DateTimeValue
-		    CurrentRegion.AnnualEvents(CurrentRegion.AnnualEvents.LastIndex).DayOff = rs.Column("dayoff").BooleanValue
+		    CurrentRegion.AnnualEvents.Add ae
 		    
 		    rs.MoveToNextRow
 		  Loop
@@ -700,17 +658,20 @@ Protected Class MultiRegionDatesWorked
 		Shared Function LoadRegions(rs as RowSet, encoding as TextEncoding = Nil) As RegionDatesWorked()
 		  Var r() as RegionDatesWorked
 		  If rs = Nil Then Return r
-		  Var identifier As String
+		  Var identifier As String, caption as string
 		  
 		  Do Until rs.AfterLastRow
 		    
 		    If Encoding = Nil Or Encoding = Encodings.UTF8 Then
+		      caption = rs.Column("name").StringValue.DefineEncoding(Encodings.UTF8).Trim
 		      identifier = rs.Column("identifier").StringValue.DefineEncoding(Encodings.UTF8).Lowercase.Trim
 		    Else
+		      caption = rs.Column("name").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8).Trim
 		      identifier = rs.Column("identifier").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8).Lowercase.Trim
 		    End
 		    
-		    r.Add new RegionDatesWorked(identifier)
+		    r.Add new RegionDatesWorked(identifier, caption)
+		    r(r.LastIndex).WorkingWeekDays.ReadString rs.Column("workingweekdays").StringValue
 		    
 		    rs.MoveToNextRow
 		    
@@ -718,41 +679,6 @@ Protected Class MultiRegionDatesWorked
 		  
 		  Return r
 		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Shared Sub LoadWeekDaysFromRowSet(regions() as RegionDatesWorked, rs as RowSet, Encoding as TextEncoding = Nil)
-		  If rs = Nil Then Exit Sub
-		  If Regions.Count = 0 Then Exit Sub
-		  
-		  Var r1 as string
-		  
-		  do until rs.AfterLastRow
-		    
-		    If Encoding = Nil Or Encoding = Encodings.UTF8 Then
-		      r1 = rs.Column("region").StringValue.DefineEncoding(Encodings.UTF8).Lowercase.Trim
-		    else
-		      r1 = rs.Column("region").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8)
-		    end
-		    
-		    for r as Integer = 0 to Regions.LastIndex
-		      
-		      If r1 <> Regions(r).Identifier.StringValue.Lowercase.Trim Then Continue
-		      
-		      Regions(r).WorkingWeekDays.WorkingSunday = rs.Column("sunday").BooleanValue
-		      Regions(r).WorkingWeekDays.WorkingMonday = rs.Column("monday").BooleanValue
-		      Regions(r).WorkingWeekDays.WorkingTuesday = rs.Column("tuesday").BooleanValue
-		      Regions(r).WorkingWeekDays.WorkingWednesday = rs.Column("wednesday").BooleanValue
-		      Regions(r).WorkingWeekDays.WorkingThursday = rs.Column("thursday").BooleanValue
-		      Regions(r).WorkingWeekDays.WorkingFriday = rs.Column("friday").BooleanValue
-		      Regions(r).WorkingWeekDays.WorkingSaturday = rs.Column("saturday").BooleanValue
-		      
-		    Next r
-		    
-		    rs.MoveToNextRow
-		    
-		  Loop
-		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0

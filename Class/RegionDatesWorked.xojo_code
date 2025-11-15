@@ -445,29 +445,21 @@ Protected Class RegionDatesWorked
 		  // if Encoding = nil, using UTF8
 		  
 		  Var EventsArray() as AnnualEvent
-		  Var caption as string, region as String
-		  
-		  Var df As AnnualEventFix
-		  Var de As AnnualEventEaster
-		  Var deo As AnnualEventOrthodoxEaster
-		  var dw as AnnualEventWeekDay
+		  Var region as String
 		  
 		  Var id As String
 		  if Identifier = nil Then id = "" else id = Identifier.StringValue.Lowercase.Trim
 		  
 		  If rs = Nil Then Return EventsArray
 		  
-		  // using the field "day", for fix and easters definitions
-		  
 		  Do Until rs.AfterLastRow
 		    
 		    
 		    If Encoding <> Nil Then // Converting all text data
-		      caption = rs.Column("caption").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8)
 		      region = rs.Column("region").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.UTF8).DefineEncoding(Encodings.UTF8)
 		    else
-		      caption = rs.Column("caption").StringValue.DefineEncoding(Encodings.UTF8)
 		      region = rs.Column("region").StringValue.DefineEncoding(Encodings.UTF8)
+		      
 		    end
 		    
 		    If region.trim.Lowercase <> id Then 
@@ -475,61 +467,8 @@ Protected Class RegionDatesWorked
 		      Continue Do
 		    End
 		    
+		    EventsArray.Add AnnualEventFix.FromString(rs.Column("value").StringValue)
 		    
-		    Select Case rs.Column("definitiontype").StringValue
-		      
-		    Case "f" // Fix
-		      
-		      df = New AnnualEventFix(caption, rs.Column("month").IntegerValue, rs.Column("day").IntegerValue, rs.Column("saturdaytofriday").BooleanValue, rs.Column("sundaytomonday").BooleanValue)
-		      df.MondayIfSaturday = rs.Column("saturdaytomonday")
-		      
-		      df.AddDays = rs.Column("adddays").IntegerValue
-		      
-		      Var nd As Integer =  rs.Column("nextweekday").IntegerValue
-		      Var pd as Integer = rs.Column("previousweekday").IntegerValue
-		      
-		      if rs.Column("alwaysdayshift").BooleanValue then
-		        df.AlwaysNextWeekDay = rs.Column("nextweekday").IntegerValue
-		        df.AlwaysPreviousWeekDay = rs.Column("previousweekday").IntegerValue
-		      else
-		        df.NextWeekDay = rs.Column("nextweekday").IntegerValue
-		        df.PreviousWeekDay = rs.Column("previousweekday").IntegerValue
-		      end
-		      EventsArray.Add df
-		      
-		    Case "WD" // Weekday
-		      
-		      dw = new AnnualEventWeekDay(caption, rs.Column("month").IntegerValue, rs.Column("weekday").IntegerValue, rs.Column("rank").IntegerValue)
-		      
-		      dw.AddDays = rs.Column("adddays").IntegerValue
-		      dw.NextWeekDay = rs.Column("nextweekday").IntegerValue
-		      dw.PreviousWeekDay = rs.Column("previousweekday").IntegerValue
-		      
-		      EventsArray.Add dw  
-		      
-		    Case  "E" // Easter
-		      
-		      de = New AnnualEventEaster(caption, rs.Column("day").IntegerValue)
-		      
-		      EventsArray.add de
-		      
-		      
-		    case "EO" // Orthodox Easter 
-		      
-		      deo = New AnnualEventOrthodoxEaster(caption, rs.Column("day").IntegerValue)
-		      
-		      EventsArray.add deo
-		      
-		      
-		    end
-		    
-		    EventsArray(EventsArray.LastIndex).CycleFirstYear = rs.Column("cyclefirstyear").IntegerValue
-		    EventsArray(EventsArray.LastIndex).CycleYearDuration = rs.Column("cycleyearduration").IntegerValue
-		    EventsArray(EventsArray.LastIndex).StartOfValidity = rs.Column("start").DateTimeValue
-		    EventsArray(EventsArray.LastIndex).EndOfValidity = rs.Column("end").DateTimeValue
-		    EventsArray(EventsArray.LastIndex).DayOff = rs.Column("dayoff").BooleanValue
-		    
-		    rs.MoveToNextRow
 		  Loop
 		  
 		  Return EventsArray
@@ -869,14 +808,11 @@ Protected Class RegionDatesWorked
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(copy as RegionDatesWorked, NewIdentifier as Variant = Nil)
+		Sub Constructor(copy as RegionDatesWorked, NewIdentifier as Variant = Nil, NewCaption as string = "")
 		  Me.WorkingWeekDays = New dprWorkingWeekDays
 		  
-		  If NewIdentifier = Nil Then
-		    Me.Identifier  = copy.Identifier
-		  Else
-		    me.Identifier = Identifier
-		  End If
+		  me.Identifier = NewIdentifier
+		  Me.Caption = NewCaption
 		  
 		  For i As Integer = 1 To 7
 		    Me.WorkingWeekDays.WorkingDay(i) = copy.WorkingWeekDays.WorkingDay(i)
@@ -938,10 +874,10 @@ Protected Class RegionDatesWorked
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(lIdentifier as Variant, lDefinitions() as AnnualEvent)
+		Sub Constructor(lIdentifier as Variant, lCaption as string)
 		  Me.WorkingWeekDays = New dprWorkingWeekDays
-		  Me.Identifier  = lIdentifier
-		  me.AnnualEvents = lDefinitions
+		  me.Caption = lCaption
+		  me.Identifier  = lIdentifier
 		End Sub
 	#tag EndMethod
 
@@ -1357,41 +1293,6 @@ Protected Class RegionDatesWorked
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub LoadWeekDaysFromRowSet(rs as RowSet, encoding as TextEncoding = Nil)
-		  If rs = Nil Then Exit Sub
-		  if rs.AfterLastRow then exit sub
-		  
-		  Var r1 As String, id As String
-		  
-		  if me.Identifier = nil Then id = "" else id = Me.Identifier.StringValue.Lowercase.Trim
-		  
-		  do until rs.AfterLastRow
-		    
-		    if Encoding = Nil Or Encoding = Encodings.UTF8 then
-		      r1 = rs.Column("region").StringValue.DefineEncoding(encodings.UTF8).Lowercase.Trim 
-		    else
-		      r1 = rs.Column("region").StringValue.DefineEncoding(Encoding).ConvertEncoding(Encodings.utf8).DefineEncoding(encodings.UTF8).Lowercase.Trim 
-		    end
-		    
-		    If r1 = id Then 
-		      
-		      me.WorkingWeekDays.WorkingSunday = rs.Column("sunday").BooleanValue
-		      Me.WorkingWeekDays.WorkingMonday = rs.Column("monday").BooleanValue
-		      Me.WorkingWeekDays.WorkingTuesday = rs.Column("tuesday").BooleanValue
-		      Me.WorkingWeekDays.WorkingWednesday = rs.Column("wednesday").BooleanValue
-		      Me.WorkingWeekDays.WorkingThursday = rs.Column("thursday").BooleanValue
-		      Me.WorkingWeekDays.WorkingFriday = rs.Column("friday").BooleanValue
-		      Me.WorkingWeekDays.WorkingSaturday = rs.Column("saturday").BooleanValue
-		      
-		      exit sub
-		      
-		    end
-		    
-		  loop
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function NextBusinessDay(d as datetime, number as integer = 1) As DateTime
 		  // if number is 1, this means the immediately following business day. 
 		  // If the number is 2, it means the second following business day, and so on.
@@ -1743,6 +1644,10 @@ Protected Class RegionDatesWorked
 
 	#tag Property, Flags = &h0
 		AnnualEvents() As AnnualEvent
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		Caption As string
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

@@ -1,6 +1,31 @@
 #tag Class
 Protected Class dprWorkingWeekDays
 	#tag Method, Flags = &h0
+		Sub ReadString(value as string)
+		  If value.Length <> 7 Then 
+		    Raise New InvalidArgumentException
+		    Exit Sub
+		  end if
+		  
+		  For i As Integer = 0 To 6
+		    me.WorkingDay(i+1) = (value.Middle(i) = "1")
+		  Next 
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ToString() As String
+		  Var s As String
+		  
+		  For i As Integer = 1 To 7
+		    If me.WorkingDay(i) Then s = s + "1" Else s = s + "0"
+		  Next
+		  
+		  Return s
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function WorkingDay(DayOfWeek as Integer) As Boolean
 		  Select Case DayOfWeek 
 		    

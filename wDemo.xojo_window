@@ -52,7 +52,7 @@ Begin DesktopWindow wDemo
       Top             =   10
       Transparent     =   False
       Underline       =   False
-      Value           =   1
+      Value           =   0
       Visible         =   True
       Width           =   863
       BeginDesktopSegmentedButton DesktopSegmentedButton SegmentedButton1
@@ -1239,37 +1239,6 @@ Begin DesktopWindow wDemo
             Visible         =   True
             VisualState     =   0
             Width           =   142
-         End
-         Begin DesktopCheckBox cbFDMondayIfSaturday
-            AllowAutoDeactivate=   True
-            Bold            =   False
-            Caption         =   "Next monday if saturday"
-            Enabled         =   True
-            FontName        =   "System"
-            FontSize        =   0.0
-            FontUnit        =   0
-            Height          =   20
-            Index           =   -2147483648
-            InitialParent   =   "PagePanel1"
-            Italic          =   False
-            Left            =   258
-            LockBottom      =   False
-            LockedInPosition=   False
-            LockLeft        =   True
-            LockRight       =   False
-            LockTop         =   True
-            Scope           =   0
-            TabIndex        =   6
-            TabPanelIndex   =   1
-            TabStop         =   True
-            Tooltip         =   ""
-            Top             =   172
-            Transparent     =   False
-            Underline       =   False
-            Value           =   False
-            Visible         =   True
-            VisualState     =   0
-            Width           =   149
          End
          Begin DesktopCheckBox cbFDFridayIfSaturday
             AllowAutoDeactivate=   True
@@ -3826,15 +3795,12 @@ End
 		  Var s As String
 		  s = "Var dFixedDay As New AnnualEventFix("
 		  s = s + """" + txtCaption.text.ReplaceAll("""", """""") + ""","
-		  s = s + CStr(popFDMonth.SelectedRowIndex + 1) + "," +CStr(popFDDay.SelectedRowIndex + 1) + ")"
+		  s = s + CStr(popFDMonth.SelectedRowIndex + 1) + "," +CStr(popFDDay.SelectedRowIndex + 1) 
+		  s = s + ")"
 		  
 		  If cbFDFridayIfSaturday.Value Then
 		    s = s + EndOfLine
 		    s = s + "dFixedDay.FridayIfSaturday = True" 
-		    
-		  ElseIf cbFDMondayIfSaturday.Value then
-		    s = s + EndOfLine
-		    s = s + "dFixedDay.MondayIfSaturday= True" 
 		  end
 		  
 		  if cbFDMondayIfSunday.Value then
@@ -3899,8 +3865,6 @@ End
 		  Var dFixedDay As New AnnualEventFix(txtCaption.Text, popFDMonth.SelectedRowIndex + 1, popFDDay.SelectedRowIndex + 1)
 		  If cbFDFridayIfSaturday.Value Then
 		    dFixedDay.FridayIfSaturday = True
-		  ElseIf cbFDMondayIfSaturday.Value Then
-		    dFixedDay.MondayIfSaturday = True
 		  end
 		  
 		  If cbFDMondayIfSunday.Value Then
@@ -4073,7 +4037,7 @@ End
 		  
 		  // Loading events for all regions
 		  Try
-		    rs = app.db.SelectSQL("Select * FROM tdays ORDER BY region")
+		    rs = app.db.SelectSQL("Select * FROM tannualevents ORDER BY region")
 		  Catch err As DataBaseException
 		    MessageBox "(" + Err.ErrorNumber.ToString + ") " + err.Message
 		    Break
@@ -4082,23 +4046,11 @@ End
 		  
 		  MultiRegionDatesWorked.LoadAnnualEventsFromRowSet(me.Regions, rs)
 		  
-		  // Loading weekdays for all regions
-		  
-		  
-		  Try
-		    rs = app.db.SelectSQL("Select * FROM tregions_weekdays ORDER BY region")
-		  Catch err As DataBaseException
-		    MessageBox "(" + Err.ErrorNumber.ToString + ") " + err.Message
-		    Break
-		    Exit Sub
-		  End Try
-		  
-		  MultiRegionDatesWorked.LoadWeekDaysFromRowSet(me.Regions, rs)
 		  
 		  // Loading Closure periofs for all regions
 		  
 		  Try
-		    rs = app.db.SelectSQL("Select * FROM tClosurePeriods ORDER BY region")
+		    rs = app.db.SelectSQL("Select * FROM tclosureperiods ORDER BY region")
 		  Catch err As DataBaseException
 		    MessageBox "(" + Err.ErrorNumber.ToString + ") " + err.Message
 		    Break
@@ -5125,18 +5077,6 @@ End
 	#tag Event
 		Sub ValueChanged()
 		  If Me.value Then
-		    cbFDMondayIfSaturday.Value = False
-		    cbFDFridayIfSaturday.Value = False
-		  End
-		  
-		  FixedDayCode
-		End Sub
-	#tag EndEvent
-#tag EndEvents
-#tag Events cbFDMondayIfSaturday
-	#tag Event
-		Sub ValueChanged()
-		  If Me.value Then
 		    cbFDFridayIfSaturday.Value = False
 		  End
 		  
@@ -5147,10 +5087,6 @@ End
 #tag Events cbFDFridayIfSaturday
 	#tag Event
 		Sub ValueChanged()
-		  If Me.value Then
-		    cbFDMondayIfSaturday.Value = False
-		  End
-		  
 		  FixedDayCode
 		End Sub
 	#tag EndEvent

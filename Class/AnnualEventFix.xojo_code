@@ -127,6 +127,8 @@ Implements AnnualEvent
 		  Me.FridayIfSaturday = vo.FridayIfSaturday
 		  Me.MondayIfSunday = vo.MondayIfSunday
 		  Me.MondayIfSaturday = vo.MondayIfSaturday
+		  Me.AlwaysNextWeekDay = vo.AlwaysNextWeekDay
+		  me.AlwaysPreviousWeekDay = vo.AlwaysPreviousWeekDay
 		  Me.NextWeekDay = vo.NextWeekDay
 		  Me.PreviousWeekDay = vo.PreviousWeekDay
 		  
@@ -151,6 +153,8 @@ Implements AnnualEvent
 		  Me.FridayIfSaturday = copy.FridayIfSaturday
 		  Me.MondayIfSunday = copy.MondayIfSunday
 		  me.MondayIfSaturday = Copy.MondayIfSaturday
+		  me.AlwaysNextWeekDay = copy.AlwaysNextWeekDay
+		  me.AlwaysPreviousWeekDay = copy.AlwaysPreviousWeekDay
 		  Me.NextWeekDay = copy.NextWeekDay
 		  me.PreviousWeekDay = copy.PreviousWeekDay
 		  
@@ -219,48 +223,21 @@ Implements AnnualEvent
 	#tag Method, Flags = &h0
 		Function DbRow(RegionIdentifier as Variant = Nil, encoding as TextEncoding = nil) As DatabaseRow
 		  Var row as new DatabaseRow
-		  Var dft as string = "F"
 		  
 		  
 		  If Encoding = Nil Or Encoding = Encodings.UTF8 Then
 		    
-		    row.Column("caption").StringValue = Me.mCaption.DefineEncoding(Encodings.UTF8)
 		    if RegionIdentifier <> nil then row.Column("region").StringValue = RegionIdentifier.StringValue.DefineEncoding(Encodings.UTF8) else row.Column("region").StringValue = ""
-		    row.Column("fingerprint").StringValue = me.FingerPrint.DefineEncoding(Encodings.UTF8)
-		    row.Column("definitiontype").StringValue = dft.DefineEncoding(Encodings.UTF8)
+		    row.Column("value").StringValue = me.ToString.DefineEncoding(Encodings.UTF8)
 		    
 		  Else
 		    
-		    row.Column("caption").StringValue = Me.mCaption.DefineEncoding(Encodings.UTF8).ConvertEncoding(Encoding).DefineEncoding(encoding)
 		    if RegionIdentifier <> nil then row.Column("region").StringValue = RegionIdentifier.StringValue.DefineEncoding(Encodings.UTF8).ConvertEncoding(Encoding).DefineEncoding(encoding) else row.Column("region").StringValue = ""
-		    row.Column("fingerprint").StringValue = me.FingerPrint.DefineEncoding(Encodings.UTF8).ConvertEncoding(Encoding).DefineEncoding(encoding)
-		    row.Column("definitiontype").StringValue = dft.DefineEncoding(Encodings.UTF8).ConvertEncoding(Encoding).DefineEncoding(encoding)
+		    row.Column("value").StringValue = me.ToString.DefineEncoding(Encodings.UTF8).ConvertEncoding(Encoding).DefineEncoding(encoding)
+		    
 		    
 		  End
 		  
-		  
-		  row.Column("cyclefirstyear").IntegerValue = me.mCycleFirstYear
-		  row.Column("cycleyearduration").IntegerValue = me.mCycleYearDuration 
-		  row.Column("start").DateTimeValue = me.mStartOfValidity
-		  row.Column("end").DateTimeValue = me.mEndOfValidity
-		  row.Column("dayoff").BooleanValue = me.mDayOff
-		  
-		  row.Column("month").IntegerValue = Me.Month
-		  row.Column("day").IntegerValue = Me.Day
-		  row.Column("sundaytomonday").BooleanValue = me.MondayIfSunday
-		  row.Column("saturdaytofriday").BooleanValue = Me.FridayIfSaturday
-		  row.Column("saturdaytomonday").BooleanValue = me.MondayIfSaturday
-		  
-		  row.Column("adddays").IntegerValue = me.AddDays
-		  if me.AlwaysNextWeekDay > 0 or me.AlwaysPreviousWeekDay > 0 then
-		    row.Column("nextweekday").IntegerValue = Me.AlwaysNextWeekDay
-		    row.Column("previousweekday").IntegerValue = Me.AlwaysPreviousWeekDay
-		    row.Column("alwaysshift").BooleanValue = True
-		  else
-		    row.Column("nextweekday").IntegerValue = Me.NextWeekDay
-		    row.Column("previousweekday").IntegerValue = Me.PreviousWeekDay
-		    row.Column("alwaysshift").BooleanValue = False
-		  end
 		  
 		  Return row
 		End Function
@@ -287,23 +264,221 @@ Implements AnnualEvent
 
 	#tag Method, Flags = &h0
 		Function FingerPrint() As string
-		  Return "F" _
-		  + Format(Me.Month, "0#") _
-		  + ";" + Format(Me.Day, "0#") _
-		  + ";" + me.AddDays.ToString _
-		  + "|" + Me.mStartOfValidity.SQLDate _
-		  + "|" + Me.mEndOfValidity.SQLDate 
+		  Var s As String
 		  
-		  'Return "F" _
-		  '+ Format(Me.Month, "0#") _
-		  '+ Format(Me.Day, "0#") _
-		  '+ If(Me.FridayIfSaturday, "1", "0") _
-		  '+ If(Me.MondayIfSaturday, "1", "0") _
-		  '+ If(Me.MondayIfSunday, "1", "0") _
-		  '+ Format(Me.AddDays, "0#") _
-		  '+ Me.NextWeekDay.ToString _
-		  '+ Me.mStartOfValidity.SQLDate _
-		  '+ Me.mEndOfValidity.SQLDate 
+		  s = "F|" // 0
+		  s = s + Me.StartOfValidity.ToString("yyyy-MM-dd") + "|" // 2
+		  s = s + Me.EndOfValidity.ToString("yyyy-MM-dd") + "|" // 3
+		  s = s + Me.CycleFirstYear.ToString(Locale.Raw) + "|" // 4
+		  s = s + Me.CycleYearDuration.ToString(Locale.Raw) + "|" // 5
+		  If Me.DayOff Then s = s + "1|" Else s = s + "0|" // 6
+		  s = s + Me.Month.ToString(Locale.Raw) + "|" // 7
+		  s = s + Me.Day.ToString(Locale.Raw) + "|" // 8
+		  
+		  
+		  If Me.MondayIfSunday And Me.FridayIfSaturday Then
+		    s = s + "A"
+		  ElseIf Me.FridayIfSaturday Then
+		    s = s + "B"
+		  ElseIf Me.MondayIfSunday Then
+		    s = s + "C"
+		  ElseIf Me.AlwaysNextWeekDay > 0 Then
+		    s = s + "D" + Me.AlwaysNextWeekDay.ToString(Locale.Raw)
+		  ElseIf  Me.AlwaysPreviousWeekDay > 0 Then
+		    s = s + "D-" + Me.AlwaysPreviousWeekDay.ToString(Locale.Raw)
+		  ElseIf Me.NextWeekDay > 0 Then
+		    s = s + "E" + Me.NextWeekDay.ToString(Locale.Raw)
+		  ElseIf Me.PreviousWeekDay > 0 Then
+		    s = s + "E-" + Me.PreviousWeekDay.ToString(Locale.Raw) 
+		  ElseIf Me.AddDays <> 0 Then
+		    s = s + "F" + Me.AddDays.ToString(Locale.Raw)
+		  Else
+		    s = s + "N"
+		  End
+		  
+		  
+		  Return s
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function FromString(value as String) As AnnualEvent
+		  Var s() As String = value.Split("|")
+		  Var x As Integer
+		  
+		  If s.LastIndex < 7 Then 
+		    Raise new InvalidArgumentException
+		    Return Nil
+		  end
+		  
+		  select case s(0)
+		    
+		  case "F"
+		    
+		    if s.LastIndex <> 9 then
+		      Raise New InvalidArgumentException
+		      Return Nil
+		    end
+		    
+		    Var adf As New AnnualEventFix
+		    If s(1).Trim <> "" Then adf.Caption = DecodeBase64(s(1))
+		    
+		    adf.StartOfValidity = DateTime.FromString(s(2))
+		    adf.EndOfValidity = DateTime.FromString(s(3))
+		    adf.mCycleFirstYear = s(4).ToInteger
+		    adf.mCycleYearDuration = s(5).ToInteger
+		    adf.DayOff = (s(6)="1")
+		    adf.Month = s(7).ToInteger
+		    adf.day = s(8).ToInteger
+		    
+		    select case s(9).Left(1)
+		      
+		    case "N"
+		      
+		      // Nothing
+		      
+		    Case "A"
+		      
+		      adf.FridayIfSaturday = True
+		      adf.MondayIfSunday = True
+		      
+		    case "B"
+		      
+		      adf.FridayIfSaturday = True
+		      
+		    case "C"
+		      
+		      adf.MondayIfSunday = True
+		      
+		    case "D"
+		      
+		      x = s(9).right(s(9).Length-1).ToInteger
+		      
+		      If x > 0 Then
+		        adf.AlwaysNextWeekDay = x
+		      ElseIf x < 0 Then
+		        adf.AlwaysPreviousWeekDay = x * -1
+		      End
+		      
+		    case "E"
+		      
+		      x = s(9).right(s(9).Length-1).ToInteger
+		      
+		      If x > 0 Then
+		        adf.NextWeekDay = x
+		      ElseIf x < 0 Then
+		        adf.PreviousWeekDay = x * -1
+		      End
+		      
+		    case "F"
+		      
+		      x = s(9).right(s(9).Length-1).ToInteger
+		      
+		      adf.AddDays = x
+		      
+		    end Select
+		    
+		    Return adf
+		    
+		  case "E"
+		    
+		    Var ae as new AnnualEventEaster
+		    
+		    If s.LastIndex <> 7 Then
+		      Raise New InvalidArgumentException
+		      Return Nil
+		    end
+		    
+		    If s(1).Trim <> "" Then ae.Caption = DecodeBase64(s(1))
+		    
+		    ae.StartOfValidity = DateTime.FromString(s(2))
+		    ae.EndOfValidity = DateTime.FromString(s(3))
+		    ae.CycleFirstYear = s(4).ToInteger
+		    ae.CycleYearDuration = s(5).ToInteger
+		    ae.DayOff = (s(6)="1")
+		    ae.DeltaEaster = s(7).ToInteger
+		    
+		    Return ae
+		    
+		  case "O"
+		    
+		    Var ae As New AnnualEventOrthodoxEaster
+		    
+		    If s.LastIndex <> 7 Then
+		      Raise New InvalidArgumentException
+		      Return nil
+		    End
+		    
+		    If s(1).Trim <> "" Then ae.Caption = DecodeBase64(s(1))
+		    
+		    ae.StartOfValidity = DateTime.FromString(s(2))
+		    ae.EndOfValidity = DateTime.FromString(s(3))
+		    ae.CycleFirstYear = s(4).ToInteger
+		    ae.CycleYearDuration = s(5).ToInteger
+		    ae.DayOff = (s(6)="1")
+		    ae.DeltaEaster = s(7).ToInteger
+		    
+		    Return ae
+		    
+		  case "W"
+		    
+		    If s.LastIndex <> 10 Then 
+		      Raise New InvalidArgumentException
+		      Return Nil
+		    End
+		    
+		    Var aw as new AnnualEventWeekDay
+		    
+		    If s(1).Trim <> "" Then aw.Caption = DecodeBase64(s(1))
+		    
+		    aw.StartOfValidity = DateTime.FromString(s(2))
+		    aw.EndOfValidity = DateTime.FromString(s(3))
+		    aw.CycleFirstYear = s(4).ToInteger
+		    aw.CycleYearDuration = s(5).ToInteger
+		    aw.DayOff = (s(6)="1")
+		    
+		    aw.Month = s(7).ToInteger
+		    aw.WeekDay = s(8).ToInteger
+		    aw.Rank = s(9).ToInteger
+		    
+		    
+		    
+		    Select Case s(10).Left(1)
+		      
+		    Case "N"
+		      
+		      // Nothing
+		      
+		    Case "A", "B", "C"
+		      
+		      // Nothing
+		      
+		    Case "D"
+		      
+		      x = s(10).Right(s(10).Length-1).ToInteger
+		      
+		      If x > 0 Then
+		        aw.NextWeekDay = x
+		      ElseIf x < 0 Then
+		        aw.PreviousWeekDay = x * -1
+		      End
+		      
+		    Case "E"
+		      
+		      x = s(10).Right(s(10).Length-1).ToInteger
+		      
+		      aw.AddDays = x
+		      
+		    end Select
+		    
+		  Else
+		    
+		    Raise New InvalidArgumentException
+		    Return Nil
+		    
+		  end
+		  
+		  
 		  
 		End Function
 	#tag EndMethod
@@ -337,12 +512,14 @@ Implements AnnualEvent
 		Function TestDate(d as DateTime) As Boolean
 		  // Simple case
 		  
+		  If d < Me.StartOfValidity Or d > Me.EndOfValidity Then Return False
+		  
 		  If Me.CycleYearDuration > 1 Then
 		    if me.CycleFirstYear > d.year then Return False
 		    If (d.year - Me.CycleFirstYear) Mod Me.CycleYearDuration > 0 Then Return false
 		  end
 		  
-		  If d < Me.StartOfValidity Or d > Me.EndOfValidity Then Return False
+		  
 		  
 		  If Me.FridayIfSaturday And d.DayOfWeek = 6 Then
 		    Var dt As DateTime = d.AddInterval(0,0,1)
@@ -425,6 +602,46 @@ Implements AnnualEvent
 		  If Me.Day = d.Day And Me.Month = d.Month Then Return True 
 		  
 		  Return false
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ToString() As String
+		  Var s as String
+		  
+		  s = "F|" // 0
+		  s = s + EncodeBase64(Me.Caption,0) + "|" // 1
+		  s = s + Me.StartOfValidity.ToString("yyyy-MM-dd") + "|" // 2
+		  s = s + Me.EndOfValidity.ToString("yyyy-MM-dd") + "|" // 3
+		  s = s + Me.CycleFirstYear.ToString(Locale.Raw) + "|" // 4
+		  s = s + Me.CycleYearDuration.ToString(Locale.Raw) + "|" // 5
+		  If me.DayOff Then s = s + "1|" Else s = s + "0|" // 6
+		  s = s + Me.Month.ToString(Locale.Raw) + "|" // 7
+		  s = s + Me.Day.ToString(Locale.Raw) + "|" // 8
+		  
+		  
+		  if me.MondayIfSunday and me.FridayIfSaturday then // 9
+		    s = s + "A"
+		  ElseIf Me.FridayIfSaturday Then
+		    s = s + "B"
+		  ElseIf Me.MondayIfSunday Then
+		    s = s + "C"
+		  ElseIf Me.AlwaysNextWeekDay > 0 Then
+		    s = s + "D" + Me.AlwaysNextWeekDay.ToString(Locale.Raw)
+		  ElseIf  Me.AlwaysPreviousWeekDay > 0 Then
+		    s = s + "D-" + Me.AlwaysPreviousWeekDay.ToString(Locale.Raw)
+		  Elseif Me.NextWeekDay > 0 Then
+		    s = s + "E" + Me.NextWeekDay.ToString(Locale.Raw)
+		  ElseIf Me.PreviousWeekDay > 0 Then
+		    s = s + "E-" + Me.PreviousWeekDay.ToString(Locale.Raw) 
+		  Elseif me.AddDays <> 0 Then
+		    s = s + "F" + Me.AddDays.ToString(Locale.Raw)
+		  else
+		    s = s + "N"
+		  End
+		  
+		  
+		  Return s
 		End Function
 	#tag EndMethod
 
