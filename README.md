@@ -71,17 +71,17 @@ This is old Real Studio code updated to meet Xojo's API 2.0 requirements. There 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Methods](#aewmethods)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Shared methods](#aewsharedmethods)<br>
 [ClosurePeriod Class](#closureperiod-class)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Presentation of properties and methods](#cppresentation)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Presentation of properties and methods](#cppresentation)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Properties](#cpproperties)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Methods](#cpmethods)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Shared methods](#cpsharedmethods)<br>
 [RegionDatesWorked Class](#regiondatesworked-class)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Presentation of properties and methods](#rdwpresentation)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Presentation of properties and methods](#rdwpresentation)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Properties](#rdwproperties)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Methods](#rdwmethods)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Shared methods](#dprsharedmethods)<br>
 [MultiRegionDatesWorked Class](#multiregiondatesworked-class)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Presentation of properties and methods](#mrdwpresentation)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Presentation of properties and methods](#mrdwpresentation)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Properties](#mrdwproperties)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Methods](#mrdwmethods)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Shared methods](#mrdwsharedmethods)<br>
@@ -362,7 +362,7 @@ In addition to the [common properties](#common-properties) and [common methods](
 |[Month](#aefmonth) |Integer
 |[Day](#aefmonth) |Integer
 |[MondayIfSunday](#aefmifs)  |Boolean
-|[FridayIfSaturday](#aeffif)   |Boolean
+|[FridayIfSaturday](#aefmifsa)   |Boolean
 |[NextWeekDay](#aefnwd)|Integer
 |[PreviousWeekDay](#aefnwd)|Integer
 |[AlwaysNextWeekDay](#aefnwd)|Integer
@@ -380,6 +380,7 @@ In addition to the [common properties](#common-properties) and [common methods](
 | Name|Parameters|Returned type
 |----------------|----------|--------------------- |
 |[FromString](#aeffs)|value as string|AnnualEvent
+
 <br>[🔝 Back to Table of contents](#table-of-contents)
 <br>
 
@@ -412,7 +413,7 @@ Determines whether the event should be postponed to Monday if it takes place on 
 ***Note :*** The property can be associated with FridayIfSaturday
 
 [🔝 Back to presentation of properties and methods](#aefpresentationp)
-<a id="aeffifs"></a>
+<a id="aefmifsa"></a>
 ##### FridayIfSaturday
 Type : Boolean
 
@@ -482,7 +483,7 @@ Otherwise, it will apply only ONE of the following conditions in the order below
  5. NextWeekDay
  6. AddDays
 
-[🔝 Back to presentation of properties and methods](#aefpresentationp)
+[🔝 Back to presentation of properties and methods](#aefpresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 <a id="aefmethods"></a>
 ### Methods
@@ -514,7 +515,7 @@ For i as integer = 0 to Events.LastIndex
     End if
 Next i
 ```
-[🔝 Back to presentation of properties and methods](#aefpresentationm)
+[🔝 Back to presentation of properties and methods](#aefpresentationm)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 <a id=aefsharedmethods></a>
 ### Shared methods
@@ -529,11 +530,12 @@ Returns an AnnualEvent interface object encoded in the string value.
     
     Var ae As AnnualEvent = AnnualEventFix.FromString(s) // Return a AnnualEvent (NOT a AnnualEventFix)
     Var aeFix as new AnnualEventFix(ae) // Creating a AnnualEventFix from then AnnualEvent
-[🔝 Back to presentation of properties and methods](#aefpresentations)
+[🔝 Back to presentation of properties and methods](#aefpresentations)<br>
 🔝 [Back to Table of contents](#table-of-contents)
 ## AnnualEventEaster and AnnualEventOrthodoxEaster Classes
 
-In addition to the [properties](#common-properties) and [methods](#common-methods) common to the interface, here is one property specific to this class.
+In addition to the [common properties](#common-properties) and [common methods](#common-methods) of the interface, here are the properties specific to this class.
+
 The only difference between the AnnualEventOrthodoxEaster class and the AnnualEventEaster class is the algorithm.
 
 Note that the date calculated by AnnualEventOrthodoxEaster is the date of the event in the Gregorian calendar.
@@ -557,6 +559,7 @@ Note that the date calculated by AnnualEventOrthodoxEaster is the date of the ev
 |----------------|----------|--------------------- |
 |[FromString](#aeefs)|value as string|AnnualEvent
 |[Easter](#aeeeaster)|year as integer|DateTime
+
 <br>[🔝 Back to Table of contents](#table-of-contents)
 <br>
 
@@ -568,7 +571,7 @@ Type : Integer
 
 The number of days to add or subtract from the date of Easter to calculate the date. If 0, it is Easter Sunday.
 
-[🔝 Back to presentation of properties and methods](#aeepresentationp)
+[🔝 Back to presentation of properties and methods](#aeepresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 <a id="aeeconstants"></a>
 #### Constants
@@ -579,7 +582,7 @@ Since some holidays have multiple names, you may have several constants with the
 
 **Note :** Despite multiple checks, errors may still exist in the values ​​or names.
 
-[🔝 Back to presentation of properties and methods](#aeepresentationp)
+[🔝 Back to presentation of properties and methods](#aeepresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 <a id="aeemethods"></a>
@@ -617,7 +620,7 @@ For i as integer = 0 to Events.LastIndex
     End if
 Next i
 ```
-[🔝 Back to presentation of properties and methods](#aeepresentationm)
+[🔝 Back to presentation of properties and methods](#aeepresentationm)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 <a id=aeesharedmethods></a>
@@ -641,11 +644,11 @@ Returns the date of Easter Sunday for the requested year.
 
     Var Easter Sunday as DateTime = AnnualEventEaster.Easter(2025)
 
-[🔝 Back to presentation of properties and methods](#aeepresentations)
+[🔝 Back to presentation of properties and methods](#aeepresentations)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 ## AnnualEventWeekDay Class
-In addition to the [properties](#common-properties) and [methods](#common-methods) common to the interface, here is one property specific to this class.
+In addition to the [common properties](#common-properties) and [common methods](#common-methods) of the interface, here are the properties specific to this class.
 <a id="aewpresentation"></a>
 ### Presentation of properties and methods
 <a id="aewpresentationp"></a>
@@ -670,6 +673,8 @@ In addition to the [properties](#common-properties) and [methods](#common-method
 | Name|Parameters|Returned type
 |----------------|----------|--------------------- |
 |[FromString](#aewfs)|value as string|AnnualEvent
+
+
 <br>[🔝 Back to Table of contents](#table-of-contents)
 <br>
 
@@ -728,7 +733,7 @@ The algorithm will apply only ONE of the following conditions in the order below
  2. NextWeekDay
  3. AddDays
 
-[🔝 Back to presentation of properties and methods](#aewpresentationp)
+[🔝 Back to presentation of properties and methods](#aewpresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 <a id="aewmethods"></a>
 ### Methods
@@ -772,7 +777,7 @@ In the example below, Events() is a array of AnnualEvent
         End if
     Next i
 
-[🔝 Back to presentation of properties and methods](#aewpresentationp)
+[🔝 Back to presentation of properties and methods](#aewpresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 <a id="aewsharedmethods"></a>
 <a id="aewfs"></a>
@@ -788,7 +793,7 @@ Returns an AnnualEvent interface object encoded in the string value.
     Var ae As AnnualEvent = AnnualEventWeekDay.FromString(s) // Return a AnnualEvent (NOT a AnnualEventWeekDay)
     Var aeWeek as new AnnualEventWeekDay(ae) // Creating a AnnualEventWeekDay from then AnnualEvent
 
-[🔝 Back to presentation of properties and methods](#aewpresentationp)
+[🔝 Back to presentation of properties and methods](#aewpresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 ## ClosurePeriod Class
 This class is used to define closure or vacation periods.
@@ -820,7 +825,8 @@ Its main purpose is to add it to the ClosurePeriods array of a RegionDatesWorked
 | Name|Parameters|Returned type
 |----------------|----------|--------------------- |
 |[FromString](#cpfs)|value as string|ClosurePeriod
-<br>
+
+<br>[🔝 Back to Table of contents](#table-of-contents)
 
 <a id="cpproperties"></a>
 ### Properties
@@ -844,7 +850,7 @@ Type : Variant
 
 Variable to put whatever you need in it
 
-[🔝 Back to presentation of properties and methods](#cppresentationp)
+[🔝 Back to presentation of properties and methods](#cppresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 <a id="cpmethods"></a>
@@ -907,7 +913,7 @@ The "Caption" property is Base64 encoded. The "Tag" property is not included in 
     
 For SpringBreak, returns U3ByaW5nIEJyZWFr|2026-04-11|2026-04-19
 
-[🔝 Back to presentation of properties and methods](#cppresentationm)
+[🔝 Back to presentation of properties and methods](#cppresentationm)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 <a id="cpsharedmethods"></a>
@@ -921,7 +927,7 @@ Returns an ClosurePeriod object encoded in the string value.
 
     Var SpringBreak as ClosurePeriod = ClosurePeriod.FromString("U3ByaW5nIEJyZWFr|2026-04-11|2026-04-19")
 
-[🔝 Back to presentation of properties and methods](#cppresentations)
+[🔝 Back to presentation of properties and methods](#cppresentations)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 ## RegionDatesWorked Class
@@ -991,6 +997,7 @@ The class has four properties for this:
 |[AnnualEventsUSA](#dprsharedmethodsusa)|State as USA = USA.Federal|AnnualEvents()
 |[AnnualEventsFromRowSet](#dprsharedannualeventsfromrowset)|rs as RowSet, Identifier as Variant = Nil, Encoding as TextEncoding = Nil|AnnualEvents()
 |[ClosurePeriodsFromRowSet](#dprsharedclosureperiodsfromrowset)|rs as RowSet, Identifier as Variant = Nil, Encoding as TextEncoding = Nil|ClosurePeriod()
+
 <br>[🔝 Back to Table of contents](#table-of-contents)
 
 <a id=rdwproperties></a>
@@ -1091,7 +1098,7 @@ Type : Variant
 
 Variable to put whatever you need in it.
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationp)
+[🔝 Back to presentation of properties and methods](#rdwpresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 <a id=rdwmethods></a>
@@ -1308,7 +1315,7 @@ me.WorkingWeekDays.ReadString("0011111") // Works from Tuesday to Saturday
 ```
 The SQL definition of a database table is given [here](#expected-structure-of-the-different-database-tables), with the expected column names.
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔝 Back to presentation of properties and methods](#rdwpresentationm)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 <a id=dprsharedmethods></a>
 ### Shared methods
@@ -1383,7 +1390,7 @@ The SQL definition of a database table is given [here](#expected-structure-of-th
     r.AnnualEvents = RegionDatesWorked.LoadEve   ntsFromRowSet(rs, r.identifier)
    
 
-[🔝 Back to presentation of properties and methods](#rdwpresentations)
+[🔝 Back to presentation of properties and methods](#rdwpresentations)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 ## MultiRegionDatesWorked Class
 This class allows you to manipulate several RegionDatesWorked classes.
@@ -1456,7 +1463,7 @@ Type : Variant
 
 Variable to put whatever you need in it.
 
-[🔝 Back to presentation of properties and methods](#mrdwpresentationp)
+[🔝 Back to presentation of properties and methods](#mrdwpresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 <a id=mrdwmethods></a>
@@ -1570,7 +1577,7 @@ The calculation can be performed over a period between two dates or over a year.
 
 All dates are initialized to 00:00:00.
 
-[🔝 Back to presentation of properties and methods](#mrdwpresentationm)
+[🔝 Back to presentation of properties and methods](#mrdwpresentationm)<br>
 [🔝 Back to Table of contents](https://stackedit.io/app#table-of-contents)
 <a id=mrdwsharedmethods></a>
 ### Shared Methods
@@ -1590,7 +1597,7 @@ Returns an array of RegionDatesWorked objects read from the rs object.
 
 The SQL definition of a database table is given [here](#expected-structure-of-the-different-database-tables), with the expected column names.
    
-[🔝 Back to presentation of properties and methods](#mrdwpresentations)
+[🔝 Back to presentation of properties and methods](#mrdwpresentations)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 # Expected structure of the different database tables
@@ -1604,7 +1611,7 @@ Note that for other databases, you should define the size of the text columns, a
     CREATE TABLE "tregions" (
     	"id_region"	INTEGER NOT NULL,
     	"identifier"	TEXT NOT NULL UNIQUE,
-    	"workingweekdays"	TEXT NOT NULL DEFAULT '1000001',
+    	"workingweekdays"	TEXT NOT NULL DEFAULT '0111110',
     	"name"	TEXT,
     	PRIMARY KEY("id_region" AUTOINCREMENT)
     )
