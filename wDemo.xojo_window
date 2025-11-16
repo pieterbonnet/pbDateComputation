@@ -52,7 +52,7 @@ Begin DesktopWindow wDemo
       Top             =   10
       Transparent     =   False
       Underline       =   False
-      Value           =   1
+      Value           =   0
       Visible         =   True
       Width           =   863
       BeginDesktopSegmentedButton DesktopSegmentedButton SegmentedButton1
@@ -946,7 +946,7 @@ Begin DesktopWindow wDemo
          Tooltip         =   ""
          Top             =   125
          Transparent     =   False
-         Value           =   0
+         Value           =   1
          Visible         =   True
          Width           =   849
          Begin DesktopPopupMenu popFDMonth
