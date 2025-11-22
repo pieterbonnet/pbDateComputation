@@ -1,7 +1,8 @@
 # pbHolidaysComputation
-Calculate holidays, closures, and working days with Xojo. Edit, save and restore parameters from a database.
+Calculate holidays, closures, and working days with Xojo.
 
 The repository is provided with an example project, allowing you to show how to calculate event dates and how to calculate working days, the next working day after a date, etc.
+Save or load event definitions and closure periods into databases.
 
 Most classes can be used alone, or you can also use them togaether, especially with the RegionDatesWorked and MultiRegionDatesWorked classes, for much greater efficiency.
 Classes also allow you to save data.
@@ -405,7 +406,7 @@ These two values ​​define the month and day of the event each year.
     // Bastille Day
     dFix.month = 7
     dFix.day = 14
-[🔝 Back to presentation of properties and methods](#aefpresentationp)
+[🔺 Back to presentation of properties and methods](#aefpresentationp)
 <a id="aefmifs"></a>
 ##### MondayIfSunday
 Type : Boolean
@@ -420,7 +421,7 @@ Determines whether the event should be postponed to Monday if it takes place on 
 
 ***Note :*** The property can be associated with FridayIfSaturday
 
-[🔝 Back to presentation of properties and methods](#aefpresentationp)
+[🔺 Back to presentation of properties and methods](#aefpresentationp)
 <a id="aefmifsa"></a>
 ##### FridayIfSaturday
 Type : Boolean
@@ -442,7 +443,7 @@ Determines whether the event should be moved to the previous Friday if it takes 
     // Never a weekend :-)
     dFix.FridayIfSaturday = True
     dFix.MondayIfSunday = True
-[🔝 Back to presentation of properties and methods](#aefpresentationp)
+[🔺 Back to presentation of properties and methods](#aefpresentationp)
 <a id="aefnwd"></a>
 ##### NextWeekDay, PreviousWeekDay, AlwaysNextWeekDay, AlwaysPreviousWeekDay
 Type : Integer
@@ -462,7 +463,7 @@ The value less that 1 indicates that there will be no offset
     dFixedDay.Month = 5
     dFixedDay.Day = 25
     dFixedDay.AlwaysPreviousWeekDay = 2
-[🔝 Back to presentation of properties and methods](#aefpresentationp)
+[🔺 Back to presentation of properties and methods](#aefpresentationp)
 <a id="aefadddays"></a>
 ##### AddDays
 Type : Integer
@@ -491,7 +492,7 @@ Otherwise, it will apply only ONE of the following conditions in the order below
  5. NextWeekDay
  6. AddDays
 
-[🔝 Back to presentation of properties and methods](#aefpresentationp)<br>
+[🔺 Back to presentation of properties and methods](#aefpresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 <a id="aefmethods"></a>
 ### ⚡ Methods
@@ -500,14 +501,14 @@ Otherwise, it will apply only ONE of the following conditions in the order below
 Creates a new object AnnualEventFix  whose properties are defined in the method arguments.
 
     Var dFixedDay As New AnnualEventFix("Día de la Independencia",9,16) // Mexico
-[🔝 Back to presentation of properties and methods](#aefpresentationm)
+[🔺 Back to presentation of properties and methods](#aefpresentationm)
 <a id="aefconstructor2"></a>
 ##### Constructor(copy as AnnualEventFix)
 Creates a new object AnnualEventFix whose properties are the same as the **copy** object passed (duplication).
 
     Var dFixedDay As New AnnualEventFix("Día de la Independencia",9,16) // Mexico
     Var dDupli as New AnnualEventFix(dFixedDay)
-[🔝 Back to presentation of properties and methods](#aefpresentationm)
+[🔺 Back to presentation of properties and methods](#aefpresentationm)
 <a id="aefconstructor3"></a>
 ##### Constructor(a as AnnualEvent)
 Creates a new object AnnualEventFix whose properties are the same as the **copy** object passed (duplication).
@@ -523,7 +524,7 @@ For i as integer = 0 to Events.LastIndex
     End if
 Next i
 ```
-[🔝 Back to presentation of properties and methods](#aefpresentationm)<br>
+[🔺 Back to presentation of properties and methods](#aefpresentationm)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 <a id=aefsharedmethods></a>
 ### ✨ Shared methods
@@ -538,7 +539,7 @@ Returns an AnnualEvent interface object encoded in the string value.
     
     Var ae As AnnualEvent = AnnualEventFix.FromString(s) // Return a AnnualEvent (NOT a AnnualEventFix) // Reading the string to construct an AnnualEvent object
     Var aeFix as new AnnualEventFix(ae) // Creating a AnnualEventFix from then AnnualEvent
-[🔝 Back to presentation of properties and methods](#aefpresentations)<br>
+[🔺 Back to presentation of properties and methods](#aefpresentations)<br>
 🔝 [Back to Table of contents](#table-of-contents)
 <a id="jump-aee-class"></a>
 ## 🧊  AnnualEventEaster and 🧊  AnnualEventOrthodoxEaster Classes
@@ -583,7 +584,7 @@ The number of days to add or subtract from the date of Easter to calculate the d
     Var PalmSunday as New AnnualEventEaster
     PalmSunday.DeltaEaster = -7
 
-[🔝 Back to presentation of properties and methods](#aeepresentationp)<br>
+[🔺 Back to presentation of properties and methods](#aeepresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 <a id="aeeconstants"></a>
 #### 𝞹 Constants
@@ -594,7 +595,7 @@ Since some holidays have multiple names, you may have several constants with the
 
 **Note :** Despite multiple checks, errors may still exist in the values ​​or names.
 
-[🔝 Back to presentation of properties and methods](#aeepresentationp)<br>
+[🔺 Back to presentation of properties and methods](#aeepresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 <a id="aeemethods"></a>
@@ -606,7 +607,7 @@ Since some holidays have multiple names, you may have several constants with the
 ```
 Var dEasterDay As New AnnualEventEaster("Palm Sunday",-7)
 ```
-[🔝 Back to presentation of properties and methods](#aeepresentationm)
+[🔺 Back to presentation of properties and methods](#aeepresentationm)
 <a id="aeeconstructor2"></a>
 ##### Constructor(copy as AnnualEventEaster )
 Creates a new object AnnualEventEaster whose properties are the same as the **copy** object passed (duplication).
@@ -615,7 +616,7 @@ Creates a new object AnnualEventEaster whose properties are the same as the **co
 Var dEasterDay As New AnnualEventEaster("Palm Sunday",-7)
 Var dDupli as New AnnualEventEaster(dEasterDay )
 ```
-[🔝 Back to presentation of properties and methods](#aeepresentationm)
+[🔺 Back to presentation of properties and methods](#aeepresentationm)
 <a id="aeeconstructor3"></a>
 ##### Constructor(a as AnnualEvent)
 
@@ -632,7 +633,7 @@ For i as integer = 0 to Events.LastIndex
     End if
 Next i
 ```
-[🔝 Back to presentation of properties and methods](#aeepresentationm)<br>
+[🔺 Back to presentation of properties and methods](#aeepresentationm)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 <a id=aeesharedmethods></a>
@@ -648,7 +649,7 @@ Returns an AnnualEvent interface object encoded in the string value.
     
     Var ae As AnnualEvent = AnnualEventFix.FromString(s) // Return a AnnualEvent (NOT a AnnualEventEaster)
     Var aeEaster as new AnnualEventEaster(ae) // Creating a AnnualEventEaster from then AnnualEvent
-[🔝 Back to presentation of properties and methods](#aeepresentations)
+[🔺 Back to presentation of properties and methods](#aeepresentations)
 <a id=aeeeaster></a>
 ##### Easter(year as integer) as DateTime
 ##### OrthodoxEaster(year as integer) as DateTime
@@ -656,7 +657,7 @@ Returns the date of Easter Sunday for the requested year.
 
     Var Easter Sunday as DateTime = AnnualEventEaster.Easter(2025)
 
-[🔝 Back to presentation of properties and methods](#aeepresentations)<br>
+[🔺 Back to presentation of properties and methods](#aeepresentations)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 <a id=jump-aew-class></a>
@@ -707,7 +708,7 @@ For the third Thursday of February, for example, the values ​​are:
 
 To indicate the last week (without knowing if it will be the 4th or 5th), use Rank = 6
 
-[🔝 Back to presentation of properties and methods](#aewpresentationp)
+[🔺 Back to presentation of properties and methods](#aewpresentationp)
 <a id="aewnwd"></a>
 ##### NextWeekDay, PreviousWeekDay
 Type : Integer
@@ -724,13 +725,13 @@ The value less that 1 indicates that there will be no offset
     dWeekDay.CycleFirstYear = 1848  // The event is not every year
     dWeekDay.CycleYearDuration = 4
 
-[🔝 Back to presentation of properties and methods](#aewpresentationp)
+[🔺 Back to presentation of properties and methods](#aewpresentationp)
 <a id="aewad"></a>
 ##### AddDays
 Type : Integer
 
 Shifts the event by the specified number of days. Accepts negative values.
-The value less that 0 indicates that there will be no offset
+0 indicates that there will be no offset
 
 
     // U.S. Presidential Election (Second example of calculation)
@@ -746,7 +747,7 @@ The algorithm will apply only ONE of the following conditions in the order below
  2. NextWeekDay
  3. AddDays
 
-[🔝 Back to presentation of properties and methods](#aewpresentationp)<br>
+[🔺 Back to presentation of properties and methods](#aewpresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 <a id="aewmethods"></a>
 ### ⚡ Methods
@@ -762,7 +763,7 @@ Var dWeekDay As New AnnualEventWeekDay("Thanksgiving Day",11,5,4)
 // The 4th (4) => Rank
 ```
 
-[🔝 Back to presentation of properties and methods](#aewpresentationp)
+[🔺 Back to presentation of properties and methods](#aewpresentationp)
 <a id="aewconstructor2"></a>
 ##### Constructor(copy as AnnualEventWeekDay )
 
@@ -773,7 +774,7 @@ Var dWeekDay As New AnnualEventWeekDay("Thanksgiving Day ",11,5,4)
 Var dDupli as New AnnualEventWeekDay(dWeekDay)
 ```
 
-[🔝 Back to presentation of properties and methods](#aewpresentationp)
+[🔺 Back to presentation of properties and methods](#aewpresentationp)
 <a id="aewconstructor3"></a>
 ##### Constructor(a as AnnualEvent)
 
@@ -790,7 +791,7 @@ In the example below, Events() is a array of AnnualEvent
         End if
     Next i
 
-[🔝 Back to presentation of properties and methods](#aewpresentationp)<br>
+[🔺 Back to presentation of properties and methods](#aewpresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 <a id="aewsharedmethods"></a>
 <a id="aewfs"></a>
@@ -806,7 +807,7 @@ Returns an AnnualEvent interface object encoded in the string value.
     Var ae As AnnualEvent = AnnualEventWeekDay.FromString(s) // Return a AnnualEvent (NOT a AnnualEventWeekDay)
     Var aeWeek as new AnnualEventWeekDay(ae) // Creating a AnnualEventWeekDay from then AnnualEvent
 
-[🔝 Back to presentation of properties and methods](#aewpresentationp)<br>
+[🔺 Back to presentation of properties and methods](#aewpresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 <a id="jump-cp-class"></a>
 ## 🧊  ClosurePeriod Class
@@ -857,7 +858,7 @@ SurmmerHolidays.LastDay = New DateTime(2025,8,31)
 SurmmerHolidays.Caption = "Summer Holidays 2025"
 ```
 <a id="cpfirstday"></a>
-[🔝 Back to presentation of properties and methods](#cppresentationp)
+[🔺 Back to presentation of properties and methods](#cppresentationp)
 ##### FirstDay, LastDay
 Type : DateTime
 
@@ -870,7 +871,7 @@ SurmmerHolidays.LastDay = New DateTime(2025,8,31)
 
 Note that when you assign these values, the first day is automatically set to 00:00:00 and the last day to 23:59:59.
 
-[🔝 Back to presentation of properties and methods](#cppresentationp)
+[🔺 Back to presentation of properties and methods](#cppresentationp)
 ##### Tag
 Type : Variant
 
@@ -882,7 +883,7 @@ SurmmerHolidays.LastDay = New DateTime(2025,8,31
 SummerHolidays.Tag = 3.14159 // Value you will need later
 
 
-[🔝 Back to presentation of properties and methods](#cppresentationp)<br>
+[🔺 Back to presentation of properties and methods](#cppresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 <a id="cpmethods"></a>
@@ -892,7 +893,7 @@ SummerHolidays.Tag = 3.14159 // Value you will need later
 Creates a new object ClosurePeriods whose properties are defined in the method arguments.
 
     Var SummerHolidays as new ClosurePeriod(New DateTime(2025, 6,8), New DateTime(2025, 8,31), "Summer Break")
-[🔝 Back to presentation of properties and methods](#cppresentationm)
+[🔺 Back to presentation of properties and methods](#cppresentationm)
 <a id="cpconstructor2"></a>
 ##### Constructor(copy as ClosurePeriod )
 Creates a new object ClosurePeriod whose properties are the same as the **copy** object passed (duplication).
@@ -901,7 +902,7 @@ Creates a new object ClosurePeriod whose properties are the same as the **copy**
 Var SummerHolidays as new ClosurePeriod(New DateTime(2025,6,8), New DateTime(2025,8,31), "Summer Break")
 Var dDupli as New ClosurePeriod(SummerHolidays)
 ```
-[🔝 Back to presentation of properties and methods](#cppresentationm)
+[🔺 Back to presentation of properties and methods](#cppresentationm)
 <a id="cpduration"></a>
 ##### Duration() as integer
 Returns the duration in days of the period
@@ -911,7 +912,7 @@ Var SummerHolidays as new ClosurePeriod(New DateTime(2025,6,8), New DateTime(202
 MessageBox SummerHolidays.Duration.ToString // 85
 ```
 
-[🔝 Back to presentation of properties and methods](#cppresentationm)
+[🔺 Back to presentation of properties and methods](#cppresentationm)
 <a id="cpinclued"></a>
 ##### IsIncluded(lDate as DateTime) as Boolean
 Returns True if the Date is included in the period.
@@ -923,7 +924,7 @@ Returns True if the Date is included in the period.
     else
 	    MessageBox "It's not during the holidays"
     end
-[🔝 Back to presentation of properties and methods](#cppresentationm)
+[🔺 Back to presentation of properties and methods](#cppresentationm)
 <a id="cpldow"></a>
 ##### LastDayOfWork() as DateTime
 Returns the date from the day before the start of the closure period.
@@ -931,7 +932,7 @@ The time is set to 23:59:59.
 
     Var SpringBreak as New ClosurePeriod(New DateTime(2026,4,11), New DateTime(2026,4,19), "Spring Break")
     Var EndOfClasses as DateTime = SpringBreak.LastDayOfWork
-[🔝 Back to presentation of properties and methods](#cppresentationm)
+[🔺 Back to presentation of properties and methods](#cppresentationm)
 <a id="cprtw"></a>
 ##### ReturnToWork() as DateTime
 Returns the date of the day following the last day of the closure period.
@@ -939,7 +940,7 @@ The time is set to 00:00:00.
 
     Var SpringBreak as New ClosurePeriod(New DateTime(2026,4,11), New DateTime(2026,4,19), "Spring Break")
     Var BackToClass as DateTime = SpringBreak.ReturnToWork
-[🔝 Back to presentation of properties and methods](#cppresentationm)
+[🔺 Back to presentation of properties and methods](#cppresentationm)
 <a id="cprts"></a>
 ##### ToString() as string
 This function can be used to store an ClosurePeriod object as a string, particularly for use in a database field.
@@ -950,7 +951,7 @@ The "Caption" property is Base64 encoded. The "Tag" property is not included in 
     
 For SpringBreak, returns U3ByaW5nIEJyZWFr|2026-04-11|2026-04-19
 
-[🔝 Back to presentation of properties and methods](#cppresentationm)<br>
+[🔺 Back to presentation of properties and methods](#cppresentationm)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 <a id="cpsharedmethods"></a>
@@ -964,7 +965,7 @@ Returns an ClosurePeriod object encoded in the string value.
 
     Var SpringBreak as ClosurePeriod = ClosurePeriod.FromString("U3ByaW5nIEJyZWFr|2026-04-11|2026-04-19")
 
-[🔝 Back to presentation of properties and methods](#cppresentations)<br>
+[🔺 Back to presentation of properties and methods](#cppresentations)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 <a id="jump-rdw-class"></a>
 ## 🧊 RegionDatesWorked Class
@@ -993,7 +994,7 @@ The class has four properties for this:
 #### ⚡ Methods
 | Name|Parameters|Returned type
 |----------------|----------|--------------------- |
-|[Constructor](#rdwconstructor1)|lIdentifier as variant = Nil
+|[Constructor](#rdwconstructor1)|lIdentifier as variant = Nil, lCaption as string = ""
 |[Constructor](#rdwconstructor2)|copy as RegionDatesWorked, NewIdentifier as Variant = Nil, NewCaption as string = ""|
 |[BusinnessDays](#rdwbdays)|starting as DateTime, ending as DateTime|DateTime()
 |[BusinnessDays](#rdwbdays)|Year as integer|DateTime()
@@ -1044,13 +1045,13 @@ The class has four properties for this:
 Type : Variant
 Allows you to give an identification to your region, for example the name of a state, a region, the number of a prefecture, etc.
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationp)
+[🔺 Back to presentation of properties and methods](#rdwpresentationp)
 <a id="rdwcaption"></a>
 ##### Caption
 Type : String
 The caption of the region.
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationp)
+[🔺 Back to presentation of properties and methods](#rdwpresentationp)
 <a id="rdwannualevents"></a>
 ##### AnnualEvents()
 
@@ -1100,7 +1101,7 @@ Another example, for the Wallonie, region of Belgium
     r.AnnualEvents.Add New AnnualEventFix("Jour de la Dynastie", 11, 15)
     r.AnnualEvents.Add New AnnualEventFix("Deuxième jour de Noël", 12, 26)
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationp)
+[🔺 Back to presentation of properties and methods](#rdwpresentationp)
 <a id="rdwclosureperiods"></a>
 ##### ClosurePeriods()
 Type : ClosurePeriod
@@ -1116,7 +1117,7 @@ For example, for school holidays in the District of Columbia (if your business i
     r.ClosurePeriods.Add New ClosurePeriod(New DateTime(2025,12,20), New DateTime(2026,1,4), "Winter Break")
     r.ClosurePeriods.Add New ClosurePeriod(New DateTime(2026,4,11), New DateTime(2026,4,19), "Spring Break")
     r.ClosurePeriods.Add New ClosurePeriod(New DateTime(2026,6,18), New DateTime(2026,8,16), "Summer Break") // Not sure for the 8/16/2026
-[🔝 Back to presentation of properties and methods](#rdwpresentationp)
+[🔺 Back to presentation of properties and methods](#rdwpresentationp)
 <a id="rdwwwd"></a>
 ##### WorkingWeekDays()
 Type : dprWorkingWeekDays
@@ -1128,14 +1129,14 @@ By default, only Saturday and Sunday are non-working days.
     r.WorkingWeekDays.WorkingSaturday = True // In my business, we works Saturday
     // The same setting, but indicating the day number of the week, to be used in a For...Next loop for example.
     r.WorkingWeekDays.WorkingDay(7) = True // In my business, we works Saturday
-[🔝 Back to presentation of properties and methods](#rdwpresentationp)
+[🔺 Back to presentation of properties and methods](#rdwpresentationp)
 <a id="rdwtag"></a>
 ##### Tag
 Type : Variant
 
 Variable to put whatever you need in it.
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationp)<br>
+[🔺 Back to presentation of properties and methods](#rdwpresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 <a id=rdwmethods></a>
@@ -1145,14 +1146,14 @@ Variable to put whatever you need in it.
 Create a new object RegionDatesWorked and assign the Identifier and Caption property
 
     Var r as new RegionDatesWorked("DC")
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwconstructor2></a>
 ##### Constructor (copy as RegionDatesWorked, NewIdentifier as Variant = Nil, NewCaption as string = "")
 Create a new object RegionDatesWorked whose properties are the same as the **copy** object passed (duplication), and assign the (new) Identifier and (new) Caption property
 
     Var rDC as new RegionDatesWorked("DC")
     Var MySchool as new RegionDatesWorked(rDC, "My Fabulous School")
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwbdays></a>
 ##### BusinnessDays(starting as DateTime, ending as DateTime) as DateTime()
 ##### BusinnessDays(Year as integer) as DateTime()
@@ -1160,21 +1161,21 @@ Returns an array of DateTime objects, corresponding to each open day, based on t
 The calculation is performed either between two dates or over a year.
 All dates are set to 00:00:00
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwcpm></a>
 ##### IsInClosurePeriod(d as DateTime) as Boolean
 Returns True if the date is included in at least one closure period.
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwcpmcaption></a>
 ##### IsInClosurePeriodCaption(d as DateTime) as Boolean
 Returns the caption of the period, if the date is included in at least one closure period (return the caption of the first period found in the array).
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwcpmobject></a>
 ##### IsInClosurePeriodObject(d as DateTime) as ClosurePeriod
 Returns ClosurePeriod object, if the date is included in at least one closure period (return the first period found in the array).
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwcountbusinnessdays></a>
 ##### CountBusinessDays(Date1 as datetime, Date2 as datetime) as integer
 Returns the number of working days corresponding to each opening day, based on the specified weekdays, closure periods, and public holidays.
@@ -1184,7 +1185,7 @@ If Date1 and Date2 are on the same day and the date is a working day, then 1 wil
 Returns the number of non-working days corresponding to each day off, based on the specified weekdays, closure periods, and public holidays.
 If Date1 and Date2 are on the same day and the date is a non-working day, then 1 will be returned, otherwise 0.
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwisannualevent></a>
 ##### IsAnnualEvent(d as DateTime, OnlyIfDayOff as Boolean = False)  as boolean
 ##### IsAnnualEventObject(d as DateTime, OnlyIfDayOff as Boolean = False)  as AnnualEvent
@@ -1227,7 +1228,7 @@ In this example, r is a RegionDatesWorked object, for the District of Columbia (
     
     End If 
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwisworkingday></a>
 ##### IsWorkingDay(d as DateTime) as Boolean
 Returns True if the date is a working day, depending on the specified working days, closing periods and public holidays.
@@ -1236,7 +1237,7 @@ In this example, r is a RegionDatesWorked object, for the District of Columbia (
 
     Var d as DateTime = DateTime.Now()
     if r.IsWorkingDay(d) then MessageBox "Today, it's a working day !"
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwlistofannualevents></a>
 ##### ListOfAnnualEvents(Starting as DateTime, Ending as DateTime, OnlyDayOff as boolean = False, IncludeSaturday as Boolean = True, IncludeSunday as Boolean = True, IncludeMonday as Boolean = True, IncludeTuesday as Boolean = True, IncludeWednesday as Boolean = True, IncludeThursday as Boolean = True, IncludeFriday as Boolean = True) as DateAndCaption
 ##### ListOfAnnualEvents(Year as integer, OnlyDayOff as boolean = False, IncludeSaturday as Boolean = True, IncludeSunday as Boolean = True, IncludeMonday as Boolean = True, IncludeTuesday as Boolean = True, IncludeWednesday as Boolean = True, IncludeThursday as Boolean = True, IncludeFriday as Boolean = True) as DateAndCaption
@@ -1250,7 +1251,7 @@ In this example, r is a RegionDatesWorked object, for the District of Columbia (
 
     //  All events for 2025, only holydays (non working event) and unless they fall on Sunday
     Var Holidays() as DateAndCaption = r.ListOfAnnualEvents(2025, True, True, False)
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwloadingcp></a>
 ##### LoadClosurePeriodsFromRowSet(rs as RowSet, Encoding as TextEncoding = Nil) 
 This method works like the shared method [ClosurePeriodsFromRowSet](#dprsharedclosureperiodsfromrowset).
@@ -1259,7 +1260,7 @@ It directly adds the periods to the ClosurePeriods array.
 
 The Inditifier filter is applied by default.
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwloadingae></a>
 ##### LoadEventsFromRowSet(rs as RowSet, Encoding as TextEncoding = Nil)
 This method works like the shared method [AnnualEventsFromRowSet](#dprsharedannualeventsfromrowset).
@@ -1268,7 +1269,7 @@ It directly adds the periods to the AnnualEvents array.
 
 The Identifier filter is applied by default.
 
-  [🔝 Back to presentation of properties and methods](#rdwpresentationm)
+  [🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwnbd></a>
 ##### NextBusinessDay(d as datetime, number as integer = 1) as DateTime
 ##### PreviousBusinessDay(d as datetime, number as integer = 1) as DateTime
@@ -1280,7 +1281,7 @@ In this example, r is a RegionDatesWorked object, for the District of Columbia (
 
     Var d as DateTime = DateTime.Now()
     Var DeliveryDay = r.NextBusinessDay(d, 4) // Four business days for a delivery
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwnnwd></a>
 ##### NextNonWorkingDay(d as datetime, number as integer = 1) as DateTime
 ##### PreviousNonWorkingDay(d as datetime, number as integer = 1) as DateTime
@@ -1288,7 +1289,7 @@ Returns the next non-working day (1), or the second (2), ... depending on the pa
 AnnualEvents with the DayOff property = True are non-working days.
 Negative values ​​give the same result as the PreviousNonWorkingDay function. Similarly, negative values ​​for the PreviousNonWorkingDay function give the same result as for the NextNonWorkingDay function.
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwnnwdr></a>
 ##### NonWorkingDayReasonCaption(d as DateTime) as string
 ##### NonWorkingDayReasonType(d as DateTime) as integer
@@ -1307,7 +1308,7 @@ For NonWorkingDayReasonType, if the date is a non-working day, return, according
   - 3, if the date corresponds to an event 
   - 0, if it's a working day
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwnnwds></a>
 ##### NonWorkingDays(starting as DateTime, ending as DateTime) as DateTime()
 ##### NonWorkingDays(year as integer) as DateTime()
@@ -1330,7 +1331,7 @@ For the methods NonWorkingDaysDateAndCaption, the caption property, according to
 
 - If it's a working day, return an empty string
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwgwd></a>
 ##### WorkingWeekDays.WorkingDay(DayOfWeek as integer)
 ##### WorkingWeekDays.WorkingDay(DayOfWeek as Integer, assigns value as Boolean)
@@ -1343,7 +1344,7 @@ The first position corresponds to Sunday, the last to Saturday.
 
 "1" means the day is a working day, "0" means it is a non-working day.
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)
 <a id=rdwgwdrs></a>
 ##### WorkingWeekDays.ReadString(value as string)
 Affects the working days stored in a 7-characters string.
@@ -1352,7 +1353,7 @@ me.WorkingWeekDays.ReadString("0011111") // Works from Tuesday to Saturday
 ```
 The SQL definition of a database table is given [here](#expected-structure-of-the-different-database-tables), with the expected column names.
 
-[🔝 Back to presentation of properties and methods](#rdwpresentationm)<br>
+[🔺 Back to presentation of properties and methods](#rdwpresentationm)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 <a id=dprsharedmethods></a>
 ### ✨ Shared methods
@@ -1365,7 +1366,7 @@ Returns an array of AnnualEvent objects containing the holidays of Belgium. The 
 
 Finally, the PublicService argument allows you to specify certain holidays observed only by public services.
 
-[🔝 Back to presentation of properties and methods](#rdwpresentations)
+[🔺 Back to presentation of properties and methods](#rdwpresentations)
 <a id=dprsharedmethodsfrance></a>
 ##### AnnualEventsFrance(Region as RegionDatesWorked.France = France.Regional) as AnnualEvents
 Returns an array of AnnualEvent objects containing the French holidays. The France enumeration allows you to choose the region.
@@ -1373,7 +1374,7 @@ Returns an array of AnnualEvent objects containing the French holidays. The Fran
     Var Martinique as  New RegionDatesWorked("france-martinique")
     Martinique.AnnualEvents = RegionDatesWorked.AnnualEventsFrance(France.Martinique)
 
-[🔝 Back to presentation of properties and methods](#rdwpresentations)
+[🔺 Back to presentation of properties and methods](#rdwpresentations)
 <a id=dprsharedmethodsusa></a>
 ##### AnnualEventsUSA(State as RegionDatesWorked.USA= USA.Federal) as AnnualEvents
 Returns an array of AnnualEvent objects containing the U.S.A holidays. The USA enumeration allows you to choose the state.
@@ -1385,7 +1386,7 @@ Please feel free to point out any errors, omissions, or subtleties.
     Var DC as  New RegionDatesWorked("dc")
     DC.AnnualEvents = RegionDatesWorked.AnnualEventsUSA(USA.DistrictOfColumbia)
 
-[🔝 Back to presentation of properties and methods](#rdwpresentations)
+[🔺 Back to presentation of properties and methods](#rdwpresentations)
 <a id=dprsharedannualeventsfromrowset></a>
 ##### AnnualEventsFromRowSet(rs as RowSet, Identifier as Variant = Nil, Encoding as TextEncoding = Nil) as AnnualEvents
 Returns an array of AnnualEvent objects from the rs object.
@@ -1407,7 +1408,7 @@ In this example, r is a RegionDatesWorked object, for the District of Columbia (
     r.AnnualEvents = RegionDatesWorked.LoadEventsFromRowSet(rs, r.identifier)
 
 
-[🔝 Back to presentation of properties and methods](#rdwpresentations)
+[🔺 Back to presentation of properties and methods](#rdwpresentations)
 <a id=dprsharedclosureperiodsfromrowset></a>
 #### ClosurePeriodsFromRowSet(rs as RowSet, Identifier as variant = nil, Encoding as TextEncoding = Nil) as ClosurePeriod()
 Returns an array of ClosurePeriod objects from the rs object.
@@ -1427,7 +1428,7 @@ The SQL definition of a database table is given [here](#expected-structure-of-th
     r.AnnualEvents = RegionDatesWorked.LoadEve   ntsFromRowSet(rs, r.identifier)
    
 
-[🔝 Back to presentation of properties and methods](#rdwpresentations)<br>
+[🔺 Back to presentation of properties and methods](#rdwpresentations)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 <a id="jump-mrdw-class"></a>
 ## 🧊 MultiRegionDatesWorked Class
@@ -1494,14 +1495,14 @@ Array of RegionDatesWorked objects that will be processed by the methods of the 
     Belgium.Regions.Add new RegionDatesWorked("belgium-wallonie")
     Belgium.Regions.Add new RegionDatesWorked("belgium-vlaanderen")
     Belgium.Regions.Add new RegionDatesWorked("belgium-deutschsprachige-gemeinschaft")
-[🔝 Back to presentation of properties and methods](#mrdwpresentationp)
+[🔺 Back to presentation of properties and methods](#mrdwpresentationp)
 <a id=mrdwtag></a>
 ##### Tag
 Type : Variant
 
 Variable to put whatever you need in it.
 
-[🔝 Back to presentation of properties and methods](#mrdwpresentationp)<br>
+[🔺 Back to presentation of properties and methods](#mrdwpresentationp)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 <a id=mrdwmethods></a>
@@ -1511,7 +1512,7 @@ Variable to put whatever you need in it.
 ##### Constructor(copy as MultiRegionDatesWorked)
 Create a new object MultiRegionDatesWorked whose propertie Regions() are the same as the **copy** object passed (duplication). Each RegionDatesWorked object is duplicated.
 
-[🔝 Back to presentation of properties and methods](#mrdwpresentationm)
+[🔺 Back to presentation of properties and methods](#mrdwpresentationm)
 <a id=mrdwbusinessdays></a>
 ##### BusinnessDays(starting as DateTime, ending as DateTime) as DateTime()
 ##### BusinnessDays(Year as integer) as DateTime()
@@ -1524,7 +1525,7 @@ All dates are initialized to 00:00:00.
 
     // All the days that will be open for the year 2025
     Var OpenDays() as DateTime = Belgium.BusinessDays(2025)
-[🔝 Back to presentation of properties and methods](#mrdwpresentationm)
+[🔺 Back to presentation of properties and methods](#mrdwpresentationm)
 <a id=mrdwcbd></a>
 ##### CountBusinessDays(Date1 as datetime, Date2 as datetime) as integer
 Returns the number of working days corresponding to each opening day, based on the specified weekdays, closure periods, and public holidays.
@@ -1536,7 +1537,7 @@ If Date1 and Date2 are on the same day and the date is a working day, then 1 wil
     Var d2 as new DateTime(2025,12,31)
     Var NbOpenDays() as Integer = Belgium.CountBusinessDays(d1,d2)
 
-[🔝 Back to presentation of properties and methods](#mrdwpresentationm)
+[🔺 Back to presentation of properties and methods](#mrdwpresentationm)
 <a id=mrdwcnwd></a>
 ##### CountNonWorkingDays(Date1 as datetime, Date2 as datetime) as integer
 Returns the number of non-working days corresponding to each day off, based on the specified weekdays, closure periods, and public holidays.
@@ -1546,27 +1547,27 @@ If Date1 and Date2 are on the same day and the date is a non-working day, then 1
     Var d1 as new DateTime(2025,1,1)
     Var d2 as new DateTime(2025,12,31)
     Var NbDayOff() as Integer = Belgium.CountNonWorkingDays(d1,d2)
-[🔝 Back to presentation of properties and methods](#mrdwpresentationm)
+[🔺 Back to presentation of properties and methods](#mrdwpresentationm)
 <a id=mrdwiae></a>
 ##### IsAnnualEvent(d as DateTime, OnlyIfDayOff as Boolean = False) as Boolean
 This method tests if the date is an event day for AT LEAST one region. If so, it returns True. If there are no events for any region, it returns False.
 
-[🔝 Back to presentation of properties and methods](#mrdwpresentationm)
+[🔺 Back to presentation of properties and methods](#mrdwpresentationm)
 <a id=mrdwicp></a>
 ##### IsInClosurePeriod(d as DateTime) as Boolean
 This method tests whether the date falls within a closure period in at least one region. If so, it returns True. If it does not fall within any closure period in any region, it returns False.
 
-[🔝 Back to presentation of properties and methods](#mrdwpresentationm)
+[🔺 Back to presentation of properties and methods](#mrdwpresentationm)
 <a id=mrdwiwwd></a>
 ##### IsWorkingWeekDay(d as DateTime) as Boolean
 This method tests whether the date is a day of the week usually worked in ALL regions.
 
-[🔝 Back to presentation of properties and methods](#mrdwpresentationm)
+[🔺 Back to presentation of properties and methods](#mrdwpresentationm)
 <a id=mrdwiwd></a>
 ##### IsWorkingDay(d as DateTime) as Boolean
 This method tests whether the date is a working day in ALL regions.
 
-[🔝 Back to presentation of properties and methods](#mrdwpresentationm)
+[🔺 Back to presentation of properties and methods](#mrdwpresentationm)
 <a id=mrdwloae></a>
 ##### ListOfAnnualEvents(Starting as DateTime, Ending as DateTime, OnlyDayOff as boolean = False, IncludeSaturday as Boolean = True, IncludeSunday as Boolean = True, IncludeMonday as Boolean = True, IncludeTuesday as Boolean = True, IncludeWednesday as Boolean = True, IncludeThursday as Boolean = True, IncludeFriday as Boolean = True) as DateAndCaption
 ##### ListOfAnnualEvents(Year as integer, OnlyDayOff as boolean = False, IncludeSaturday as Boolean = True, IncludeSunday as Boolean = True, IncludeMonday as Boolean = True, IncludeTuesday as Boolean = True, IncludeWednesday as Boolean = True, IncludeThursday as Boolean = True, IncludeFriday as Boolean = True) as DateAndCaption
@@ -1581,13 +1582,13 @@ You can also choose whether or not to include events that occur on a specific da
     
     //  All events for 2025, only holydays (non working event) and unless they fall on Sunday, for Belgium
         Var Holidays() as DateAndCaption = Belgium.ListOfAnnualEvents(2025, True, True, False)
-[🔝 Back to presentation of properties and methods](#mrdwpresentationm)
+[🔺 Back to presentation of properties and methods](#mrdwpresentationm)
 <a id=mrdwlor></a>
 ##### ListOfRegions() as Variant()
 Returns an array containing the Identifier property of each region.
 
     Var identifiers() as Variant = Belgium.ListOfRegions
-[🔝 Back to presentation of properties and methods](#mrdwpresentationm)
+[🔺 Back to presentation of properties and methods](#mrdwpresentationm)
 <a id=mrdwnbd></a>
 ##### NextBusinessDay(d as DateTime, Number as integer) as DateTime
 ##### PreviousBusinessDay(d as DateTime, Number as integer) as DateTime
@@ -1604,7 +1605,7 @@ In this example, Belgium is a MultiRegionDatesWorked object
 
     Var d as DateTime = DateTime.Now()
     Var DeliveryDay = Belgium.NextBusinessDay(d,4) // Four business days for a delivery
-[🔝 Back to presentation of properties and methods](#mrdwpresentationm)
+[🔺 Back to presentation of properties and methods](#mrdwpresentationm)
 <a id=mrdwnwd></a>
 ##### NonWorkingDays(starting as DateTime, ending as DateTime) as Number
 ##### NonWorkingDays(year as integer) as Number
@@ -1615,7 +1616,7 @@ The calculation can be performed over a period between two dates or over a year.
 
 All dates are initialized to 00:00:00.
 
-[🔝 Back to presentation of properties and methods](#mrdwpresentationm)<br>
+[🔺 Back to presentation of properties and methods](#mrdwpresentationm)<br>
 [🔝 Back to Table of contents](https://stackedit.io/app#table-of-contents)
 <a id=mrdwsharedmethods></a>
 ### ✨Shared Methods
@@ -1635,7 +1636,7 @@ Returns an array of RegionDatesWorked objects read from the rs object.
 
 The SQL definition of a database table is given [here](#expected-structure-of-the-different-database-tables), with the expected column names.
    
-[🔝 Back to presentation of properties and methods](#mrdwpresentations)<br>
+[🔺 Back to presentation of properties and methods](#mrdwpresentations)<br>
 [🔝 Back to Table of contents](#table-of-contents)
 
 # Expected structure of the different database tables
